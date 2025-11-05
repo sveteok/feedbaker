@@ -1,0 +1,95 @@
+import express from "express";
+import { z } from "zod";
+import { OAuth2Client } from "google-auth-library";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+
+import { UserPayload } from "../types/users";
+import { baseUserSchema } from "../validations/users";
+import { findOrCreateUser } from "../models/users";
+
+const router = express.Router();
+
+router.post("/google", async (req: express.Request, res: express.Response) => {
+  try {
+    const COOKIE_NAME = process.env.COOKIE_NAME!;
+    const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET!;
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+    const { credential } = req.body;
+
+    const audience = process.env.GOOGLE_CLIENT_ID;
+    if (!audience) {
+      throw new Error("Missing GOOGLE_CLIENT_ID in environment variables");
+    }
+
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload || !payload?.sub || !payload?.email) {
+      return res
+        .status(400)
+        .json({ error: "Invalid or malformed Google token payload" });
+    }
+
+    const ADMIN_USER = process.env.ADMIN_USER || "sveteok@gmail.com";
+
+    const googlePayload = {
+      provider: "google",
+      provider_id: payload.sub,
+      email: payload.email,
+      name: payload.name || payload.email,
+      picture: payload.picture,
+      is_admin: payload.email === ADMIN_USER,
+    };
+
+    const parsed = baseUserSchema.safeParse(googlePayload);
+    if (!parsed.success) {
+      console.error("Invalid Google user data:", z.treeifyError(parsed.error));
+      throw new Error("Invalid user data from Google");
+    }
+
+    const validatedUser = parsed.data;
+    const user = await findOrCreateUser(validatedUser);
+
+    const token = jwt.sign(
+      {
+        user_id: user.user_id,
+        email: user.email,
+        name: user.name,
+        is_admin: user.is_admin,
+        picture: user.picture,
+      } as UserPayload,
+      GOOGLE_CLIENT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.cookie(COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 1000,
+    });
+
+    res.status(200).json({ message: "Authenticated", user });
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ error: "Invalid Google token" });
+  }
+});
+
+router.get("/csrf", (_req, res: express.Response) => {
+  const csrfToken = crypto.randomBytes(32).toString("hex");
+
+  res.cookie("XSRF-TOKEN", csrfToken, {
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+  });
+
+  res.json({ csrfToken });
+});
+
+export default router;
