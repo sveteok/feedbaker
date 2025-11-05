@@ -103,9 +103,11 @@ CREATE TABLE feedbacks (
 CREATE INDEX idx_users_name_trgm ON users USING gin (name gin_trgm_ops);
 CREATE INDEX idx_sites_name_trgm ON sites USING gin (name gin_trgm_ops);
 CREATE INDEX idx_sites_url_trgm ON sites USING gin (url gin_trgm_ops);
-CREATE INDEX idx_feedbacks_body_trgm ON feedbacks USING gin (body gin_trgm_ops);
-CREATE INDEX idx_feedbacks_site_public_created ON feedbacks (site_id, public, created_on DESC);
-CREATE INDEX idx_created ON sites (created_on DESC);
+CREATE INDEX idx_feedback_body_trgm ON feedback USING gin (body gin_trgm_ops);
+CREATE INDEX idx_feedback_site_public_created ON feedback (site_id, public, created_on DESC);
+CREATE INDEX idx_created_on ON sites (created_on DESC);
+CREATE INDEX IF NOT EXISTS idx_feedback_siteid ON feedback(site_id);
+
 ```
 
 ### Endpoints

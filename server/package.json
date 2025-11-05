@@ -19,12 +19,14 @@
     "build": "tsc"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
     "@types/express": "^5.0.5",
     "@types/node": "^24.10.0",
+    "@types/pg": "^8.15.6",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.0",
     "globals": "^16.5.0",
