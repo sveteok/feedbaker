@@ -26,6 +26,16 @@ export const executeQuery = async (query: string, parameters?: unknown[]) => {
   }
 };
 
+export class QueryBuilder {
+  query = "";
+  params: unknown[] = [];
+
+  addParam(value: unknown): string {
+    this.params.push(value);
+    return `$${this.params.length}`;
+  }
+}
+
 export const createTables = async () => {
   await executeQuery(`CREATE EXTENSION IF NOT EXISTS pg_trgm;`);
 
