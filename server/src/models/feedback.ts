@@ -86,7 +86,9 @@ export const findFeedbackById = async (
                   WHERE feedback.feedback_id=$1::uuid`;
   const parameters = [feedback_id];
   const result = await executeQuery(query, parameters);
-  return result.rows[0] as Feedback | null;
+
+  if (result.rows.length === 0) return null;
+  return result.rows[0] as Feedback;
 };
 
 export const findFeedbackOwnerId = async (
@@ -99,7 +101,8 @@ export const findFeedbackOwnerId = async (
                   WHERE feedback_id=$1::uuid`;
   const parameters = [feedback_id];
   const result = await executeQuery(query, parameters);
-  return result.rows[0] as Feedback | null;
+
+  return result.rows.length > 0 ? (result.rows[0] as Feedback) : null;
 };
 
 export const createFeedback = async ({
@@ -136,5 +139,5 @@ export const deleteFeedback = async ({
   const parameters = [feedback_id, site_id];
   const result = await executeQuery(query, parameters);
 
-  return result.rows[0] as Feedback | null;
+  return result.rows.length > 0 ? (result.rows[0] as Feedback) : null;
 };

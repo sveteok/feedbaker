@@ -79,7 +79,7 @@ export const findSiteById = async (id: string) => {
   const parameters = [id];
 
   const result = await executeQuery(query, parameters);
-  return result.rows[0] as Site | null;
+  return result.rows.length > 0 ? (result.rows[0] as Site) : null;
 };
 
 export const createSite = async (site: SiteAddFormData) => {
@@ -99,6 +99,7 @@ export const createSite = async (site: SiteAddFormData) => {
   if (!result.rows.length) {
     throw new Error("Failed to create or update site");
   }
+
   return result.rows[0] as Site;
 };
 
