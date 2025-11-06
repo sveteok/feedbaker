@@ -40,6 +40,7 @@ export function Title({ children }: { children?: React.ReactNode }) {
   //     {children}
   //   </h1>;
 }
+
 export function LinkButton(
   props: React.ComponentProps<typeof Link> & { children: React.ReactNode }
 ) {
@@ -270,12 +271,21 @@ export function FormText({
   );
 }
 
-export function FormButtons({ busy = false, title = "Submit" }) {
+export function FormButtons({
+  busy = false,
+  title = "Submit",
+  onReset,
+}: {
+  busy: boolean;
+  title: string;
+  onReset?: () => void;
+}) {
   return (
     <div className="px-2 flex gap-2 mx-auto w-2/3">
       <button
         className="p-2 text-white bg-sky-600 rounded-sm m-2 w-1/2 mx-auto cursor-pointer active:opacity-80"
         type="reset"
+        onClick={onReset}
       >
         Reset
       </button>

@@ -54,7 +54,7 @@ export type SiteAddFormData = z.infer<typeof siteCreateSchema>;
 export const siteUpdateSchema = baseSiteSchema;
 
 export const siteDetailSchema = baseSiteSchema.extend({
-  feedbacks_count: z.number(),
+  feedback_count: z.number(),
 });
 
 export const paginatedSitesSchema = z.object({

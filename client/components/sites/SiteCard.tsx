@@ -1,0 +1,65 @@
+import { Site } from "@/types/sites";
+import { DefaultLink, LinkButton, OwnerLinkButton } from "../Ui";
+import Link from "next/link";
+import { SvgSite } from "../Svg";
+import { formatDate } from "@/lib/utils/dateFormat";
+
+const SiteCard = ({
+  site,
+  feedbacks_count,
+}: {
+  site: Site; //SiteWithFeedbacks;
+  feedbacks_count?: number;
+}) => {
+  console.log(feedbacks_count);
+  return (
+    <div className="flex flex-col gap-1 p-4 px-6  bg-gray-50">
+      <div className="font-bold flex gap-2 justify-between items-center">
+        <div className="flex-1 flex gap-1">
+          <SvgSite />
+          {site.name}
+        </div>
+
+        {/*
+        {feedbacks_count !== undefined && (
+          <DefaultLink href={`/sites/${site.site_id}/feedbacks`}>
+            {feedbacks_count === 0 && "feedbacks"}
+            {feedbacks_count === 1 && "1 feedback"}
+            {feedbacks_count > 1 && `${feedbacks_count} feedbacks`}
+          </DefaultLink>
+        )} */}
+        {feedbacks_count !== undefined && (
+          <div className="-mr-2 flex gap-2">
+            <OwnerLinkButton href={`/sites/${site.site_id}/edit`}>
+              edit site
+            </OwnerLinkButton>
+            <LinkButton href={`/sites/${site.site_id}/feedbacks`}>
+              feedback
+            </LinkButton>
+          </div>
+        )}
+      </div>
+      <div className="text-xs italic xfont-bold opacity-50 ">
+        registred on {formatDate(site.created_on)}
+      </div>
+      <div className="flex justify-between items-center text-sm">
+        <DefaultLink href={site.url || ""} external>
+          {site.url}
+        </DefaultLink>
+
+        <div className="text-sm"></div>
+      </div>
+      {site.description && (
+        <div className="text-smx italic">{site.description}</div>
+      )}
+
+      {feedbacks_count !== undefined && (
+        <div className="text-xs text-right italic opacity-50">
+          feedback: {feedbacks_count}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SiteCard;
