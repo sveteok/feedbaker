@@ -1,0 +1,293 @@
+import Link from "next/link";
+import { SvgLeft, SvgRight } from "./Svg";
+
+export function Section({
+  children,
+  className,
+  promo = false,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  promo?: boolean;
+}) {
+  return (
+    <section
+      className={
+        "min-w-xs flex justify-center " +
+        (promo ? "bg-sky-600 text-white" : "bg-white text-black")
+      }
+    >
+      <div
+        className={
+          "max-w-2xl flex-1 min-w-xs bg-red-500/50x p-4 gap-4 flex flex-col " +
+          className
+        }
+      >
+        {children}
+      </div>
+    </section>
+  );
+}
+
+export function Title({ children }: { children?: React.ReactNode }) {
+  return (
+    <h1 className="font-bold text-sky-50 bg-sky-600 p-4 pl-6 xborder-b-2 border-dotted border-black/30 flex justify-between items-center">
+      {children}
+    </h1>
+  );
+  //  <h1 className="font-bold text-amber-800 p-2 border-b-2 border-dotted border-black/30 flex justify-between items-center">
+  //     <div className="flex-1">{text}</div>
+  //     {children}
+  //   </h1>;
+}
+export function LinkButton(
+  props: React.ComponentProps<typeof Link> & { children: React.ReactNode }
+) {
+  return (
+    <Link
+      {...props}
+      className={
+        "bg-sky-500 text-white text-sm font-normal px-2 py-1 -my-1 .5 transition-all " +
+        "active:opacity-80 " +
+        " hover:bg-sky-600 "
+      }
+    >
+      {props.children}
+    </Link>
+  );
+}
+export function OwnerLinkButton(
+  props: React.ComponentProps<typeof Link> & { children: React.ReactNode }
+) {
+  return (
+    <Link
+      {...props}
+      className={
+        "bg-amber-600 text-white text-sm -my-1 font-normal px-2 py-1 transition-all " +
+        "active:opacity-80 active:ring-8 " +
+        "hover:ring-4 hover:ring-white -600/20 "
+      }
+    >
+      {props.children}
+    </Link>
+  );
+}
+
+export function TitleLinkButton(
+  props: React.ComponentProps<typeof Link> & { children: React.ReactNode }
+) {
+  return (
+    <Link
+      {...props}
+      className={
+        "bg-sky-50 text-sky-700 text-sm -my-1 font-normal px-2 py-1 transition-all " +
+        "active:opacity-80 " +
+        "hover:bg-sky-200 "
+      }
+    >
+      {props.children}
+    </Link>
+  );
+}
+export function DefaultLink({
+  children,
+  href,
+  external = false,
+}: Readonly<{
+  children: React.ReactNode;
+  href?: string | undefined | null;
+  external?: boolean;
+}>) {
+  if (!href)
+    return <span className="font-normal text-sm opacity-50">no url</span>;
+  return (
+    <Link
+      href={href || "/"}
+      target={external ? "_blank" : "_self"}
+      className="font-normal text-sm text-sky-800 underline flex gap-1 items-start overflow-hidden"
+    >
+      <span className="text-ellipsis overflow-hidden whitespace-nowrap">
+        {children}
+      </span>
+      {external && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
+          <path d="M11 13l9 -9" />
+          <path d="M15 4h5v5" />
+        </svg>
+      )}
+    </Link>
+  );
+}
+
+export type PageNavigatorProps = {
+  onPrev: () => void;
+  onNext: () => void;
+  currPage?: number;
+  totalPages?: number;
+};
+export default function PageNavigator({
+  onPrev,
+  onNext,
+  currPage = 0,
+  totalPages = 0,
+}: PageNavigatorProps) {
+  return (
+    <div className="p-4 bg-sky-100 border-t-4 border-sky-200 -mt-4 gap-2 flex justify-between items-center px-6">
+      <div className="text-xs italic flex-1 text-sky-800">
+        {`page ${Math.min(currPage, totalPages)} of ${totalPages}`}
+      </div>
+      <button
+        className="text-sky-800 disabled:text-sky-200 not-disabled:cursor-pointer"
+        onClick={onPrev}
+        disabled={currPage < 2}
+      >
+        <SvgLeft />
+      </button>
+      <button
+        className="text-sky-800 disabled:text-sky-200 not-disabled:cursor-pointer"
+        onClick={onNext}
+        disabled={currPage >= totalPages}
+      >
+        <SvgRight />
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="flex justify-between items-center p-2 xbg-sky-50 border-t-2 border-black/30 border-dotted">
+      <button
+        className="text-sky-700 disabled:opacity-30 not-disabled:cursor-pointer"
+        onClick={onPrev}
+        disabled={currPage < 2}
+      >
+        <svg
+          width="1em"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M5 12l14 0 M5 12l6 6 M5 12l6 -6" />
+        </svg>
+      </button>
+
+      <div className="text-xs text-black/50">
+        {`Page ${Math.min(currPage, totalPages)} of ${totalPages}`}
+      </div>
+
+      <button
+        className="text-sky-700 disabled:opacity-30 not-disabled:cursor-pointer"
+        onClick={onNext}
+        disabled={currPage >= totalPages}
+      >
+        <svg
+          width="1em"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="-scale-100"
+        >
+          <path d="M5 12l14 0 M5 12l6 6 M5 12l6 -6" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+export function FormInput({
+  title,
+  error,
+  required = false,
+  ...props
+}: {
+  title: string;
+  error?: string | undefined;
+} & React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <div className="flex flex-col gap-1 p-2">
+      <div className="flex justify-between px-2">
+        <label htmlFor="name" className="">
+          {title}
+          {required && "*"}
+        </label>
+        <span className="text-red-500 text-sm">{error}</span>
+      </div>
+
+      <input
+        className="p-2 bg-sky-50 rounded-sm ring-2 ring-sky-200 disabled:saturate-0 disabled:text-neutral-500"
+        type="text"
+        {...props}
+        aria-invalid={!!error}
+        aria-describedby={!!error ? `${props.name}-error` : undefined}
+      />
+    </div>
+  );
+}
+
+export function FormText({
+  title,
+  error,
+  required = false,
+  ...props
+}: {
+  title: string;
+  error: string | undefined;
+} & React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <div className="flex flex-col gap-1 p-2">
+      <div className="flex justify-between px-2">
+        <label htmlFor="name" className="">
+          {title}
+          {required && "*"}
+        </label>
+        <span className="text-red-500 text-sm">{error}</span>
+      </div>
+
+      <textarea
+        className="p-2 bg-sky-50 rounded-sm ring-2 ring-sky-200 disabled:saturate-0 disabled:text-neutral-500"
+        {...props}
+        rows={5}
+        aria-invalid={!!error}
+        aria-describedby={!!error ? `${props.name}-error` : undefined}
+      />
+    </div>
+  );
+}
+
+export function FormButtons({ busy = false, title = "Submit" }) {
+  return (
+    <div className="px-2 flex gap-2 mx-auto w-2/3">
+      <button
+        className="p-2 text-white bg-sky-600 rounded-sm m-2 w-1/2 mx-auto cursor-pointer active:opacity-80"
+        type="reset"
+      >
+        Reset
+      </button>
+      <button
+        disabled={busy}
+        className="p-2 text-white bg-sky-600 rounded-sm m-2 w-1/2 mx-auto disabled:saturate-0 
+        active:opacity-80
+        disabled:opacity-50 not-disabled:cursor-pointer"
+        type="submit"
+      >
+        {busy ? "Wait..." : title}
+      </button>
+    </div>
+  );
+}
