@@ -11,6 +11,7 @@ import sitesRouter from "./routes/sites";
 
 import { createTables } from "./models/db";
 import MESSAGES from "./constants/messages";
+import { errorHandler } from "./middleware/errorHandler";
 
 createTables();
 
@@ -31,6 +32,8 @@ app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/", profileRouter);
 app.use("/api/sites", sitesRouter);
+
+app.use(errorHandler);
 
 app.listen(PORT, HOST, () => {
   console.log(MESSAGES.FEEDBACKER_API_LISTENING_TO_PORT, 4000);

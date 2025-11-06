@@ -28,10 +28,10 @@ export class InvalidToken extends Error {
   }
 }
 
-export class InvalidSiteDataError extends Error {
+export class InvalidDataError extends Error {
   constructor() {
-    super(MESSAGES.INVALID_TOKEN);
-    this.name = "InvalidSiteDataError";
+    super(MESSAGES.INVALID_DATA);
+    this.name = "InvalidDataError";
   }
 }
 
@@ -53,5 +53,12 @@ export class InvalidFeedbackDataError extends Error {
   constructor() {
     super(MESSAGES.FEEDBACK_INVALID_DATA);
     this.name = "InvalidFeedbackDataError";
+  }
+}
+
+export class InvalidSiteDataError extends Error {
+  constructor(msg?: string) {
+    super(msg || MESSAGES.ERROR_OBJECT_ALREADY_EXITS);
+    this.name = "InvalidSiteDataError";
   }
 }
