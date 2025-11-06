@@ -7,6 +7,7 @@ dotenv.config();
 
 import authRouter from "./routes/auth";
 import profileRouter from "./routes/profile";
+import sitesRouter from "./routes/sites";
 
 import { createTables } from "./models/db";
 import MESSAGES from "./constants/messages";
@@ -29,6 +30,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/", profileRouter);
+app.use("/api/sites", sitesRouter);
 
 app.listen(PORT, HOST, () => {
   console.log(MESSAGES.FEEDBACKER_API_LISTENING_TO_PORT, 4000);

@@ -7,7 +7,7 @@ const MESSAGES = Object.freeze({
   SITE_WITH_ID_NOT_FOUND: `Application with ID {ID} not found`,
   INVALID_SITE_ID: `Invalid application ID`,
   INVALID_SITE_DATA: `Invalid site data`,
-
+  ERROR_SITE_NAME_ALREADY_EXITS: `Site name already exists`,
   ERROR_FETCHING_FEEDBACK: `Error fetching feedback`,
   ERROR_CREATING_FEEDBACK: `Error creating feedback`,
   ERROR_DELETING_FEEDBACK: `Error deleting feedback`,
