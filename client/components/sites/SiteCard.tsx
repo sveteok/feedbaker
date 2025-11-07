@@ -1,6 +1,5 @@
 import { Site } from "@/types/sites";
 import { DefaultLink, LinkButton, OwnerLinkButton } from "../Ui";
-import Link from "next/link";
 import { SvgSite } from "../Svg";
 import { formatDate } from "@/lib/utils/dateFormat";
 
@@ -8,10 +7,9 @@ const SiteCard = ({
   site,
   feedbacks_count,
 }: {
-  site: Site; //SiteWithFeedbacks;
+  site: Site;
   feedbacks_count?: number;
 }) => {
-  console.log(feedbacks_count);
   return (
     <div className="flex flex-col gap-1 p-4 px-6  bg-gray-50">
       <div className="font-bold flex gap-2 justify-between items-center">

@@ -13,6 +13,7 @@ export type UserPayload = {
   picture?: string;
   is_admin: boolean;
 };
+
 export interface AuthenticateRequest extends Request {
   user?: UserPayload;
 }

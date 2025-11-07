@@ -301,3 +301,25 @@ export function FormButtons({
     </div>
   );
 }
+
+export function MenuLink({
+  children,
+  href,
+}: Readonly<{
+  children: React.ReactNode;
+  href: string;
+}>) {
+  // const current = usePathname() === href;
+  const current = false;
+  return (
+    <Link
+      href={href}
+      className={
+        "p-4 whitespace-nowrap hover:bg-white/50 " +
+        (current ? "border-b-4 pb-3 border-amber-800 " : "")
+      }
+    >
+      {children}
+    </Link>
+  );
+}

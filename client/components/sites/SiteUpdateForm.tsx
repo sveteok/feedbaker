@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { redirect } from "next/navigation";
 import DeleteButton from "@/components/DeleteButton";
 import {
   FormButtons,
@@ -73,61 +72,6 @@ const SiteUpdateForm = ({ site, onSubmit, disabled }: InputFormProps) => {
         error={errors?.description?.message}
         {...register("description")}
       />
-      {/* <div className="flex flex-row gap-1">
-        <label htmlFor="name">Site Name</label>
-        <input
-          type="text"
-          id="name"
-          placeholder="Add a New Site Name"
-          {...register("name")}
-          disabled={disabled}
-          aria-invalid={errors.name ? "true" : "false"}
-          aria-describedby={errors.name ? "name-error" : undefined}
-        />
-        {errors.name && <p>{errors.name.message}</p>}
-      </div> 
-      <div className="flex flex-row gap-1">
-        <label htmlFor="url">App Url</label>
-        <input
-          type="text"
-          id="url"
-          placeholder="Add an Url"
-          {...register("url")}
-          disabled={disabled}
-          aria-invalid={errors.url ? "true" : "false"}
-          aria-describedby={errors.url ? "url-error" : undefined}
-        />
-        {errors.url && <p>{errors.url.message}</p>}
-      </div>
-
-      <label htmlFor="description">Description</label>
-      <textarea
-        id="description"
-        aria-invalid={errors.description ? "true" : "false"}
-        aria-describedby={errors.description ? "description-error" : undefined}
-        rows={6}
-        {...register("description")}
-        placeholder="Write a description ..."
-      ></textarea>
-      {errors.description && (
-        <p id="description-error" role="alert" style={{ color: "red" }}>
-          {errors.description.message}
-        </p>
-      )}
-        
-      <input type="hidden" id="site_id" {...register("site_id")} />
-      <input type="hidden" id="owner_id" {...register("owner_id")} />
-      <button
-        type="button"
-        onClick={() => redirect(`/sites/${site.site_id}`)}
-        disabled={disabled}
-      >
-        Cancel
-      </button>
-      <button className="" type="submit" disabled={disabled}>
-        {disabled ? "Wait.." : "Save"}
-      </button>
-      */}
       <FormButtons
         busy={disabled}
         title={"Save"}

@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 
 import SitesMainPage from "@/components/sites/SitesMainPage";
-import { DEFAULT_QUERY } from "@/features/constants";
+import { DEFAULT_QUERY } from "@/config/constants";
 import { prefetchSitesQuery } from "@/features/sites/prefetchQuery";
 
 export default async function SitesPage() {

@@ -1,17 +1,11 @@
 "use client";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
 import SiteCard from "@/components/sites/SiteCard";
-
-import { useMemo, useCallback } from "react";
 import { SearchUiQueryProps } from "@/validations/sites";
-
 import PageNavigator from "../Ui";
-import { queryKeys } from "@/lib/react-query/queryKeys";
-import { PaginatedSites, SiteWithFeedback } from "@/types/sites";
-import { getSites } from "@/lib/fetchers/sites";
-import { SITE_PAGE_SIZE } from "@/features/constants";
+import { SITE_PAGE_SIZE } from "@/config/constants";
 import { useSitesQuery } from "@/features/sites/useSitesQuery";
+import { SiteWithFeedback } from "@/types/sites";
 
 export default function SiteList({
   query,

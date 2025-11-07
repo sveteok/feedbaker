@@ -9,7 +9,7 @@ import {
 } from "@/validations/sites";
 import { absoluteURL } from "@/config/env";
 import { PaginatedSites, Site } from "@/types/sites";
-import { SITE_PAGE_SIZE } from "@/features/constants";
+import { SITE_PAGE_SIZE } from "@/config/constants";
 import { getAxiosErrorMessage } from "@/lib/utils/errors";
 
 const baseURL = `${absoluteURL}/api/sites`;

@@ -1,8 +1,6 @@
 import { z } from "zod";
 
 export const baseUserSchema = z.object({
-  provider: z.string().min(1),
-  provider_id: z.string().min(1),
   name: z.string().min(1),
   email: z.email(),
   picture: z.url().optional(),

@@ -2,7 +2,6 @@ import express from "express";
 import { z } from "zod";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
 
 import { UserPayload } from "../types/users";
 import { baseUserSchema } from "../validations/users";
@@ -55,17 +54,17 @@ router.post("/google", async (req: express.Request, res: express.Response) => {
     const validatedUser = parsed.data;
     const user = await findOrCreateUser(validatedUser);
 
-    const token = jwt.sign(
-      {
-        user_id: user.user_id,
-        email: user.email,
-        name: user.name,
-        is_admin: user.is_admin,
-        picture: user.picture,
-      } as UserPayload,
-      GOOGLE_CLIENT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const userPayload = {
+      user_id: user.user_id,
+      email: user.email,
+      name: user.name,
+      is_admin: user.is_admin,
+      picture: user.picture,
+    } as UserPayload;
+
+    const token = jwt.sign(userPayload, GOOGLE_CLIENT_SECRET, {
+      expiresIn: "1h",
+    });
 
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
@@ -74,22 +73,11 @@ router.post("/google", async (req: express.Request, res: express.Response) => {
       maxAge: 60 * 60 * 1000,
     });
 
-    res.status(200).json({ message: "Authenticated", user });
+    res.status(200).json({ message: "Authenticated", userPayload });
   } catch (err) {
     console.error(err);
     res.status(401).json({ error: "Invalid Google token" });
   }
-});
-
-router.get("/csrf", (_req, res: express.Response) => {
-  const csrfToken = crypto.randomBytes(32).toString("hex");
-
-  res.cookie("XSRF-TOKEN", csrfToken, {
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
-  });
-
-  res.json({ csrfToken });
 });
 
 export default router;

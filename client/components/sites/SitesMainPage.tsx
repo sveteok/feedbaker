@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback, useState } from "react";
+import { useMemo } from "react";
 
 import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
@@ -8,15 +8,9 @@ import { Suspense } from "react";
 import Search from "@/components/Search";
 import SiteList from "@/components/sites/SiteList";
 
-import {
-  DefaultLink,
-  OwnerLinkButton,
-  Section,
-  Title,
-  TitleLinkButton,
-} from "../Ui";
+import { Section, Title, TitleLinkButton } from "../Ui";
 import { useRouter, useSearchParams } from "next/navigation";
-import { DEFAULT_QUERY } from "@/features/constants";
+import { DEFAULT_QUERY } from "@/config/constants";
 
 export default function SitesMainPage() {
   const router = useRouter();
@@ -65,10 +59,8 @@ export default function SitesMainPage() {
       <Title>
         Sites
         <TitleLinkButton href={`/sites/new`}>register new site</TitleLinkButton>
-        {/* <DefaultLink href={`/sites/new`}>register new site</DefaultLink> */}
       </Title>
 
-      {/* <Search searchQuery={text} setSearchQuery={setText} /> */}
       <Search
         searchQuery={search}
         setSearchQuery={handleSearch}

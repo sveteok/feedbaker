@@ -6,7 +6,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
-import { getUser } from "@/lib/auth";
+import { getUser } from "@/lib/providers/auth";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 import { siteGetByIdSchema } from "@/validations/sites";
 import { Site } from "@/types/sites";

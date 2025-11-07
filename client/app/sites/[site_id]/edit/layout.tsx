@@ -1,4 +1,4 @@
-import { getUser } from "@/lib/auth";
+import { getUser } from "@/lib/providers/auth";
 import { redirect } from "next/navigation";
 
 export default async function EditSiteLayout({

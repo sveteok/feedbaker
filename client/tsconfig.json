@@ -18,8 +18,15 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@components/*": ["components/*"],
+      "@config/*": ["config/*"],
+      "@features/*": ["features/*"],
+      "@lib/*": ["lib/*"],
+      "@types/*": ["types/*"],
+      "@validations/*": ["validations/*"]
     }
   },
   "include": [

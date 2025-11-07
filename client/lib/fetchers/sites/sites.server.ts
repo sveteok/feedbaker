@@ -14,7 +14,7 @@ import {
 import { getAxiosErrorMessage } from "@/lib/utils/errors";
 
 import { absoluteURL } from "@/config/env";
-import { SITE_PAGE_SIZE } from "@/features/constants";
+import { SITE_PAGE_SIZE } from "@/config/constants";
 
 const baseURL = `${absoluteURL}/api/sites`;
 
