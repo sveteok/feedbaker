@@ -8,6 +8,7 @@ type SearchProps = {
   isPending?: boolean;
   placeholder?: string;
   disabled?: boolean;
+  statusText?: string;
 };
 
 const Search = ({
@@ -16,6 +17,7 @@ const Search = ({
   isPending = false,
   placeholder = "Filter...",
   disabled = false,
+  statusText = "",
 }: SearchProps) => {
   const [text, setText] = useState("");
 
@@ -60,7 +62,7 @@ const Search = ({
         {isPending && <span className="text-sm text-gray-500">Updating…</span>}
       </div>
       <div className="text-xs text-right pt-2 px-2 italic text-sky-800">
-        items found: 12
+        {statusText}
       </div>
     </div>
   );

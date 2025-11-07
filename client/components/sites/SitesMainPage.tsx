@@ -11,6 +11,9 @@ import SiteList from "@/components/sites/SiteList";
 import { Section, Title, TitleLinkButton } from "../Ui";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DEFAULT_QUERY } from "@/config/constants";
+import { useSitesQuery } from "@/features/sites/useSitesQuery";
+import PageNavigator from "../Ui";
+import { SITE_PAGE_SIZE } from "@/config/constants";
 
 export default function SitesMainPage() {
   const router = useRouter();
@@ -54,19 +57,20 @@ export default function SitesMainPage() {
     updateParams({ search: value, page: 0 });
   };
 
+  const { data: sites } = useSitesQuery(query);
+
   return (
     <Section>
       <Title>
         Sites
         <TitleLinkButton href={`/sites/new`}>register new site</TitleLinkButton>
       </Title>
-
       <Search
         searchQuery={search}
         setSearchQuery={handleSearch}
         placeholder="search in name or description..."
+        statusText={`sites found: ${sites.totalCount}`}
       />
-
       <ErrorBoundary
         fallbackRender={({ error, resetErrorBoundary }) => (
           <div className="alert alert-danger m-3">
@@ -79,7 +83,13 @@ export default function SitesMainPage() {
         )}
       >
         <Suspense fallback={<div className="text-center mt-4">Loading...</div>}>
-          <SiteList query={query} onNext={handleNext} onPrev={handlePrev} />
+          <SiteList sites={sites} />
+          <PageNavigator
+            onNext={handleNext}
+            onPrev={handlePrev}
+            currPage={Number(page || 0)}
+            totalPages={Math.ceil(sites.totalCount / SITE_PAGE_SIZE)}
+          />
         </Suspense>
       </ErrorBoundary>
     </Section>
