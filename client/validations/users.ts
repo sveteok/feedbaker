@@ -11,6 +11,11 @@ export const userSchema = baseUserSchema.extend({
   user_id: z.uuid(),
 });
 
+export const authenticatedUserSchema = z.object({
+  message: z.string(),
+  userPayload: userSchema,
+});
+
 export type BaseUser = z.infer<typeof baseUserSchema>;
 export type GoogleUser = BaseUser;
 export type User = z.infer<typeof userSchema>;

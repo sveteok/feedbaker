@@ -12,8 +12,8 @@ const router = express.Router();
 router.post("/google", async (req: express.Request, res: express.Response) => {
   try {
     const COOKIE_NAME = process.env.COOKIE_NAME!;
-    const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET!;
     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    const JWT_SECRET = process.env.JWT_SECRET!;
 
     const { credential } = req.body;
 
@@ -62,7 +62,7 @@ router.post("/google", async (req: express.Request, res: express.Response) => {
       picture: user.picture,
     } as UserPayload;
 
-    const token = jwt.sign(userPayload, GOOGLE_CLIENT_SECRET, {
+    const token = jwt.sign(userPayload, JWT_SECRET, {
       expiresIn: "1h",
     });
 

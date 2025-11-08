@@ -8,7 +8,7 @@ import app from "../testApp";
 
 const COOKIE_NAME = "feedbaker_session";
 const SECRET = "testsecret";
-process.env.GOOGLE_CLIENT_SECRET = SECRET;
+process.env.JWT_SECRET = SECRET;
 process.env.COOKIE_NAME = COOKIE_NAME;
 process.env.ADMIN_USER = "admin@example.com";
 process.env.GOOGLE_CLIENT_ID = "fake-client-id";
