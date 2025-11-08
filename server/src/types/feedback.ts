@@ -9,6 +9,12 @@ export type Feedback = {
   comment?: string;
 };
 
+export type FeedbackOwnerDetail = {
+  feedback_id: string;
+  site_id: string;
+  owner_id: string;
+};
+
 export interface PaginatedFeedback {
   feedback: Feedback[];
   totalCount: number;

@@ -5,20 +5,16 @@ import {
   FeedbackSearchQueryProps,
   FeedbackDeleteFormData,
 } from "../validations/feedback";
-import { Feedback, PaginatedFeedback } from "../types/feedback";
+import {
+  Feedback,
+  FeedbackOwnerDetail,
+  PaginatedFeedback,
+} from "../types/feedback";
 
 export const getFeedbackPaginated = async (
   data: FeedbackSearchQueryProps
 ): Promise<PaginatedFeedback> => {
-  const {
-    site_id,
-    is_admin,
-    search: search = "",
-    limit = 10,
-    offset = 0,
-    owner_id,
-  } = data;
-  console.log(data);
+  const { site_id, is_admin, search, limit = 10, offset = 0, owner_id } = data;
 
   const qb = new QueryBuilder();
   qb.query = `SELECT 
@@ -48,7 +44,9 @@ export const getFeedbackPaginated = async (
     conditions.push(`s.owner_id = ${qb.addParam(owner_id)}`);
   }
 
-  conditions.push(`f.body ILIKE '%' || ${qb.addParam(search)}::text || '%'`);
+  conditions.push(
+    `f.body ILIKE '%' || ${qb.addParam(search || "")}::text || '%'`
+  );
 
   if (conditions.length > 0) {
     qb.query += ` WHERE ${conditions.join(" AND ")} `;
@@ -93,7 +91,7 @@ export const findFeedbackById = async (
 
 export const findFeedbackOwnerId = async (
   feedback_id: string
-): Promise<Feedback | null> => {
+): Promise<FeedbackOwnerDetail | null> => {
   const query = `SELECT 
                   sites.owner_id, feedback.feedback_id, feedback.site_id  
                   FROM feedback 
@@ -102,7 +100,9 @@ export const findFeedbackOwnerId = async (
   const parameters = [feedback_id];
   const result = await executeQuery(query, parameters);
 
-  return result.rows.length > 0 ? (result.rows[0] as Feedback) : null;
+  return result.rows.length > 0
+    ? (result.rows[0] as FeedbackOwnerDetail)
+    : null;
 };
 
 export const createFeedback = async ({

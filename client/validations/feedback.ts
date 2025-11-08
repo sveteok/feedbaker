@@ -9,6 +9,17 @@ export const feedbackSearchQueryProps = z.object({
 
 export type FeedbackSearchQueryProps = z.infer<typeof feedbackSearchQueryProps>;
 
+export type FeedbackSearchUiQueryProps = SearchUiQueryProps & {
+  site_id: string;
+};
+
+export const searchUiQueryProps = z.object({
+  page: z.preprocess(Number, z.number().int().min(0)).optional(),
+  search: z.string().optional(),
+});
+
+export type SearchUiQueryProps = z.infer<typeof searchUiQueryProps>;
+
 // schemas
 export const baseFeedbackSchema = z.object({
   feedback_id: z.uuid(),
@@ -52,7 +63,7 @@ export const feedbackUpdateSchema = z.object({
 export type FeedbackAddFormData = z.infer<typeof feedbackCreateSchema>;
 export type FeedbackUpdateFormData = z.infer<typeof feedbackUpdateSchema>;
 
-export const paginatedFeedbacksSchema = z.object({
-  feedbacks: z.array(baseFeedbackSchema),
+export const paginatedFeedbackSchema = z.object({
+  feedback: z.array(baseFeedbackSchema),
   totalCount: z.number(),
 });

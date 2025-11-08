@@ -8,6 +8,7 @@ dotenv.config();
 import authRouter from "./routes/auth";
 import profileRouter from "./routes/profile";
 import sitesRouter from "./routes/sites";
+import feedbackRouter from "./routes/feedback";
 
 import { createTables } from "./models/db";
 import MESSAGES from "./constants/messages";
@@ -32,6 +33,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/", profileRouter);
 app.use("/api/sites", sitesRouter);
+app.use("/api/feedback", feedbackRouter);
 
 app.use(errorHandler);
 

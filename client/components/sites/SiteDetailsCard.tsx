@@ -13,7 +13,7 @@ const SiteDetailsCard = async ({ site }: { site: Site }) => {
       </Title>
       <div className="flex flex-col gap-1 p-2">
         <div className="font-bold flex justify-between items-center">
-          !!!{site.name}
+          {site.name}
           <div className="text-sm font-normal">
             {formatDate(site.created_on)}
           </div>

@@ -3,6 +3,7 @@ import "./globals.css";
 import { getUser } from "@/lib/providers/auth";
 import NavBar from "@/components/NavBar";
 import { AppProviders } from "@/lib/providers/AppProviders";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default async function RootLayout({
   children,
@@ -22,6 +23,7 @@ export default async function RootLayout({
             <br />
             2025
           </footer>
+          <ReactQueryDevtools initialIsOpen={false} />
         </AppProviders>
       </body>
     </html>

@@ -1,12 +1,24 @@
 import express from "express";
 import { DatabaseError } from "pg";
 
+import { authenticateOwnerOrAdmin, optionalAuth } from "../middleware/auth";
+import { AuthenticateRequest } from "../types/users";
+import { asyncHandler } from "../utils/asyncHandler";
+
 import MESSAGES from "../constants/messages";
+
 import {
   SiteNotFoundError,
   ForbiddenError,
   InvalidSiteDataError,
 } from "../constants/errors";
+
+import {
+  siteUpdateInputSchema,
+  siteCreateSchema,
+  searchQueryProps,
+  siteGetByIdSchema,
+} from "../validations/sites";
 
 import {
   getSitesPaginated,
@@ -16,28 +28,16 @@ import {
   deleteSite,
 } from "../models/sites";
 
-import { authenticateOwnerOrAdmin, optionalAuth } from "../middleware/auth";
-
-import {
-  siteUpdateInputSchema,
-  siteCreateSchema,
-  searchQueryProps,
-  siteGetByIdSchema,
-} from "../validations/sites";
-
-import { AuthenticateRequest } from "../types/users";
-import { asyncHandler } from "../utils/asyncHandler";
-
 const router = express.Router();
 
 router.get(
   "/",
   optionalAuth,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
-    console.log("Is Admin: ", req.user?.is_admin === true);
-    if (!req.user) {
-      console.log("SITES: NOO USER");
-    }
+    // console.log("Is Admin: ", req.user?.is_admin === true);
+    // if (!req.user) {
+    //   console.log("SITES: NOO USER");
+    // }
     //await new Promise((resolve) => setTimeout(resolve, 5000));
 
     const parsed = searchQueryProps.parse({

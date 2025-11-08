@@ -61,7 +61,10 @@ const Search = ({
         )}
         {isPending && <span className="text-sm text-gray-500">Updating…</span>}
       </div>
-      <div className="text-xs text-right pt-2 px-2 italic text-sky-800">
+      <div
+        className="text-xs text-right pt-2 px-2 italic text-sky-800"
+        suppressHydrationWarning
+      >
         {statusText}
       </div>
     </div>

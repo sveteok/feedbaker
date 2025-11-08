@@ -8,8 +8,7 @@ export type Feedback = {
   updated_on: Date;
   comment?: string | null;
 };
-
-export interface PaginatedFeedbacks {
-  feedbacks: Feedback[];
+export interface PaginatedFeedback {
+  feedback: Feedback[];
   totalCount: number;
 }

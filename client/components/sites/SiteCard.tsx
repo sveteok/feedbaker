@@ -5,10 +5,10 @@ import { formatDate } from "@/lib/utils/dateFormat";
 
 const SiteCard = ({
   site,
-  feedbacks_count,
+  feedback_count,
 }: {
   site: Site;
-  feedbacks_count?: number;
+  feedback_count?: number;
 }) => {
   return (
     <div className="flex flex-col gap-1 p-4 px-6  bg-gray-50">
@@ -17,21 +17,12 @@ const SiteCard = ({
           <SvgSite />
           {site.name}
         </div>
-
-        {/*
-        {feedbacks_count !== undefined && (
-          <DefaultLink href={`/sites/${site.site_id}/feedbacks`}>
-            {feedbacks_count === 0 && "feedbacks"}
-            {feedbacks_count === 1 && "1 feedback"}
-            {feedbacks_count > 1 && `${feedbacks_count} feedbacks`}
-          </DefaultLink>
-        )} */}
-        {feedbacks_count !== undefined && (
+        {feedback_count !== undefined && (
           <div className="-mr-2 flex gap-2">
             <OwnerLinkButton href={`/sites/${site.site_id}/edit`}>
               edit site
             </OwnerLinkButton>
-            <LinkButton href={`/sites/${site.site_id}/feedbacks`}>
+            <LinkButton href={`/sites/${site.site_id}/feedback`}>
               feedback
             </LinkButton>
           </div>
@@ -51,9 +42,9 @@ const SiteCard = ({
         <div className="text-smx italic">{site.description}</div>
       )}
 
-      {feedbacks_count !== undefined && (
+      {feedback_count !== undefined && (
         <div className="text-xs text-right italic opacity-50">
-          feedback: {feedbacks_count}
+          feedback: {feedback_count}
         </div>
       )}
     </div>

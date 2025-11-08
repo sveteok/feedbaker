@@ -1,3 +1,7 @@
+function normalizeFilters(filters: Record<string, unknown>): string {
+  return JSON.stringify(filters, Object.keys(filters).sort());
+}
+
 export const queryKeys = {
   sites: {
     all: ["sites"] as const,
@@ -7,7 +11,8 @@ export const queryKeys = {
         page?: number;
         search?: string;
         site_id?: string;
-      }) => [...queryKeys.sites.all, "list", JSON.stringify(filters)] as const,
+      }) =>
+        [...queryKeys.sites.all, "list", normalizeFilters(filters)] as const,
     },
     detail: (id: string) => [...queryKeys.sites.all, "byId", id] as const,
   },
@@ -21,7 +26,7 @@ export const queryKeys = {
         search?: string;
         site_id?: string;
       }) =>
-        [...queryKeys.feedback.all, "list", JSON.stringify(filters)] as const,
+        [...queryKeys.feedback.all, "list", normalizeFilters(filters)] as const,
     },
     detail: (id: string) => [...queryKeys.feedback.all, "byId", id] as const,
   },

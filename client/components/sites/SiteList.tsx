@@ -9,7 +9,7 @@ export default function SiteList({ sites }: { sites: PaginatedSites }) {
           <SiteCard
             key={site.site_id}
             site={site}
-            feedbacks_count={site.feedback_count}
+            feedback_count={site.feedback_count}
           />
         ))}
         {sites.totalCount === 0 && (

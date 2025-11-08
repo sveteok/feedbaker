@@ -22,7 +22,7 @@ export const getSites = async (
 
     const searchRestQuery: SearchQueryProps = {
       limit: SITE_PAGE_SIZE,
-      offset: (page - 1) * SITE_PAGE_SIZE,
+      offset: Math.max((page - 1) * SITE_PAGE_SIZE, 0),
       searchText: search,
     };
 
@@ -71,11 +71,12 @@ export const editSite = async (site: Site): Promise<Site | null> => {
   try {
     const response: AxiosResponse = await axios.put(
       `${baseURL}/${site.site_id}`,
-      site
+      site,
+      { withCredentials: true }
     );
 
     const result = siteSchema.safeParse(response.data);
-    console.log(result);
+
     if (!result.success) {
       throw new Error("Edit Site: Invalid response data");
     }
@@ -89,7 +90,9 @@ export const editSite = async (site: Site): Promise<Site | null> => {
 
 export const deleteSite = async (id: string): Promise<Site | null> => {
   try {
-    const response: AxiosResponse = await axios.delete(`${baseURL}/${id}`);
+    const response: AxiosResponse = await axios.delete(`${baseURL}/${id}`, {
+      withCredentials: true,
+    });
 
     const result = siteSchema.safeParse(response.data);
 

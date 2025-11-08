@@ -54,9 +54,16 @@ export const getSitesServer = async (
   }
 };
 
+const axiosServer = axios.create({
+  baseURL: `${absoluteURL}/api/sites`,
+  headers: {
+    "Cache-Control": "no-cache, no-store, must-revalidate",
+  },
+});
+
 export const getSiteServer = async (id: string): Promise<Site | null> => {
   try {
-    const response = await axios.get(`${baseURL}/${id}`, {
+    const response = await axiosServer.get(`${baseURL}/${id}`, {
       headers: { "Cache-Control": "no-cache, no-store, must-revalidate" },
     });
 
@@ -70,7 +77,7 @@ export const getSiteServer = async (id: string): Promise<Site | null> => {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       return null;
     }
-    console.error("getSite error:", error);
+    console.error("getSites error:", error);
     throw new Error(getAxiosErrorMessage(error));
   }
 };
