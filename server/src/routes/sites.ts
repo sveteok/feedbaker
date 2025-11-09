@@ -2,6 +2,7 @@ import express from "express";
 import { DatabaseError } from "pg";
 
 import { authenticateOwnerOrAdmin, optionalAuth } from "../middleware/auth";
+import { publicCors, restrictedCors } from "../middleware/cors";
 import { AuthenticateRequest } from "../types/users";
 import { asyncHandler } from "../utils/asyncHandler";
 
@@ -32,6 +33,7 @@ const router = express.Router();
 
 router.get(
   "/",
+  publicCors,
   optionalAuth,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     // console.log("Is Admin: ", req.user?.is_admin === true);
@@ -54,6 +56,7 @@ router.get(
 
 router.get(
   "/:site_id",
+  publicCors,
   asyncHandler(async (req: express.Request, res: express.Response) => {
     const parsed = siteGetByIdSchema.parse(req.params);
 
@@ -68,6 +71,7 @@ router.get(
 
 router.post(
   "/",
+  restrictedCors,
   authenticateOwnerOrAdmin,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const owner_id = req.user!.user_id;
@@ -88,6 +92,7 @@ router.post(
 
 router.put(
   "/:site_id",
+  restrictedCors,
   authenticateOwnerOrAdmin,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = siteUpdateInputSchema.parse({
@@ -113,6 +118,7 @@ router.put(
 
 router.delete(
   "/:site_id",
+  restrictedCors,
   authenticateOwnerOrAdmin,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = siteGetByIdSchema.parse(req.params);

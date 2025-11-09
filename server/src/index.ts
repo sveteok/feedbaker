@@ -1,5 +1,5 @@
 import express from "express";
-import cors from "cors";
+import { restrictedCors } from "./middleware/cors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
@@ -20,18 +20,13 @@ const PORT = Number(process.env.PORT || 4000);
 const HOST = process.env.HOST || "localhost";
 
 const app = express();
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-  })
-);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/api/auth", authRouter);
-app.use("/api/", profileRouter);
+app.use("/api/auth", restrictedCors, authRouter);
+app.use("/api/", restrictedCors, profileRouter);
 app.use("/api/sites", sitesRouter);
 app.use("/api/feedback", feedbackRouter);
 

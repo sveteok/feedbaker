@@ -1,6 +1,7 @@
 import express from "express";
 
 import { authenticateOwnerOrAdmin, optionalAuth } from "../middleware/auth";
+import { publicCors, restrictedCors } from "../middleware/cors";
 import { AuthenticateRequest } from "../types/users";
 import { asyncHandler } from "../utils/asyncHandler";
 import { FeedbackNotFoundError, ForbiddenError } from "../constants/errors";
@@ -25,6 +26,7 @@ const router = express.Router();
 
 router.get(
   "/",
+  publicCors,
   optionalAuth,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = feedbackSearchQueryProps.parse({
@@ -42,6 +44,7 @@ router.get(
 
 router.get(
   "/:feedback_id",
+  publicCors,
   asyncHandler(async (req: express.Request, res: express.Response) => {
     const parsed = feedbackGetByIdSchema.parse(req.params);
 
@@ -54,6 +57,7 @@ router.get(
 
 router.post(
   "/",
+  publicCors,
   asyncHandler(async (req: express.Request, res: express.Response) => {
     const result = feedbackCreateSchema.parse(req.body);
     const createdFeedback = await createFeedback(result);
@@ -63,6 +67,7 @@ router.post(
 
 router.put(
   "/:feedback_id",
+  restrictedCors,
   authenticateOwnerOrAdmin,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const { feedback_id } = req.params;
@@ -90,6 +95,7 @@ router.put(
 
 router.delete(
   "/:feedback_id",
+  restrictedCors,
   authenticateOwnerOrAdmin,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = feedbackGetByIdSchema.parse(req.params);
