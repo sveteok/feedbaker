@@ -39,9 +39,11 @@ export default async function SitePage({
         <>
           <Title>
             {site.name}
-            <TitleLinkButton href={`/sites/${site.site_id}/edit`}>
-              edit details
-            </TitleLinkButton>
+            {user && (user.is_admin || user.user_id === site.owner_id) && (
+              <TitleLinkButton href={`/sites/${site.site_id}/edit`}>
+                edit details
+              </TitleLinkButton>
+            )}
           </Title>
           <SiteCard site={site} user={user} />
         </>

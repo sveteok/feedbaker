@@ -14,6 +14,7 @@ import FeedbackMainPage from "@/components/feedback/FeedbackMainPage";
 import SiteCard from "@/components/sites/SiteCard";
 import { Section, Title, TitleLinkButton } from "@/components/Ui";
 import { prefetchFeedbackQuery } from "@/features/feedback/prefetchQuery";
+import { getUser } from "@/lib/providers/auth";
 
 export default async function SiteDetailsPage({
   params,
@@ -28,6 +29,7 @@ export default async function SiteDetailsPage({
   const result = siteGetByIdSchema.safeParse({ site_id });
   if (!result.success) notFound();
 
+  const user = await getUser();
   const queryClient = new QueryClient();
 
   const page = Number(resolvedSearchParams?.page ?? 1);
@@ -46,15 +48,19 @@ export default async function SiteDetailsPage({
     <HydrationBoundary state={dehydrate(queryClient)}>
       {site && (
         <Section>
-          <Title>
-            Site Details
-            <TitleLinkButton href={`/sites/${site.site_id}/edit`}>
-              edit details
-            </TitleLinkButton>
-          </Title>
+          {user && (user.is_admin || user.user_id === site.owner_id) && (
+            <Title>
+              Site Details
+              <TitleLinkButton href={`/sites/${site.site_id}/edit`}>
+                edit details
+              </TitleLinkButton>
+            </Title>
+          )}
+
           <div className="flex flex-col border-y-4 gap-1 bg-gray-200  border-sky-200">
-            <SiteCard site={site} />
+            <SiteCard site={site} user={user} />
           </div>
+
           <FeedbackMainPage
             site_id={site.site_id}
             initialPage={page}
