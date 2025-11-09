@@ -8,11 +8,12 @@ import {
 
 import FeedbackAddFormController from "@/components/feedback/FeedbackAddFormController";
 import SiteCard from "@/components/sites/SiteCard";
-import { Section } from "@/components/Ui";
+import { Section, SectionContent } from "@/components/Ui";
 import { siteGetByIdSchema } from "@/validations/sites";
 import { prefetchSiteQuery } from "@/features/sites/prefetchQuery";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 import { Site } from "@/types/sites";
+import { getUser } from "@/lib/providers/auth";
 
 export default async function AddNewFeedbackPage({
   params,
@@ -32,12 +33,15 @@ export default async function AddNewFeedbackPage({
   );
 
   if (!site) notFound();
+  const user = await getUser();
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       {site && (
         <Section>
-          <SiteCard site={site} />
+          <SectionContent>
+            <SiteCard site={site} user={user} />
+          </SectionContent>
           <FeedbackAddFormController site={site} />
         </Section>
       )}

@@ -1,6 +1,7 @@
 import FeedbackCard from "@/components/feedback/FeedbackCard";
 import { Feedback, PaginatedFeedback } from "@/types/feedback";
 import { UserPayload } from "@/types/users";
+import { TableHolder } from "../Ui";
 
 export default function FeedbackList({
   feedback,
@@ -11,7 +12,7 @@ export default function FeedbackList({
 }) {
   return (
     <>
-      <div className="flex flex-col gap-2 bg-emerald-50xx">
+      <TableHolder>
         {feedback.feedback.map((fb: Feedback) => (
           <FeedbackCard key={fb.feedback_id} feedback={fb} user={user} />
         ))}
@@ -20,7 +21,7 @@ export default function FeedbackList({
             no feedback records found
           </div>
         )}
-      </div>
+      </TableHolder>
     </>
   );
 }

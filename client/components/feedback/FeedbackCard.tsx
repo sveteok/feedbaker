@@ -10,6 +10,7 @@ import FeedbackUpdateCommentForm from "./FeedbackUpdateCommentForm";
 import Modal from "../Modal";
 import DeleteContent from "../DeleteContent";
 import { UserPayload } from "@/types/users";
+import { OwnerButton, OwnerLinkButton } from "../Ui";
 
 const FeedbackCard = ({
   feedback,
@@ -40,75 +41,88 @@ const FeedbackCard = ({
     (user.user_id === feedback.site_owner_id || user.is_admin);
 
   return (
-    <div className="flex flex-col gap-1 p-4 px-6 crounded-md xxodd: bg-gray-50">
-      <div className="flex gap-2 justify-between items-center -mr-2">
-        <b className="flex-1 flex gap-1">
-          <SvgAuthor /> {feedback.author}
-        </b>
-        {canFeedbackEdit && (
-          <button onClick={handleToggleStatusFeedback}>
-            {feedback.public ? "unpublish" : "pubish"}
-          </button>
-        )}
-        {canFeedbackEdit && (
-          <>
-            <button
-              className="border-red-600 border-2 w-50"
-              onClick={() => setShowModal(true)}
-            >
-              Delete Feedback
-            </button>
-            {showModal && (
-              <Modal onClose={() => setShowModal(false)}>
-                <DeleteContent
-                  onConfirm={() =>
-                    removeFeedbackMutation.mutate(feedback.feedback_id)
-                  }
-                  confirmText={`${feedback.feedback_id}`}
-                />
-              </Modal>
-            )}
-          </>
-        )}
-        {canFeedbackEdit && (
-          <button
-            className="border-red-600 border-2 w-50"
-            onClick={() => setOpenUpdateForm((prev) => !prev)}
-          >
-            {openUpdateForm
-              ? `Cancel`
-              : feedback.comment
-              ? `Update Comment`
-              : `Add Comment`}
-          </button>
-        )}
-      </div>
-      <div className="text-xs italic xfont-bold opacity-50 ">
-        posted on {formatDate(feedback.created_on)}
-      </div>
-      <div className="flex gap-2 items-start ">
-        <div className="italic flex-1 whitespace-precc whitespace-pre-wrap">
-          {feedback.body}
+    <>
+      <div
+        className={
+          "flex flex-col gap-1 p-4 px-6 bg-gray-50 " +
+          //(!feedback.public && "xtext-gray-400 xbg-gray-100 opacity-50 ") +
+          (openUpdateForm && " bg-sky-50 ")
+        }
+      >
+        <div className="flex gap-2 justify-between items-center -mr-2">
+          <b className="flex-1 flex gap-1">
+            <SvgAuthor /> {feedback.author}
+          </b>
+          {canFeedbackEdit && (
+            <>
+              {!openUpdateForm && (
+                <>
+                  <OwnerButton
+                    className={
+                      (!feedback.public &&
+                        "text-amber-600 bg-white ring-1 ring-amber-600") ||
+                      ""
+                    }
+                    onClick={handleToggleStatusFeedback}
+                  >
+                    {feedback.public ? "unpublish" : "pubish"}
+                  </OwnerButton>
+                  <OwnerButton onClick={() => setShowModal(true)}>
+                    delete
+                  </OwnerButton>
+                  <OwnerButton
+                    onClick={() => setOpenUpdateForm((prev) => !prev)}
+                  >
+                    reply
+                  </OwnerButton>
+                </>
+              )}
+              {showModal && (
+                <Modal onClose={() => setShowModal(false)}>
+                  <DeleteContent
+                    onConfirm={() =>
+                      removeFeedbackMutation.mutate(feedback.feedback_id)
+                    }
+                    confirmText={`${feedback.feedback_id}`}
+                    onCancel={() => setShowModal(false)}
+                  />
+                </Modal>
+              )}
+            </>
+          )}
         </div>
-      </div>
-      {!openUpdateForm ? (
-        <div className="text-smx flex gap-2 items-start text-sky-700 italic">
-          {feedback.comment}
+        <div className="text-xs italic xfont-bold opacity-50 ">
+          posted on {formatDate(feedback.created_on)}
         </div>
-      ) : (
-        <FeedbackUpdateCommentForm
-          feedback={feedback}
-          onSubmit={handleUpdateFeedback}
-          disabled={
-            updateFeedbackMutation.isPending || removeFeedbackMutation.isPending
-          }
-        />
-      )}
+        <div className="flex gap-2 items-start ">
+          <div className="italic flex-1 whitespace-precc whitespace-pre-wrap">
+            {feedback.body}
+          </div>
+        </div>
+        {feedback.comment && (
+          <div className="text-xs italic xtext-amber-700 xfont-bold  opacity-50 xpl-4">
+            replied on {formatDate(feedback.updated_on)}
+          </div>
+        )}
 
-      <div className="text-xs italic xtext-amber-700 xfont-bold  opacity-50 xpl-4">
-        replied on {formatDate(feedback.updated_on)}
+        {!openUpdateForm && feedback.comment && (
+          <div className="text-smx flex items-start text-sky-700 italic">
+            {feedback.comment}
+          </div>
+        )}
+        {openUpdateForm && (
+          <FeedbackUpdateCommentForm
+            feedback={feedback}
+            onSubmit={handleUpdateFeedback}
+            cancel={() => setOpenUpdateForm((prev) => !prev)}
+            disabled={
+              updateFeedbackMutation.isPending ||
+              removeFeedbackMutation.isPending
+            }
+          />
+        )}
       </div>
-    </div>
+    </>
   );
 };
 

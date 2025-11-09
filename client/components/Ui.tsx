@@ -1,5 +1,41 @@
+"use client";
 import Link from "next/link";
 import { SvgLeft, SvgRight } from "./Svg";
+import { usePathname } from "next/navigation";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export function SectionContent({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={"bg-sky-200 flex flex-col gap-1 p-1 " + className}>
+      {children}
+    </div>
+  );
+}
+
+export function TableHolder({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={"flex flex-col gap-1 bg-gray-200 " + className}>
+      {children}
+    </div>
+  );
+}
 
 export function Section({
   children,
@@ -57,6 +93,26 @@ export function LinkButton(
     </Link>
   );
 }
+export function OwnerButton(
+  props: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    children: React.ReactNode;
+  }
+) {
+  return (
+    <button
+      {...props}
+      className={cn(
+        `bg-amber-600 text-white text-sm -my-1 font-normal px-2 py-1 transition-all 
+        active:brightness-125 cursor-pointer 
+        hover:opacity-80`,
+        props.className
+      )}
+    >
+      {props.children}
+    </button>
+  );
+}
+
 export function OwnerLinkButton(
   props: React.ComponentProps<typeof Link> & { children: React.ReactNode }
 ) {
@@ -144,7 +200,7 @@ export default function PageNavigator({
   totalPages = 0,
 }: PageNavigatorProps) {
   return (
-    <div className="p-4 bg-sky-100 border-t-4 border-sky-200 -mt-4 gap-2 flex justify-between items-center px-6">
+    <div className="p-4 bg-sky-100 border-sky-200 gap-2 flex justify-between items-center px-6">
       <div className="text-xs italic flex-1 text-sky-800">
         {`page ${Math.min(currPage, totalPages)} of ${totalPages}`}
       </div>
@@ -164,51 +220,6 @@ export default function PageNavigator({
       </button>
     </div>
   );
-
-  return (
-    <div className="flex justify-between items-center p-2 xbg-sky-50 border-t-2 border-black/30 border-dotted">
-      <button
-        className="text-sky-700 disabled:opacity-30 not-disabled:cursor-pointer"
-        onClick={onPrev}
-        disabled={currPage < 2}
-      >
-        <svg
-          width="1em"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M5 12l14 0 M5 12l6 6 M5 12l6 -6" />
-        </svg>
-      </button>
-
-      <div className="text-xs text-black/50">
-        {`Page ${Math.min(currPage, totalPages)} of ${totalPages}`}
-      </div>
-
-      <button
-        className="text-sky-700 disabled:opacity-30 not-disabled:cursor-pointer"
-        onClick={onNext}
-        disabled={currPage >= totalPages}
-      >
-        <svg
-          width="1em"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="-scale-100"
-        >
-          <path d="M5 12l14 0 M5 12l6 6 M5 12l6 -6" />
-        </svg>
-      </button>
-    </div>
-  );
 }
 
 export function FormInput({
@@ -221,7 +232,7 @@ export function FormInput({
   error?: string | undefined;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <div className="flex flex-col gap-1 p-2">
+    <div className="flex flex-col gap-2 p-2">
       <div className="flex justify-between px-2">
         <label htmlFor="name" className="">
           {title}
@@ -231,7 +242,9 @@ export function FormInput({
       </div>
 
       <input
-        className="p-2 bg-sky-50 rounded-sm ring-2 ring-sky-200 disabled:saturate-0 disabled:text-neutral-500"
+        className="p-2 bg-white sky-50 rounded-smx ring-2 ring-sky-200 
+        outline-none focus:ring-sky-500
+        disabled:saturate-0 disabled:text-neutral-500"
         type="text"
         {...props}
         aria-invalid={!!error}
@@ -251,17 +264,20 @@ export function FormText({
   error: string | undefined;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
-    <div className="flex flex-col gap-1 p-2">
-      <div className="flex justify-between px-2">
-        <label htmlFor="name" className="">
+    <div className="flex flex-col gap-2 p-2">
+      <div className="flex justify-between px-2 items-center gap-2">
+        <label htmlFor="name" className="flex-1">
           {title}
           {required && "*"}
         </label>
         <span className="text-red-500 text-sm">{error}</span>
+        {props.children}
       </div>
 
       <textarea
-        className="p-2 bg-sky-50 rounded-sm ring-2 ring-sky-200 disabled:saturate-0 disabled:text-neutral-500"
+        className="p-2 bg-white sky-50 xrounded-sm ring-2 ring-sky-200 
+        outline-none focus:ring-sky-500
+        disabled:saturate-0 disabled:text-neutral-500"
         {...props}
         rows={5}
         aria-invalid={!!error}
@@ -283,15 +299,20 @@ export function FormButtons({
   return (
     <div className="px-2 flex gap-2 mx-auto w-2/3">
       <button
-        className="p-2 text-white bg-sky-600 rounded-sm m-2 w-1/2 mx-auto cursor-pointer active:opacity-80"
+        className="p-2 text-white bg-sky-600 rounded-xs m-2 w-1/2 mx-auto 
+        outline-none focus:ring-sky-800 focus:ring-2
+        cursor-pointer active:opacity-80"
         type="reset"
         onClick={onReset}
       >
         Reset
       </button>
+
       <button
         disabled={busy}
-        className="p-2 text-white bg-sky-600 rounded-sm m-2 w-1/2 mx-auto disabled:saturate-0 
+        className="p-2 text-white bg-sky-600 rounded-xs m-2 w-1/2 mx-auto 
+        outline-none focus:ring-sky-800 focus:ring-2
+        disabled:saturate-0 
         active:opacity-80
         disabled:opacity-50 not-disabled:cursor-pointer"
         type="submit"
@@ -309,14 +330,19 @@ export function MenuLink({
   children: React.ReactNode;
   href: string;
 }>) {
-  // const current = usePathname() === href;
-  const current = false;
+  const path = usePathname();
+  let current = path.startsWith(href);
+  if (href === "/" && path !== "/") current = false;
+
+  //const current = false;
   return (
     <Link
       href={href}
       className={
-        "p-4 whitespace-nowrap hover:bg-white/50 " +
-        (current ? "border-b-4 pb-3 border-amber-800 " : "")
+        "p-4 whitespace-nowrap hover:bg-white/50 flex gap-4 items-center x-mb-1 z-30 " +
+        (current
+          ? "border-b-4 pb-3 border-amber-800 "
+          : "border-b-4 pb-3 border-amber-800/10 ")
       }
     >
       {children}

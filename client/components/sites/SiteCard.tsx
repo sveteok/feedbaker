@@ -24,7 +24,7 @@ const SiteCard = ({
           <div className="-mr-2 flex gap-2">
             {user && (user.user_id === site.owner_id || user.is_admin) && (
               <OwnerLinkButton href={`/sites/${site.site_id}/edit`}>
-                edit site
+                manage
               </OwnerLinkButton>
             )}
             <LinkButton href={`/sites/${site.site_id}/feedback`}>

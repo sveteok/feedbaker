@@ -12,10 +12,11 @@ export default function FeedbackAddFormController({ site }: { site: Site }) {
     <>
       <Title>
         Add New Feedback
-        <DefaultLink href={`/sites/${site.site_id}/feedback`}>
+        {/* <DefaultLink href={`/sites/${site.site_id}/feedback`}>
           Cancel
-        </DefaultLink>
+        </DefaultLink> */}
       </Title>
+
       <FeedbackAddForm
         site_id={site.site_id}
         onSubmit={addFeedbackMutation.mutate}

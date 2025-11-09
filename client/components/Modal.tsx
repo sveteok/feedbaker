@@ -55,12 +55,12 @@ export default dynamic(
       return createPortal(
         <div
           ref={modal}
-          className="fixed inset-0 bg-black/50 flex items-center justify-center"
+          className="fixed z-50 inset-0 bg-black/50 flex items-center justify-center"
           onClick={onClose}
           onKeyDown={handleTabKey}
         >
           <div
-            className="bg-white p-4 rounded"
+            className="bg-white p-4 rounded max-w-lg m-8  shadow-lg shadow-black/30"
             onClick={(e) => e.stopPropagation()}
           >
             {children}

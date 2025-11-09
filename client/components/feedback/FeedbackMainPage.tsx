@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import Search from "@/components/Search";
 import FeedbackList from "@/components/feedback/FeedbackList";
-import PageNavigator, { Title, TitleLinkButton } from "../Ui";
+import PageNavigator, { SectionContent, Title, TitleLinkButton } from "../Ui";
 import { DEFAULT_QUERY, FEEDBACK_PAGE_SIZE } from "@/config/constants";
 import { useFeedbackQuery } from "@/features/feedback/useFeedbackQuery";
 import { useAuth } from "@/lib/providers/AuthContext";
@@ -73,34 +73,37 @@ export default function FeedbackMainPage({
           add new feedback
         </TitleLinkButton>
       </Title>
-
-      <ErrorBoundary
-        fallbackRender={({ error, resetErrorBoundary }) => (
-          <div className="alert alert-danger m-3">
-            <h4>Something went wrong loading sites.</h4>
-            <p>{error.message}</p>
-            <button className="btn btn-primary" onClick={resetErrorBoundary}>
-              Try Again
-            </button>
-          </div>
-        )}
-      >
-        <Suspense fallback={<div className="text-center mt-4">Loading...</div>}>
-          <Search
-            searchQuery={search}
-            setSearchQuery={handleSearch}
-            placeholder="Filter feedback..."
-            statusText={`feedback found: ${feedback.totalCount}`}
-          />
-          <FeedbackList feedback={feedback} user={user} />
-          <PageNavigator
-            onNext={handleNext}
-            onPrev={handlePrev}
-            currPage={Number(query.page || 0)}
-            totalPages={Math.ceil(feedback.totalCount / FEEDBACK_PAGE_SIZE)}
-          />
-        </Suspense>
-      </ErrorBoundary>
+      <SectionContent>
+        <ErrorBoundary
+          fallbackRender={({ error, resetErrorBoundary }) => (
+            <div className="alert alert-danger m-3">
+              <h4>Something went wrong loading sites.</h4>
+              <p>{error.message}</p>
+              <button className="btn btn-primary" onClick={resetErrorBoundary}>
+                Try Again
+              </button>
+            </div>
+          )}
+        >
+          <Suspense
+            fallback={<div className="text-center mt-4">Loading...</div>}
+          >
+            <Search
+              searchQuery={search}
+              setSearchQuery={handleSearch}
+              placeholder="Filter feedback..."
+              statusText={`feedback found: ${feedback.totalCount}`}
+            />
+            <FeedbackList feedback={feedback} user={user} />
+            <PageNavigator
+              onNext={handleNext}
+              onPrev={handlePrev}
+              currPage={Number(query.page || 0)}
+              totalPages={Math.ceil(feedback.totalCount / FEEDBACK_PAGE_SIZE)}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </SectionContent>
     </>
   );
 }

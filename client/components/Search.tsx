@@ -25,13 +25,13 @@ const Search = ({
     setText(searchQuery);
   }, [searchQuery]);
   return (
-    <div className=" p-4 bg-sky-100 gap-4 -mb-4 xx-mt-4 pt-6 border-b-4  border-sky-200">
+    <div className="p-4 bg-sky-100 gap-4 pt-6 border-sky-200">
       <div
         className="flex xgap-0.5 p-0.5 -m-0.5 bg-sky-200 items-xcenter pr-2x
     focus-within:bg-sky-600"
       >
         <input
-          className="outline-none text-sky-700 p-2 w-full bg-sky-50 focus:bg-white placeholder:text-sm placeholder:text-ske-600/50"
+          className="outline-none text-sky-700 p-2 w-full bg-sky-50 focus:bg-white placeholder:text-sm"
           placeholder={isPending ? ">Updating…" : placeholder}
           id="SearchInput"
           type="text"

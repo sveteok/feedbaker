@@ -1,6 +1,6 @@
 import FeedbackCard from "@/components/feedback/FeedbackCard";
 import { SvgDashboard, SvgPromo, SvgSecure, SvgWidget } from "@/components/Svg";
-import { Section, Title } from "@/components/Ui";
+import { Section, SectionContent, TableHolder, Title } from "@/components/Ui";
 
 export default function MainPage() {
   return (
@@ -25,15 +25,16 @@ export default function MainPage() {
       <Section>
         <Title>Key features</Title>
         <div className="grid grid-cols-3 gap-4 text-amber-800">
-          <div className="flex flex-1 flex-col gap-2 text-center justify-center items-center p-4 bg-gray-100">
+          <div className="flex flex-1 flex-col gap-2 text-center justify-center items-center p-4 bg-gray-100 border-4 border-amber-800/20">
             <SvgWidget />
             Lightweight Embeddable Widget
           </div>
-          <div className="flex  flex-1 flex-col gap-2 text-center justify-center items-center p-4 bg-gray-100">
+
+          <div className="flex  flex-1 flex-col gap-2 text-center justify-center items-center p-4 bg-gray-100 border-4 border-amber-800/20">
             <SvgDashboard />
             <div className="flex-1">Owner Dashboard & Moderation</div>
           </div>
-          <div className="flex  flex-1 flex-col gap-2 text-center justify-center items-center p-4 bg-gray-100">
+          <div className="flex  flex-1 flex-col gap-2 text-center justify-center items-center p-4 bg-gray-100 border-4 border-amber-800/20">
             <SvgSecure />
             <div className="flex-1">Secure Google Oauth</div>
           </div>
@@ -41,36 +42,38 @@ export default function MainPage() {
       </Section>
       <Section>
         <Title>Recent Feedbacks</Title>
-        <div className="flex flex-col gap-1 bg-gray-200 -mt-4x border-y-4 border-y-sky-200 ">
-          <FeedbackCard
-            feedback={{
-              feedback_id: "",
-              site_id: "",
-              author: "Svetlana",
-              body: "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu",
-              public: true,
-              comment:
-                "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu ",
-              created_on: new Date(),
-              updated_on: new Date(),
-            }}
-            user={null}
-          />
-          <FeedbackCard
-            feedback={{
-              feedback_id: "",
-              site_id: "",
-              author: "Svetlana",
-              body: "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu",
-              public: true,
-              comment:
-                "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu ",
-              created_on: new Date(),
-              updated_on: new Date(),
-            }}
-            user={null}
-          />
-        </div>
+        <SectionContent>
+          <TableHolder>
+            <FeedbackCard
+              feedback={{
+                feedback_id: "",
+                site_id: "",
+                author: "Svetlana",
+                body: "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu",
+                public: true,
+                comment:
+                  "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu ",
+                created_on: new Date(),
+                updated_on: new Date(),
+              }}
+              user={null}
+            />
+            <FeedbackCard
+              feedback={{
+                feedback_id: "",
+                site_id: "",
+                author: "Svetlana",
+                body: "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu",
+                public: true,
+                comment:
+                  "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu ",
+                created_on: new Date(),
+                updated_on: new Date(),
+              }}
+              user={null}
+            />
+          </TableHolder>
+        </SectionContent>
       </Section>
     </>
   );

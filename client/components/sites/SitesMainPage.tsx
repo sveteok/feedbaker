@@ -8,7 +8,7 @@ import { Suspense } from "react";
 import Search from "@/components/Search";
 import SiteList from "@/components/sites/SiteList";
 
-import { Section, Title, TitleLinkButton } from "../Ui";
+import { Section, SectionContent, Title, TitleLinkButton } from "../Ui";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DEFAULT_QUERY } from "@/config/constants";
 import { useSitesQuery } from "@/features/sites/useSitesQuery";
@@ -63,41 +63,48 @@ export default function SitesMainPage() {
 
   return (
     <Section>
-      {user && (
-        <Title>
-          Sites
+      <Title>
+        Sites
+        {user && (
           <TitleLinkButton href={`/sites/new`}>
             register new site
           </TitleLinkButton>
-        </Title>
-      )}
-      <Search
-        searchQuery={search}
-        setSearchQuery={handleSearch}
-        placeholder="search in name or description..."
-        statusText={`sites found: ${sites.totalCount}`}
-      />
-      <ErrorBoundary
-        fallbackRender={({ error, resetErrorBoundary }) => (
-          <div className="alert alert-danger m-3">
-            <h4>Something went wrong loading sites.</h4>
-            <p>{error.message}</p>
-            <button className="btn btn-primary" onClick={resetErrorBoundary}>
-              Try Again
-            </button>
-          </div>
         )}
-      >
-        <Suspense fallback={<div className="text-center mt-4">Loading...</div>}>
-          <SiteList sites={sites} user={user} />
-          <PageNavigator
-            onNext={handleNext}
-            onPrev={handlePrev}
-            currPage={Number(page || 0)}
-            totalPages={Math.ceil(sites.totalCount / SITE_PAGE_SIZE)}
-          />
-        </Suspense>
-      </ErrorBoundary>
+      </Title>
+
+      <SectionContent>
+        <Search
+          searchQuery={search}
+          setSearchQuery={handleSearch}
+          placeholder="search in name or description..."
+          statusText={`sites found: ${sites.totalCount}`}
+        />
+
+        <ErrorBoundary
+          fallbackRender={({ error, resetErrorBoundary }) => (
+            <div className="alert alert-danger m-3">
+              <h4>Something went wrong loading sites.</h4>
+              <p>{error.message}</p>
+              <button className="btn btn-primary" onClick={resetErrorBoundary}>
+                Try Again
+              </button>
+            </div>
+          )}
+        >
+          <Suspense
+            fallback={<div className="text-center mt-4">Loading...</div>}
+          >
+            <SiteList sites={sites} user={user} />
+
+            <PageNavigator
+              onNext={handleNext}
+              onPrev={handlePrev}
+              currPage={Number(page || 0)}
+              totalPages={Math.ceil(sites.totalCount / SITE_PAGE_SIZE)}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </SectionContent>
     </Section>
   );
 }

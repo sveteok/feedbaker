@@ -90,6 +90,7 @@ export default function FeedbackUpdateController({
               removeFeedbackMutation.mutate(feedback.feedback_id)
             }
             confirmText={`${feedback.feedback_id}`}
+            onCancel={() => setShowModal(false)}
           />
         </Modal>
       )}

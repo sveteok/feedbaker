@@ -37,6 +37,7 @@ export default function SiteUpdateController({
             onConfirm={() => deleteSiteMutation.mutate(site.site_id)}
             confirmText={`${site.site_id}`}
             title={`Deleting site "${site.name}"`}
+            onCancel={() => router.back()}
           />
         </Modal>
       )}
