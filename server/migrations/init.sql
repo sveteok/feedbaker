@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS "feedback" (
     "feedback_id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "site_id" UUID NOT NULL REFERENCES sites(site_id) ON DELETE CASCADE,
     "author" VARCHAR(255) UNIQUE NOT NULL,
-    "feedback" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
     "created_on" TIMESTAMP WITH TIME ZONE DEFAULT now(),
     "updated_on" TIMESTAMP WITH TIME ZONE DEFAULT now(),
     "public" BOOLEAN DEFAULT TRUE,

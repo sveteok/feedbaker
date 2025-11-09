@@ -1,3 +1,4 @@
+import FeedbackCard from "@/components/feedback/FeedbackCard";
 import { SvgDashboard, SvgPromo, SvgSecure, SvgWidget } from "@/components/Svg";
 import { Section, Title } from "@/components/Ui";
 
@@ -39,8 +40,37 @@ export default function MainPage() {
         </div>
       </Section>
       <Section>
-        <Title>Recent Feedback</Title>
-        <div className="flex flex-col gap-1 bg-gray-200 -mt-4x border-y-4 border-y-sky-200 "></div>
+        <Title>Recent Feedbacks</Title>
+        <div className="flex flex-col gap-1 bg-gray-200 -mt-4x border-y-4 border-y-sky-200 ">
+          <FeedbackCard
+            feedback={{
+              feedback_id: "",
+              site_id: "",
+              author: "Svetlana",
+              body: "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu",
+              public: true,
+              comment:
+                "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu ",
+              created_on: new Date(),
+              updated_on: new Date(),
+            }}
+            user={null}
+          />
+          <FeedbackCard
+            feedback={{
+              feedback_id: "",
+              site_id: "",
+              author: "Svetlana",
+              body: "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu",
+              public: true,
+              comment:
+                "Mikäli epäilet, että kyseessä on virheellinen tuote, niin ottaisitko yhteyttä verkkokauppa@bauhaus.fi, niin selvitämme asiaa mielellämme. Ystävällisin terveisin, Pinja / Asiakaspalvelu ",
+              created_on: new Date(),
+              updated_on: new Date(),
+            }}
+            user={null}
+          />
+        </div>
       </Section>
     </>
   );
