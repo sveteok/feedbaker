@@ -1,5 +1,5 @@
 import express from "express";
-import { restrictedCors } from "./middleware/cors";
+import { restrictedCors, publicCors } from "./middleware/cors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
@@ -27,8 +27,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", restrictedCors, authRouter);
 app.use("/api/", restrictedCors, profileRouter);
-app.use("/api/sites", sitesRouter);
-app.use("/api/feedback", feedbackRouter);
+app.use("/api/sites", publicCors, sitesRouter);
+app.use("/api/feedback", publicCors, feedbackRouter);
 
 app.use(errorHandler);
 
