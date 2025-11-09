@@ -13,7 +13,7 @@ export default function DeleteButton({
 
   return (
     <button
-      className="bg-red-500 p-2 text-white rounded-sm w-full not-disabled:cursor-pointer"
+      className="w-2/3 bg-red-500 p-2 text-white rounded-xs not-disabled:cursor-pointer"
       type="button"
       onClick={() => router.push(href)}
       disabled={disabled}
