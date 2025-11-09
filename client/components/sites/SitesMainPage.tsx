@@ -14,8 +14,10 @@ import { DEFAULT_QUERY } from "@/config/constants";
 import { useSitesQuery } from "@/features/sites/useSitesQuery";
 import PageNavigator from "../Ui";
 import { SITE_PAGE_SIZE } from "@/config/constants";
+import { useAuth } from "@/lib/providers/AuthContext";
 
 export default function SitesMainPage() {
+  const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -61,10 +63,14 @@ export default function SitesMainPage() {
 
   return (
     <Section>
-      <Title>
-        Sites
-        <TitleLinkButton href={`/sites/new`}>register new site</TitleLinkButton>
-      </Title>
+      {user && (
+        <Title>
+          Sites
+          <TitleLinkButton href={`/sites/new`}>
+            register new site
+          </TitleLinkButton>
+        </Title>
+      )}
       <Search
         searchQuery={search}
         setSearchQuery={handleSearch}
@@ -83,7 +89,7 @@ export default function SitesMainPage() {
         )}
       >
         <Suspense fallback={<div className="text-center mt-4">Loading...</div>}>
-          <SiteList sites={sites} />
+          <SiteList sites={sites} user={user} />
           <PageNavigator
             onNext={handleNext}
             onPrev={handlePrev}

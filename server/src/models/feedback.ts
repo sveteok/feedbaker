@@ -26,23 +26,19 @@ export const getFeedbackPaginated = async (
                   f.comment,
                   f.public,
                   f.site_id,
+                  s.owner_id as site_owner_id,
                   COUNT(*) OVER() AS total_count
-                FROM feedback f`;
-
-  if (site_id || owner_id) {
-    qb.query += ` JOIN sites s ON s.site_id = f.site_id `;
-  }
+                FROM feedback f
+                JOIN sites s ON s.site_id = f.site_id `;
 
   const conditions: string[] = [];
   if (site_id) {
     conditions.push(`f.site_id = ${qb.addParam(site_id)}`);
   }
-  if (!is_admin) {
-    conditions.push(`f.public IS TRUE`);
-  }
-  if (owner_id) {
-    conditions.push(`s.owner_id = ${qb.addParam(owner_id)}`);
-  }
+
+  conditions.push(
+    ` (f.public IS TRUE OR (s.owner_id = ${qb.addParam(owner_id)} OR ${qb.addParam(is_admin)})) `
+  );
 
   conditions.push(
     `f.body ILIKE '%' || ${qb.addParam(search || "")}::text || '%'`

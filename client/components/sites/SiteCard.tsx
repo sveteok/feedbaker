@@ -2,13 +2,16 @@ import { Site } from "@/types/sites";
 import { DefaultLink, LinkButton, OwnerLinkButton } from "../Ui";
 import { SvgSite } from "../Svg";
 import { formatDate } from "@/lib/utils/dateFormat";
+import { UserPayload } from "@/types/users";
 
 const SiteCard = ({
   site,
   feedback_count,
+  user,
 }: {
   site: Site;
   feedback_count?: number;
+  user: UserPayload | null;
 }) => {
   return (
     <div className="flex flex-col gap-1 p-4 px-6  bg-gray-50">
@@ -19,9 +22,11 @@ const SiteCard = ({
         </div>
         {feedback_count !== undefined && (
           <div className="-mr-2 flex gap-2">
-            <OwnerLinkButton href={`/sites/${site.site_id}/edit`}>
-              edit site
-            </OwnerLinkButton>
+            {user && (user.user_id === site.owner_id || user.is_admin) && (
+              <OwnerLinkButton href={`/sites/${site.site_id}/edit`}>
+                edit site
+              </OwnerLinkButton>
+            )}
             <LinkButton href={`/sites/${site.site_id}/feedback`}>
               feedback
             </LinkButton>

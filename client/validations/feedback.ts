@@ -24,6 +24,7 @@ export type SearchUiQueryProps = z.infer<typeof searchUiQueryProps>;
 export const baseFeedbackSchema = z.object({
   feedback_id: z.uuid(),
   site_id: z.uuid(),
+  site_owner_id: z.uuid().optional(),
   author: z
     .string()
     .trim()

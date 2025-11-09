@@ -1,7 +1,14 @@
 import SiteCard from "@/components/sites/SiteCard";
 import { PaginatedSites, SiteWithFeedback } from "@/types/sites";
+import { UserPayload } from "@/types/users";
 
-export default function SiteList({ sites }: { sites: PaginatedSites }) {
+export default function SiteList({
+  sites,
+  user,
+}: {
+  sites: PaginatedSites;
+  user: UserPayload | null;
+}) {
   return (
     <>
       <div className="flex flex-col gap-1 bg-gray-200">
@@ -9,6 +16,7 @@ export default function SiteList({ sites }: { sites: PaginatedSites }) {
           <SiteCard
             key={site.site_id}
             site={site}
+            user={user}
             feedback_count={site.feedback_count}
           />
         ))}

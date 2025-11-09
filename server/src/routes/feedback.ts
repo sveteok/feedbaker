@@ -35,6 +35,7 @@ router.get(
       search: String(req.query.searchText ?? ""),
       site_id: req.query.site_id,
       is_admin: req.user?.is_admin || false,
+      owner_id: req.user && req.user.user_id,
     });
 
     const feedbacks = await getFeedbackPaginated(parsed);

@@ -1,6 +1,7 @@
 export type Feedback = {
   feedback_id: string;
   site_id: string;
+  site_owner_id?: string;
   author: string;
   body: string;
   public: boolean;

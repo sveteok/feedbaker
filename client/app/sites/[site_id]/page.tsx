@@ -11,6 +11,7 @@ import { Title, TitleLinkButton } from "@/components/Ui";
 import { siteGetByIdSchema } from "@/validations/sites";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 import { prefetchSiteQuery } from "@/features/sites/prefetchQuery";
+import { getUser } from "@/lib/providers/auth";
 
 export default async function SitePage({
   params,
@@ -23,12 +24,14 @@ export default async function SitePage({
   if (!result.success) notFound();
 
   const queryClient = new QueryClient();
-  await prefetchSiteQuery(queryClient, site_id);
+  await prefetchSiteQuery(queryClient, result.data.site_id);
 
   const site = queryClient.getQueryData<Site | null>(
-    queryKeys.sites.detail(site_id)
+    queryKeys.sites.detail(result.data.site_id)
   );
   if (!site) notFound();
+
+  const user = await getUser();
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -40,7 +43,7 @@ export default async function SitePage({
               edit details
             </TitleLinkButton>
           </Title>
-          <SiteCard site={site} />
+          <SiteCard site={site} user={user} />
         </>
       )}
     </HydrationBoundary>

@@ -10,6 +10,7 @@ import FeedbackList from "@/components/feedback/FeedbackList";
 import PageNavigator, { Title, TitleLinkButton } from "../Ui";
 import { DEFAULT_QUERY, FEEDBACK_PAGE_SIZE } from "@/config/constants";
 import { useFeedbackQuery } from "@/features/feedback/useFeedbackQuery";
+import { useAuth } from "@/lib/providers/AuthContext";
 
 export default function FeedbackMainPage({
   site_id,
@@ -20,6 +21,7 @@ export default function FeedbackMainPage({
   initialPage: number;
   initialSearch: string;
 }) {
+  const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -90,7 +92,7 @@ export default function FeedbackMainPage({
             placeholder="Filter feedback..."
             statusText={`feedback found: ${feedback.totalCount}`}
           />
-          <FeedbackList feedback={feedback} />
+          <FeedbackList feedback={feedback} user={user} />
           <PageNavigator
             onNext={handleNext}
             onPrev={handlePrev}
