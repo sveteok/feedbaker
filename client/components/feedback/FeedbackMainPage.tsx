@@ -7,10 +7,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import Search from "@/components/Search";
 import FeedbackList from "@/components/feedback/FeedbackList";
-import PageNavigator, { SectionContent, Title, TitleLinkButton } from "../Ui";
+import PageNavigator, {
+  SectionContent,
+  TableHolder,
+  Title,
+  TitleButton,
+  TitleLinkButton,
+} from "../Ui";
 import { DEFAULT_QUERY, FEEDBACK_PAGE_SIZE } from "@/config/constants";
 import { useFeedbackQuery } from "@/features/feedback/useFeedbackQuery";
 import { useAuth } from "@/lib/providers/AuthContext";
+import { summarizeFeedback } from "@/lib/fetchers/feedback";
+import { SvgRobot } from "../Svg";
 
 export default function FeedbackMainPage({
   site_id,
@@ -68,11 +76,36 @@ export default function FeedbackMainPage({
   return (
     <>
       <Title>
-        Feedback
+        <div className="flex-1">Feedback</div>
+        {user && (
+          <TitleButton>
+            <SvgRobot />
+            summarize
+          </TitleButton>
+        )}
         <TitleLinkButton href={`/sites/${site_id}/feedback/new`}>
-          add new feedback
+          add new
         </TitleLinkButton>
       </Title>
+
+      <SectionContent>
+        <TableHolder>
+          <div className="xpx-6 xpy-4 text-sky-800 italic bg-gray-50 flex gap-6x ">
+            <div className="bg-amber-100 p-6 text-3xl border-r border-gray-200 text-amber-600">
+              <SvgRobot />
+            </div>
+
+            <div className="p-4 block overflow-auto whitespace-pre-line">
+              <h1 className="text-xs font-bold pb-2 opacity-50">AI Summary</h1>
+              {`Our recent user feedback highlights a strong positive sentiment regarding the platform's core experience and support. Users frequently commend the support team for being exceptionally responsive, contributing to an overall smooth setup process and intuitive interface. The seamless integration with Google, top-notch dashboard analytics, and clear, helpful documentation were also consistently praised as significant strengths.
+
+While satisfaction is high, valuable suggestions for future enhancements have been identified. Key areas for improvement include a strong user desire for more UI customization options and the addition of export functionality. Feedback also suggests that implementing a default dark mode would be a welcome feature, and attention could be given to optimizing the mobile version, which some users found to be a bit cramped.
+              `}
+            </div>
+          </div>
+        </TableHolder>
+      </SectionContent>
+
       <SectionContent>
         <ErrorBoundary
           fallbackRender={({ error, resetErrorBoundary }) => (

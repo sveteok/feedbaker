@@ -31,7 +31,7 @@ export function TableHolder({
   className?: string;
 }) {
   return (
-    <div className={"flex flex-col gap-1 bg-gray-200 " + className}>
+    <div className={cn("flex flex-col gap-1 bg-gray-200", className)}>
       {children}
     </div>
   );
@@ -67,7 +67,7 @@ export function Section({
 
 export function Title({ children }: { children?: React.ReactNode }) {
   return (
-    <h1 className="font-bold text-sky-50 bg-sky-600 p-4 pl-6 xborder-b-2 border-dotted border-black/30 flex justify-between items-center">
+    <h1 className="font-bold text-sky-50 bg-sky-600 p-4 gap-4 pl-6 xborder-b-2 border-dotted border-black/30 flex justify-between items-center">
       {children}
     </h1>
   );
@@ -144,6 +144,25 @@ export function TitleLinkButton(
     >
       {props.children}
     </Link>
+  );
+}
+export function TitleButton(
+  props: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    children: React.ReactNode;
+  }
+) {
+  return (
+    <button
+      {...props}
+      className={cn(
+        "bg-sky-50 text-sky-700 text-sm -my-1 font-normal px-2 py-1 transition-all cursor-pointer flex gap-2 ",
+        "active:opacity-80 ",
+        "hover:bg-sky-200 ",
+        props.className
+      )}
+    >
+      {props.children}
+    </button>
   );
 }
 export function DefaultLink({

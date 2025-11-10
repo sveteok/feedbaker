@@ -113,19 +113,17 @@ export function SvgSecure() {
   );
 }
 
-export function CopyClipboard() {
+export function SvgCopyClipboard() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width="1.2em"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="icon icon-tabler icons-tabler-outline icon-tabler-copy"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
@@ -173,22 +171,6 @@ export function SvgAuthor() {
       <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
       <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
     </svg>
-    // <svg
-    //   xmlns="http://www.w3.org/2000/svg"
-    //   width="1em"
-    //   viewBox="0 0 24 24"
-    //   fill="none"
-    //   stroke="currentColor"
-    //   strokeWidth="2"
-    //   strokeLinecap="round"
-    //   strokeLinejoin="round"
-    //   class="icon icon-tabler icons-tabler-outline icon-tabler-user-square-rounded"
-    // >
-    //   <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    //   <path d="M12 13a3 3 0 1 0 0 -6a3 3 0 0 0 0 6z" />
-    //   <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
-    //   <path d="M6 20.05v-.05a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v.05" />
-    // </svg>
   );
 }
 
@@ -221,6 +203,54 @@ export function SvgRight() {
       className="rotate-180"
     >
       <path d="M5 12l14 0 M5 12l6 6 M5 12l6 -6" />
+    </svg>
+  );
+}
+
+export function SvgAlarm() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="3em"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="shrink-0"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 9v4" />
+      <path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
+      <path d="M12 16h.01" />
+    </svg>
+  );
+}
+
+export function SvgRobot() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="shrink-0"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M6 4m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" />
+      <path d="M12 2v2" />
+      <path d="M9 12v9" />
+      <path d="M15 12v9" />
+      <path d="M5 16l4 -2" />
+      <path d="M15 14l4 2" />
+      <path d="M9 18h6" />
+      <path d="M10 8v.01" />
+      <path d="M14 8v.01" />
     </svg>
   );
 }

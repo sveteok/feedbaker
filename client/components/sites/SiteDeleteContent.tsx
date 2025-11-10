@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FormInput, SectionContent, TableHolder } from "../Ui";
 import { Site } from "@/types/sites";
+import { SvgAlarm } from "../Svg";
 
 export default function SiteDeleteContent({
   site,
@@ -18,6 +19,12 @@ export default function SiteDeleteContent({
   return (
     <SectionContent>
       <TableHolder>
+        <div className="px-6 py-4 text-red-500 italic bg-gray-50 flex gap-6">
+          <SvgAlarm />
+          Once you remove the site from Feedbaker all sites&apos; feedback will
+          be permanently deleted!
+        </div>
+
         <div className="p-2 bg-sky-50">
           <FormInput
             title="Type Site Name to Confirm Deletion"

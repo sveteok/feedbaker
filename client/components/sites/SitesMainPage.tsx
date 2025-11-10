@@ -8,7 +8,13 @@ import { Suspense } from "react";
 import Search from "@/components/Search";
 import SiteList from "@/components/sites/SiteList";
 
-import { Section, SectionContent, Title, TitleLinkButton } from "../Ui";
+import {
+  Section,
+  SectionContent,
+  Title,
+  TitleButton,
+  TitleLinkButton,
+} from "../Ui";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DEFAULT_QUERY } from "@/config/constants";
 import { useSitesQuery } from "@/features/sites/useSitesQuery";
@@ -64,11 +70,13 @@ export default function SitesMainPage() {
   return (
     <Section>
       <Title>
-        Sites
+        <div className="flex-1">Sites</div>
         {user && (
-          <TitleLinkButton href={`/sites/new`}>
-            register new site
-          </TitleLinkButton>
+          <>
+            <TitleButton>show all</TitleButton>
+            <TitleButton>show own</TitleButton>
+            <TitleLinkButton href={`/sites/new`}>register new</TitleLinkButton>
+          </>
         )}
       </Title>
 
