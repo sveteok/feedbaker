@@ -11,6 +11,7 @@ declare global {
             auto_select?: boolean;
             cancel_on_tap_outside?: boolean;
             context?: "signin" | "signup" | "use";
+            ux_mode?: "popup" | "redirect";
             error_callback?: () => void;
             itp_support?: boolean;
             use_fedcm_for_prompt?: boolean;

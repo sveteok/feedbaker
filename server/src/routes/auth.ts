@@ -63,7 +63,7 @@ router.post("/google", async (req: express.Request, res: express.Response) => {
     } as UserPayload;
 
     const token = jwt.sign(userPayload, JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "2h",
     });
 
     res.cookie(COOKIE_NAME, token, {

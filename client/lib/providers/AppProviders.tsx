@@ -23,7 +23,7 @@ export function AppProviders({
     <ReactQueryProvider>
       <AuthProvider user={user}>
         <HydrationBoundary state={dehydratedState}>
-          <Toaster position="top-right" />
+          <Toaster position="top-center" />
           {children}
         </HydrationBoundary>
       </AuthProvider>

@@ -41,7 +41,7 @@ export default function ProfilePage() {
         <Image
           src={user.picture ?? "/"}
           alt={user.name || ""}
-          className="rounded-full"
+          className=""
           width={100}
           height={100}
           loading="eager"
