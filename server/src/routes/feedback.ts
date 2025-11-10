@@ -11,6 +11,7 @@ import {
   feedbackCreateSchema,
   feedbackUpdateSchema,
   feedbackSearchQueryProps,
+  summarizeFeedbackProps,
 } from "../validations/feedback";
 
 import {
@@ -18,9 +19,11 @@ import {
   deleteFeedback,
   findFeedbackById,
   findFeedbackOwnerId,
+  getFeedbackBody,
   getFeedbackPaginated,
   updateFeedback,
 } from "../models/feedback";
+import { summarizeFeedback } from "../models/summarizeFeedback";
 
 const router = express.Router();
 
@@ -40,6 +43,30 @@ router.get(
 
     const feedbacks = await getFeedbackPaginated(parsed);
     res.status(200).json(feedbacks);
+  })
+);
+
+router.get(
+  "/summarize",
+  restrictedCors,
+  authenticateOwnerOrAdmin,
+  asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
+    const parsed = summarizeFeedbackProps.parse({
+      site_id: req.query.site_id,
+      is_admin: req.user?.is_admin || false,
+      owner_id: req.user && req.user.user_id,
+    });
+
+    const feedback = await getFeedbackBody(parsed);
+
+    const summary = summarizeFeedback(feedback);
+
+    // res.json({
+    //   summary,
+    //   total_feedback_items: feedbackIds.length,
+    // });
+
+    res.status(200).json({ summarize: summary });
   })
 );
 

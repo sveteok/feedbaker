@@ -4,6 +4,7 @@ import {
   FeedbackAddFormData,
   FeedbackSearchQueryProps,
   FeedbackDeleteFormData,
+  SummarizeFeedbackProps,
 } from "../validations/feedback";
 import {
   Feedback,
@@ -136,4 +137,41 @@ export const deleteFeedback = async ({
   const result = await executeQuery(query, parameters);
 
   return result.rows.length > 0 ? (result.rows[0] as Feedback) : null;
+};
+
+export const getFeedbackBody = async (
+  data: SummarizeFeedbackProps
+): Promise<{ body: string; feedback_id: string; site_id: string }[]> => {
+  const { site_id, is_admin, owner_id } = data;
+
+  const qb = new QueryBuilder();
+  qb.query = `SELECT 
+                  f.body,
+                  f.feedback_id,
+                  s.site_id
+                FROM feedback f
+                JOIN sites s ON s.site_id = f.site_id `;
+
+  const conditions: string[] = [];
+  if (site_id) {
+    conditions.push(`f.site_id = ${qb.addParam(site_id)}`);
+  }
+
+  conditions.push(` f.public IS TRUE  `);
+
+  if (!is_admin) {
+    conditions.push(`f.owner_id = ${qb.addParam(owner_id)}`);
+  }
+
+  if (conditions.length > 0) {
+    qb.query += ` WHERE ${conditions.join(" AND ")} ;`;
+  }
+
+  const result = await executeQuery(qb.query, qb.params);
+
+  return result.rows as {
+    body: string;
+    feedback_id: string;
+    site_id: string;
+  }[];
 };

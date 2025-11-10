@@ -68,3 +68,8 @@ export const paginatedFeedbackSchema = z.object({
   feedback: z.array(baseFeedbackSchema),
   totalCount: z.number(),
 });
+
+export const summarizeFeedbackSchema = z.object({
+  summarize: z.array(z.string()),
+});
+export type SummarizeFeedbackData = z.infer<typeof summarizeFeedbackSchema>;

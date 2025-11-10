@@ -5,15 +5,43 @@ import { Feedback, PaginatedFeedback } from "@/types/feedback";
 import {
   baseFeedbackSchema,
   FeedbackAddFormData,
-  FeedbackSearchQueryProps,
   FeedbackSearchUiQueryProps,
   FeedbackUpdateFormData,
   paginatedFeedbackSchema,
+  SummarizeFeedbackData,
+  summarizeFeedbackSchema,
 } from "@/validations/feedback";
 import axios, { AxiosResponse } from "axios";
 import { z } from "zod";
 
 const baseURL = `${absoluteURL}/api/feedback`;
+
+export const summarizeFeedback = async (
+  site_id: string,
+  cookieHeader?: string
+): Promise<SummarizeFeedbackData> => {
+  try {
+    console.log(site_id);
+    const response = await axios.get(`${baseURL}/summarize`, {
+      headers: { "Cache-Control": "no-cache, no-store, must-revalidate" },
+      params: { site_id },
+      withCredentials: true,
+    });
+
+    const result = summarizeFeedbackSchema.safeParse(response.data);
+
+    if (!result.success) {
+      console.error("getSites: invalid response", result.error);
+      throw new Error("Invalid server response");
+    }
+
+    console.log(result.data);
+    return result.data;
+  } catch (error: unknown) {
+    console.error("getFeedback error:", error);
+    throw new Error(getAxiosErrorMessage(error));
+  }
+};
 
 export const getFeedback = async (
   searchUiQuery: FeedbackSearchUiQueryProps & { cookieHeader?: string }

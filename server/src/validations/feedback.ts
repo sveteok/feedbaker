@@ -12,8 +12,14 @@ export const feedbackSearchQueryProps = z.object({
   is_admin: z.boolean().optional(),
   owner_id: z.uuid().optional(),
 });
-
 export type FeedbackSearchQueryProps = z.infer<typeof feedbackSearchQueryProps>;
+
+export const summarizeFeedbackProps = z.object({
+  site_id: z.uuid(),
+  is_admin: z.boolean().optional(),
+  owner_id: z.uuid().optional(),
+});
+export type SummarizeFeedbackProps = z.infer<typeof summarizeFeedbackProps>;
 
 export const feedbackSchema = z.object({
   site_id: z.uuid().optional(),
@@ -50,3 +56,8 @@ export type FeedbackAddFormData = z.infer<typeof feedbackCreateSchema>;
 export type FeedbackUpdateFormData = z.infer<typeof feedbackUpdateSchema>;
 export type FeedbackDeleteFormData = z.infer<typeof feedbackDeleteSchema>;
 export type FeedbackGetByIdFormData = z.infer<typeof feedbackGetByIdSchema>;
+
+export const summarizeFeedbackSchema = z.object({
+  summarize: z.array(z.string()),
+});
+export type SummarizeFeedbackData = z.infer<typeof summarizeFeedbackSchema>;
