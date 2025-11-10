@@ -16,6 +16,8 @@ import { Site } from "@/types/sites";
 import { siteUpdateSchema } from "@/validations/sites";
 import { formatDate } from "@/lib/utils/dateFormat";
 import { SvgSite } from "../Svg";
+import SiteDeleteContent from "./SiteDeleteContent";
+import WidgetInstructions from "./WidgetInstructions";
 
 type UpdateFormData = z.infer<typeof siteUpdateSchema>;
 
@@ -23,9 +25,15 @@ interface InputFormProps {
   site: Site;
   disabled: boolean;
   onSubmit: (site: Site) => void;
+  onDelete: (site_id: string) => void;
 }
 
-const SiteUpdateForm = ({ site, onSubmit, disabled }: InputFormProps) => {
+const SiteUpdateForm = ({
+  site,
+  onSubmit,
+  disabled,
+  onDelete,
+}: InputFormProps) => {
   const {
     handleSubmit,
     register,
@@ -101,49 +109,23 @@ const SiteUpdateForm = ({ site, onSubmit, disabled }: InputFormProps) => {
               <FormButtons
                 busy={disabled}
                 title={"Save"}
-                onReset={() => reset({ ...site })}
+                onReset={() => reset()}
               />
             </div>
           </TableHolder>
         </SectionContent>
 
-        <Title>Widget Instructions</Title>
-        <SectionContent>
-          <TableHolder>
-            <div className="p-4  break-keep bg-white m-4 ring-2 ring-gray-300">
-              {`
-              <script
-                src="http://localhost:3000/feedbaker.js"
-                data-site="52be079b-b0cf-4d75-94d2-2c3b86438fa2"
-                data-bg="#0088aa"
-                data-fg="#ffffff"
-              ></script>
-              `}
-            </div>
-          </TableHolder>
-        </SectionContent>
+        <WidgetInstructions
+          site_id={site.site_id}
+          src={`${process.env.NEXT_PUBLIC_API_URL}/feedbaker.js`}
+        />
 
         <Title>Danger Zone</Title>
-        <SectionContent>
-          <TableHolder>
-            <div className="p-2 bg-sky-50">
-              <FormInput
-                title="Type Site Name to Confirm Deletion"
-                placeholder="Site Name"
-                required={true}
-                disabled={disabled}
-              />
-            </div>
-          </TableHolder>
-          <TableHolder>
-            <div className="p-2 bg-sky-100 flex justify-center">
-              <DeleteButton
-                href={`/sites/${site.site_id}/edit?modal=true`}
-                disabled={disabled}
-              />
-            </div>
-          </TableHolder>
-        </SectionContent>
+        <SiteDeleteContent
+          site={site}
+          onDelete={onDelete}
+          disabled={disabled}
+        />
       </form>
     </Section>
   );

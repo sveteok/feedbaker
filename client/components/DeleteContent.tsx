@@ -48,7 +48,7 @@ export default function DeleteContent({
             Cancel
           </button>
           <button
-            disabled
+            disabled={state !== confirmText}
             className="flex-1 p-2 bg-amber-600 text-white rounded-xs 
             disabled:opacity-50
             not-disabled:cursor-pointer not-disabled:hover:opacity-80"

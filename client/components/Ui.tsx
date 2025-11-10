@@ -302,7 +302,7 @@ export function FormButtons({
         className="p-2 text-white bg-sky-600 rounded-xs m-2 w-1/2 mx-auto 
         outline-none focus:ring-sky-800 focus:ring-2
         cursor-pointer active:opacity-80"
-        type="reset"
+        type="button"
         onClick={onReset}
       >
         Reset
