@@ -2,29 +2,35 @@ import express from "express";
 
 import { authenticateOwnerOrAdmin } from "../middleware/auth";
 import { restrictedCors } from "../middleware/cors";
-import { AuthenticateRequest, UserPayload } from "../types/users";
+import { AuthenticateRequest } from "../types/users";
 import { asyncHandler } from "../utils/asyncHandler";
 
 import { ForbiddenError, UserNotFoundError } from "../constants/errors";
 import { userGetByIdSchema } from "../validations/users";
-import { executeQuery } from "../models/db";
-import { deleteUser } from "../models/users";
+import { deleteUser, findUserById, getUsersPaginated } from "../models/users";
+import { searchQueryProps } from "../validations/sites";
 
 const router = express.Router();
 
-export const findUserById = async (id: string) => {
-  const query = `SELECT 
-                    user_id, 
-                    name,
-                    email,
-                    picture,
-                    is_admin
-                  FROM users WHERE user_id=$1::uuid`;
-  const parameters = [id];
+router.get(
+  "/",
+  restrictedCors,
+  authenticateOwnerOrAdmin,
+  asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
+    if (req.user?.is_admin !== true) {
+      throw new ForbiddenError();
+    }
 
-  const result = await executeQuery(query, parameters);
-  return result.rows.length > 0 ? (result.rows[0] as UserPayload) : null;
-};
+    const parsed = searchQueryProps.parse({
+      limit: Number(req.query.limit ?? 10),
+      offset: Number(req.query.offset ?? 0),
+      searchText: String(req.query.searchText ?? ""),
+    });
+
+    const sites = await getUsersPaginated(parsed);
+    res.status(200).json(sites);
+  })
+);
 
 router.delete(
   "/:user_id",

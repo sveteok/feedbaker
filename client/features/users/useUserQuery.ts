@@ -3,8 +3,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 import { useAuth } from "@/lib/providers/AuthContext";
-import { fetchProfile } from "@lib/fetchers/users";
-import { UserPayload } from "@/types/users";
+import { fetchProfile, getSiteUsers } from "@lib/fetchers/users";
+import { PaginatedUsers, UserPayload } from "@/types/users";
+import { SearchUiQueryProps } from "@/validations/feedback";
+import { useCallback, useMemo } from "react";
 
 export function useUserQuery() {
   const { user: contextUser, setUser } = useAuth();
@@ -24,4 +26,19 @@ export function useUserQuery() {
   });
 
   return { user: data };
+}
+
+export function useSiteUsersQuery(query: SearchUiQueryProps) {
+  const queryKey = useMemo(
+    () => queryKeys.users.lists.filtered(query),
+    [query]
+  );
+
+  const queryFn = useCallback(() => getSiteUsers(query), [query]);
+
+  return useSuspenseQuery<PaginatedUsers>({
+    queryKey,
+    queryFn,
+    // refetchInterval: 60000,
+  });
 }

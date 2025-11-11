@@ -17,3 +17,7 @@ export type UserPayload = {
 export interface AuthenticateRequest extends Request {
   user?: UserPayload;
 }
+export interface PaginatedUsers {
+  users: UserPayload[];
+  totalCount: number;
+}

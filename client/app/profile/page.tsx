@@ -104,7 +104,7 @@ export default function ProfilePage() {
         outline-none focus:ring-amber-800 focus:ring-2
         cursor-pointer active:opacity-80"
             type="button"
-            onClick={() => {}}
+            onClick={() => router.push(`/users`)}
           >
             User List
           </button>
