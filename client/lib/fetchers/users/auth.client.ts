@@ -1,7 +1,10 @@
 import { absoluteURL } from "@/config/env";
 import { UserPayload } from "@/types/users";
 import { authenticatedUserSchema, userSchema } from "@/validations/users";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { getAxiosErrorMessage } from "@/lib/utils/errors";
+
+const baseURL = `${absoluteURL}/api/users`;
 
 export const fetchProfile = async (): Promise<UserPayload | null> => {
   try {
@@ -64,5 +67,23 @@ export const handleCredentialResponse = async (
       console.error("Unknown error:", error);
     }
     return null;
+  }
+};
+
+export const deleteUser = async (id: string): Promise<UserPayload | null> => {
+  try {
+    const response: AxiosResponse = await axios.delete(`${baseURL}/${id}`, {
+      withCredentials: true,
+    });
+
+    const result = userSchema.safeParse(response.data);
+
+    if (!result.success) {
+      throw new Error("Delete User: Invalid response data");
+    }
+    return result.data;
+  } catch (error: unknown) {
+    console.error(error);
+    throw new Error(getAxiosErrorMessage(error));
   }
 };

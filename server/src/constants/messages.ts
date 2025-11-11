@@ -5,6 +5,7 @@ const MESSAGES = Object.freeze({
   ERROR_DELETING_SITE: `Error deleting site`,
   ERROR_UPDATING_SITE: `Error updating site`,
   SITE_WITH_ID_NOT_FOUND: `Application with ID {ID} not found`,
+  USER_WITH_ID_NOT_FOUND: `User with ID {ID} not found`,
   INVALID_SITE_ID: `Invalid application ID`,
   INVALID_DATA: `Invalid data`,
   ERROR_SITE_NAME_ALREADY_EXITS: `Site name already exists`,

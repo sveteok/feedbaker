@@ -7,24 +7,24 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/providers/AuthContext";
 import { logout } from "@/lib/fetchers/users";
 import { useUserQuery } from "@/features/users/useUserQuery";
+import { useUserMutation } from "@/features/users/mutations";
 import {
-  FormInput,
   Section,
   SectionContent,
   TableHolder,
   Title,
   TitleButton,
 } from "@/components/Ui";
-import { SvgAlarm } from "@/components/Svg";
+import UserDeleteContent from "@/components/users/UserDeleteContent";
 
 export default function ProfilePage() {
   const { user: queryUser } = useUserQuery();
   const router = useRouter();
   const { setUser, user: contextUser } = useAuth();
+  const deleteUserMutation = useUserMutation("onDelete");
 
   const user = queryUser || contextUser;
   if (!user) return <p>Not signed in</p>;
-
   const userName = user.name;
 
   const handleLogout = async () => {
@@ -82,7 +82,7 @@ export default function ProfilePage() {
         outline-none focus:ring-amber-800 focus:ring-2
         cursor-pointer active:opacity-80"
             type="button"
-            onClick={null}
+            onClick={() => {}}
           >
             Register New Site
           </button>
@@ -92,7 +92,7 @@ export default function ProfilePage() {
         outline-none focus:ring-amber-800 focus:ring-2
         cursor-pointer active:opacity-80"
             type="button"
-            onClick={null}
+            onClick={() => {}}
           >
             Own Sites List
           </button>
@@ -102,45 +102,20 @@ export default function ProfilePage() {
         outline-none focus:ring-amber-800 focus:ring-2
         cursor-pointer active:opacity-80"
             type="button"
-            onClick={null}
+            onClick={() => {}}
           >
             User List
           </button>
         </TableHolder>
       </SectionContent>
       <Title>Danger Zone</Title>
-      <SectionContent>
-        <TableHolder>
-          <div className="px-6 py-4 text-red-500 italic bg-gray-50 flex gap-6">
-            <SvgAlarm />
-            Once you remove yourself from Feedbaker all your sites and sites'
-            feedback will be permanently deleted!
-          </div>
-          <div className="p-2 bg-sky-50">
-            <FormInput
-              title="Type Your Name to Confirm Deletion"
-              required={true}
-              disabled={false}
-              onChange={(e) => null}
-              placeholder={`Please, write your name`}
-            />
-          </div>
-        </TableHolder>
-        <TableHolder>
-          <div className="p-2 bg-sky-100 flex justify-center">
-            <button
-              className="w-2/3 bg-red-500 p-2 text-white rounded-xs not-disabled:cursor-pointer
-            disabled:opacity-50
-            not-disabled:hover:opacity-80 "
-              type="button"
-              onClick={() => null}
-              disabled={false}
-            >
-              Delete
-            </button>
-          </div>
-        </TableHolder>
-      </SectionContent>
+      <UserDeleteContent
+        user={user}
+        onDelete={() => {
+          deleteUserMutation.mutate(user.user_id);
+          setUser(null);
+        }}
+      />
     </Section>
   );
 }

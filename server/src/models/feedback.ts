@@ -50,7 +50,7 @@ export const getFeedbackPaginated = async (
   }
 
   qb.query += `
-    ORDER BY f.created_on DESC
+    ORDER BY f.created_on, f.feedback_id DESC
     LIMIT ${qb.addParam(limit)}::int OFFSET ${qb.addParam(offset)}::int;
   `;
 

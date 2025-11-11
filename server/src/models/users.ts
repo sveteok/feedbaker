@@ -28,3 +28,10 @@ export const findOrCreateUser = async (
   const result = await executeQuery(query, params);
   return result.rows[0];
 };
+
+export const deleteUser = async (id: string) => {
+  const query = `DELETE FROM users WHERE user_id = $1::uuid RETURNING *`;
+  const parameters = [id];
+  const result = await executeQuery(query, parameters);
+  return result.rows[0] as User | null;
+};

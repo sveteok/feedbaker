@@ -33,7 +33,15 @@ export const queryKeys = {
 
   users: {
     all: ["user"] as const,
-    list: () => ["users", "list"] as const,
-    detail: (id: string) => ["users", "byId", id] as const,
+    lists: {
+      root: () => [...queryKeys.users.all, "list"] as const,
+      filtered: (filters: {
+        page?: number;
+        search?: string;
+        user_id?: string;
+      }) =>
+        [...queryKeys.users.all, "list", normalizeFilters(filters)] as const,
+    },
+    detail: (id: string) => [...queryKeys.users.all, "byId", id] as const,
   },
 };

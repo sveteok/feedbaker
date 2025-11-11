@@ -14,13 +14,10 @@ import { prefetchSiteQuery } from "@/features/sites/prefetchQuery";
 
 export default async function EditSitePage({
   params,
-  searchParams,
 }: {
   params: Promise<{ site_id: string }>;
-  searchParams: Promise<{ modal?: string }>;
 }) {
   const { site_id } = await params;
-  const { modal } = await searchParams;
 
   const result = siteGetByIdSchema.safeParse({ site_id });
   if (!result.success) notFound();
@@ -43,11 +40,9 @@ export default async function EditSitePage({
     redirect("/unauthorized");
   }
 
-  const showModal = modal === "true";
-
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {site && <SiteUpdateController site={site} showModal={showModal} />}
+      {site && <SiteUpdateController site={site} />}
     </HydrationBoundary>
   );
 }

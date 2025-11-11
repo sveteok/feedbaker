@@ -13,6 +13,10 @@ export const userSchema = baseUserSchema.extend({
   user_id: z.uuid(),
 });
 
+export const userGetByIdSchema = z.object({
+  user_id: z.uuid(),
+});
+
 export type BaseUser = z.infer<typeof baseUserSchema>;
 export type GoogleUser = BaseUser;
 export type User = z.infer<typeof userSchema>;

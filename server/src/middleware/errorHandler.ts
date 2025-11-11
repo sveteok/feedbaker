@@ -6,6 +6,7 @@ import {
   InvalidDataError,
   InvalidSiteDataError,
   FeedbackNotFoundError,
+  UserNotFoundError,
 } from "../constants/errors";
 import MESSAGES from "../constants/messages";
 
@@ -34,6 +35,9 @@ export function errorHandler(
     return res.status(400).json({ error: err.message });
   }
   if (err instanceof SiteNotFoundError) {
+    return res.status(404).json({ error: err.message });
+  }
+  if (err instanceof UserNotFoundError) {
     return res.status(404).json({ error: err.message });
   }
   if (err instanceof FeedbackNotFoundError) {

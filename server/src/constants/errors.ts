@@ -7,6 +7,13 @@ export class SiteNotFoundError extends Error {
   }
 }
 
+export class UserNotFoundError extends Error {
+  constructor(id: string) {
+    super(MESSAGES.USER_WITH_ID_NOT_FOUND.replace(`{ID}`, `${id}`));
+    this.name = "UserNotFoundError";
+  }
+}
+
 export class InvalidSiteIdError extends Error {
   constructor() {
     super(MESSAGES.INVALID_SITE_ID);

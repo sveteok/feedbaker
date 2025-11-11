@@ -9,6 +9,7 @@ import authRouter from "./routes/auth";
 import profileRouter from "./routes/profile";
 import sitesRouter from "./routes/sites";
 import feedbackRouter from "./routes/feedback";
+import usersRouter from "./routes/users";
 
 import { createTables } from "./models/db";
 import MESSAGES from "./constants/messages";
@@ -29,6 +30,7 @@ app.use("/api/auth", restrictedCors, authRouter);
 app.use("/api/", restrictedCors, profileRouter);
 app.use("/api/sites", publicCors, sitesRouter);
 app.use("/api/feedback", publicCors, feedbackRouter);
+app.use("/api/users", restrictedCors, usersRouter);
 
 app.use(errorHandler);
 

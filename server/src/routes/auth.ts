@@ -63,14 +63,14 @@ router.post("/google", async (req: express.Request, res: express.Response) => {
     } as UserPayload;
 
     const token = jwt.sign(userPayload, JWT_SECRET, {
-      expiresIn: "2h",
+      expiresIn: "10h",
     });
 
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 1000,
+      maxAge: 60 * 60 * 10000,
     });
 
     res.status(200).json({ message: "Authenticated", userPayload });
