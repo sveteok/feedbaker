@@ -105,11 +105,8 @@ export const summarizeFeedback = async (
 
 export const updateStaus = async (summary_result: FeedbackSummarizeResult) => {
   try {
-    console.log("summary_result ", summary_result);
-
     const summaryParsed = feedbackSummarizeUpdateSchema.parse(summary_result);
 
-    console.log("summaryParsed ", summaryParsed);
     await updateFeedbackSummarize(summaryParsed);
   } catch (error) {
     console.log(error);
