@@ -1,18 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { SvgLogo } from "@/components/Svg";
 import { MenuLink } from "@/components/Ui";
-import { UserPayload } from "@/types/users";
 import { useAuth } from "@/lib/providers/AuthContext";
-import { usePathname } from "next/navigation";
-
-// export default function NavBar({ user }: { user: UserPayload | null }) {
 
 export default function NavBar() {
-  const pn = usePathname();
   const { user } = useAuth();
-  //   console.log(user);
   return (
     <nav
       className="min-w-xs bg-amber-100 text-amber-800 flex justify-between sticky top-0 xshadow-sm overflow-hidden

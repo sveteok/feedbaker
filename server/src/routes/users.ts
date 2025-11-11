@@ -32,7 +32,7 @@ router.delete(
   authenticateOwnerOrAdmin,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = userGetByIdSchema.parse(req.params);
-    console.log(parsed.user_id);
+
     const existingUser = await findUserById(parsed.user_id);
     if (!existingUser) throw new UserNotFoundError(parsed.user_id);
 
