@@ -16,6 +16,7 @@ export default function NavBar() {
         <span className="hidden sm:block">Feedbaker</span>
       </MenuLink>
       <MenuLink href="/sites">Sites</MenuLink>
+      {user?.is_admin && <MenuLink href="/users">Users</MenuLink>}
       <MenuLink href="/help">Help</MenuLink>
       <div className="flex-1 border-b-4 pb-3 border-amber-800/10"></div>
       {user && <MenuLink href="/profile">Profile</MenuLink>}

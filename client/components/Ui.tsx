@@ -17,7 +17,7 @@ export function SectionContent({
   className?: string;
 }) {
   return (
-    <div className={"bg-sky-200 flex flex-col gap-1 p-1 " + className}>
+    <div className={cn("bg-sky-200 flex flex-col gap-1 p-1", className)}>
       {children}
     </div>
   );
@@ -48,10 +48,10 @@ export function Section({
 }) {
   return (
     <section
-      className={
-        "min-w-xs flex justify-center " +
-        (promo ? "bg-sky-600 text-white" : "bg-white text-black")
-      }
+      className={cn(
+        "min-w-xs flex justify-center ",
+        promo ? "bg-sky-600 text-white" : "bg-white text-black"
+      )}
     >
       <div
         className={
@@ -65,16 +65,23 @@ export function Section({
   );
 }
 
-export function Title({ children }: { children?: React.ReactNode }) {
+export function Title({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
   return (
-    <h1 className="font-bold text-sky-50 bg-sky-600 p-4 gap-4 pl-6 xborder-b-2 border-dotted border-black/30 flex justify-between items-center">
+    <h1
+      className={cn(
+        "font-bold text-sky-50 bg-sky-600 p-4 gap-4 pl-6 flex justify-between items-center",
+        className
+      )}
+    >
       {children}
     </h1>
   );
-  //  <h1 className="font-bold text-amber-800 p-2 border-b-2 border-dotted border-black/30 flex justify-between items-center">
-  //     <div className="flex-1">{text}</div>
-  //     {children}
-  //   </h1>;
 }
 
 export function LinkButton(

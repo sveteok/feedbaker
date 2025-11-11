@@ -38,6 +38,11 @@ const Search = ({
           value={text}
           onChange={(event) => setText(event.target.value)}
           disabled={disabled || isPending}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              setSearchQuery(text);
+            }
+          }}
         />
         {text !== searchQuery && (
           <button

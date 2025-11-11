@@ -14,6 +14,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg" sizes="any" />
+      </head>
       <body className="bg-gray-900 flex flex-col min-h-dvh">
         <AppProviders user={user}>
           <NavBar />

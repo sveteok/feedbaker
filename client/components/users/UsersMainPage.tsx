@@ -69,7 +69,7 @@ export default function UsersMainPage() {
         <Search
           searchQuery={search}
           setSearchQuery={handleSearch}
-          placeholder="search in name or description..."
+          placeholder="search by name"
           statusText={`users found: ${users.totalCount}`}
         />
 

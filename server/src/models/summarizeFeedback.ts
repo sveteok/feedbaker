@@ -67,7 +67,8 @@ export const summarizeFeedback = async (
   const prompt = `You are a professional feedback analyst. Summarize the following user feedback entries into a concise report.
         You are a professional feedback analyst.
         Summarize the following user feedback entries into a concise report.
-        Provide one or two paragraphs of text so it can be easy shown on web page for visitors.
+        Provide 2-3 sentenses of text so it can be easy shown on web page for visitors.
+        Text must be easy to read and includes relevant light and funny joke.
     
         FEEDBACK ENTRIES:
         ---
