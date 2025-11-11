@@ -36,17 +36,13 @@ router.get(
   publicCors,
   optionalAuth,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
-    // console.log("Is Admin: ", req.user?.is_admin === true);
-    // if (!req.user) {
-    //   console.log("SITES: NOO USER");
-    // }
-    //await new Promise((resolve) => setTimeout(resolve, 5000));
-
     const parsed = searchQueryProps.parse({
       limit: Number(req.query.limit ?? 10),
       offset: Number(req.query.offset ?? 0),
       searchText: String(req.query.searchText ?? ""),
       is_admin: req.user?.is_admin ?? false,
+      owner_id: req.query.owner_id || undefined,
+      site_public: Boolean(req.query.site_id ?? true),
     });
 
     const sites = await getSitesPaginated(parsed);

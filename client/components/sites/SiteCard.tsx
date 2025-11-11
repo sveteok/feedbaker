@@ -33,7 +33,7 @@ const SiteCard = ({
           </div>
         )}
       </div>
-      <div className="text-xs italic xfont-bold opacity-50 ">
+      <div className="text-xs italic opacity-50 " suppressHydrationWarning>
         registred on {formatDate(site.created_on)}
       </div>
       <div className="flex justify-between items-center text-sm">
@@ -48,7 +48,10 @@ const SiteCard = ({
       )}
 
       {feedback_count !== undefined && (
-        <div className="text-xs text-right italic opacity-50">
+        <div
+          className="text-xs text-right italic opacity-50"
+          suppressHydrationWarning
+        >
           feedback: {feedback_count}
         </div>
       )}

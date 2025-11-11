@@ -6,6 +6,7 @@ export const searchQueryProps = z.object({
   searchText: z.string().optional(),
   is_admin: z.boolean().optional(),
   owner_id: z.uuid().optional(),
+  site_public: z.union([z.string(), z.boolean()]).optional(),
 });
 
 export type SearchQueryProps = z.infer<typeof searchQueryProps>;

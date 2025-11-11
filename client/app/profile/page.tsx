@@ -92,7 +92,9 @@ export default function ProfilePage() {
         outline-none focus:ring-amber-800 focus:ring-2
         cursor-pointer active:opacity-80"
             type="button"
-            onClick={() => {}}
+            onClick={() =>
+              router.push(`/sites?page=0&owner_id=${user.user_id}`)
+            }
           >
             Own Sites List
           </button>

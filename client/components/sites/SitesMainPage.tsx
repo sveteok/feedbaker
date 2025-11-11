@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
@@ -16,7 +16,7 @@ import {
   TitleLinkButton,
 } from "../Ui";
 import { useRouter, useSearchParams } from "next/navigation";
-import { DEFAULT_QUERY } from "@/config/constants";
+import { SITE_QUERY } from "@/config/constants";
 import { useSitesQuery } from "@/features/sites/useSitesQuery";
 import PageNavigator from "../Ui";
 import { SITE_PAGE_SIZE } from "@/config/constants";
@@ -27,16 +27,22 @@ export default function SitesMainPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const search = searchParams.get("search") || DEFAULT_QUERY.search;
-  const page = Number(searchParams.get("page")) || DEFAULT_QUERY.page;
+  const search = searchParams.get("search") || SITE_QUERY.search;
+  const page = Number(searchParams.get("page")) || SITE_QUERY.page;
+  const owner_id = searchParams.get("owner_id") || SITE_QUERY.owner_id;
+  const site_public = searchParams.get("site_public") || SITE_QUERY.site_public;
+
+  const [ownSite, setOwnSite] = useState(owner_id !== "");
 
   const query = useMemo(
     () => ({
-      ...DEFAULT_QUERY,
+      ...SITE_QUERY,
       page,
       search,
+      owner_id,
+      site_public,
     }),
-    [page, search]
+    [page, search, owner_id, site_public]
   );
 
   const handleNext = () => updateParams({ page: page + 1 });
@@ -73,8 +79,26 @@ export default function SitesMainPage() {
         <div className="flex-1">Sites</div>
         {user && (
           <>
-            <TitleButton>show all</TitleButton>
-            <TitleButton>show own</TitleButton>
+            {ownSite && (
+              <TitleButton
+                onClick={() => {
+                  updateParams({ owner_id: "", page: 0 });
+                  setOwnSite(false);
+                }}
+              >
+                show all
+              </TitleButton>
+            )}
+            {!ownSite && (
+              <TitleButton
+                onClick={() => {
+                  updateParams({ owner_id: user.user_id, page: 0 });
+                  setOwnSite(true);
+                }}
+              >
+                show own
+              </TitleButton>
+            )}
             <TitleLinkButton href={`/sites/new`}>register new</TitleLinkButton>
           </>
         )}
