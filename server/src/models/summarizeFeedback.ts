@@ -1,4 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
+import { FeedbackSummarizeResult } from "../types/feedback";
+import { feedbackSummarizeUpdateSchema } from "../validations/feedback";
+import { updateFeedbackSummarize } from "./feedback";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
@@ -56,9 +59,9 @@ export const summarizeFeedback = async (
   feedback: {
     body: string;
     feedback_id: string;
-    site_id: string;
-  }[]
-): Promise<string | undefined> => {
+  }[],
+  site_id: string
+): Promise<void> => {
   const allFeedbackText = feedback.map((row) => row.body).join("\n---\n");
 
   const prompt = `You are a professional feedback analyst. Summarize the following user feedback entries into a concise report.
@@ -72,8 +75,6 @@ export const summarizeFeedback = async (
         ---
         `;
 
-  console.log("prompt ", prompt);
-
   const aiCall = async () => {
     const aiResponse = await ai.models.generateContent({
       model: "gemini-2.5-flash",
@@ -84,12 +85,32 @@ export const summarizeFeedback = async (
 
   try {
     const summary = await retryWithBackoff(aiCall, 4); // Retry up to 4 times
-    console.log("summary result:  ", summary);
-    return summary;
+
+    updateStaus({
+      site_id,
+      summary: summary || null,
+    });
+    return;
   } catch (error) {
     console.log(error);
   }
 
-  console.log("summary result:  ERROR");
-  return "error";
+  updateStaus({
+    site_id,
+    summary: null,
+    error: "error",
+  });
+};
+
+export const updateStaus = async (summary_result: FeedbackSummarizeResult) => {
+  try {
+    console.log("summary_result ", summary_result);
+
+    const summaryParsed = feedbackSummarizeUpdateSchema.parse(summary_result);
+
+    console.log("summaryParsed ", summaryParsed);
+    await updateFeedbackSummarize(summaryParsed);
+  } catch (error) {
+    console.log(error);
+  }
 };

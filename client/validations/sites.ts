@@ -35,6 +35,10 @@ export const baseSiteSchema = z.object({
   description: z.union([z.string(), z.null()]).optional(),
   created_on: z.coerce.date(),
   updated_on: z.coerce.date(),
+  summary: z.union([z.string(), z.null()]).optional(),
+  summary_started_on: z.coerce.date().optional(),
+  summary_updated_on: z.coerce.date().optional(),
+  summary_error: z.union([z.string(), z.null()]).optional(),
 });
 
 export const siteSchema = baseSiteSchema;

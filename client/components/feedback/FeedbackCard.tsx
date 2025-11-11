@@ -10,7 +10,7 @@ import FeedbackUpdateCommentForm from "./FeedbackUpdateCommentForm";
 import Modal from "../Modal";
 import DeleteContent from "../DeleteContent";
 import { UserPayload } from "@/types/users";
-import { OwnerButton, OwnerLinkButton } from "../Ui";
+import { OwnerButton } from "../Ui";
 
 const FeedbackCard = ({
   feedback,
@@ -45,7 +45,6 @@ const FeedbackCard = ({
       <div
         className={
           "flex flex-col gap-1 p-4 px-6 bg-gray-50 " +
-          //(!feedback.public && "xtext-gray-400 xbg-gray-100 opacity-50 ") +
           (openUpdateForm && " bg-sky-50 ")
         }
       >

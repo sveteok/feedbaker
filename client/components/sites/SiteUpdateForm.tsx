@@ -1,12 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import DeleteButton from "@/components/DeleteButton";
 import {
   FormButtons,
   FormInput,
   FormText,
-  OwnerLinkButton,
   Section,
   SectionContent,
   TableHolder,
@@ -45,18 +43,12 @@ const SiteUpdateForm = ({
     ) as import("react-hook-form").Resolver<UpdateFormData>,
     values: site,
     defaultValues: site,
-    // mode: "onBlur", // or "onChange" / "onSubmit"
   });
 
   return (
     <Section>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-        <Title>
-          Site Details Editing
-          {/* <OwnerLinkButton href={`/sites/${site.site_id}`}>
-            back
-          </OwnerLinkButton> */}
-        </Title>
+        <Title>Site Details Editing</Title>
         <SectionContent>
           <TableHolder>
             <div className="flex justify-between items-center bg-gray-50">

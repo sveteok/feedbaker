@@ -20,3 +20,17 @@ export interface PaginatedFeedback {
   feedback: Feedback[];
   totalCount: number;
 }
+
+export type FeedbackSummarize = {
+  site_id: string;
+  summary?: string | null;
+  error?: string | null;
+  started_on?: Date;
+  updated_on?: Date;
+};
+
+export type FeedbackSummarizeResult = {
+  site_id: string;
+  summary?: string | null;
+  error?: string | null;
+};

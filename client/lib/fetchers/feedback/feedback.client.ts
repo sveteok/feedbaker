@@ -6,10 +6,10 @@ import {
   baseFeedbackSchema,
   FeedbackAddFormData,
   FeedbackSearchUiQueryProps,
+  feedbackSummarize,
+  FeedbackSummarizeData,
   FeedbackUpdateFormData,
   paginatedFeedbackSchema,
-  SummarizeFeedbackData,
-  summarizeFeedbackSchema,
 } from "@/validations/feedback";
 import axios, { AxiosResponse } from "axios";
 import { z } from "zod";
@@ -17,25 +17,22 @@ import { z } from "zod";
 const baseURL = `${absoluteURL}/api/feedback`;
 
 export const summarizeFeedback = async (
-  site_id: string,
-  cookieHeader?: string
-): Promise<SummarizeFeedbackData> => {
+  site_id: string
+): Promise<FeedbackSummarizeData> => {
   try {
-    console.log(site_id);
     const response = await axios.get(`${baseURL}/summarize`, {
       headers: { "Cache-Control": "no-cache, no-store, must-revalidate" },
       params: { site_id },
       withCredentials: true,
     });
 
-    const result = summarizeFeedbackSchema.safeParse(response.data);
+    const result = feedbackSummarize.safeParse(response.data);
 
     if (!result.success) {
       console.error("getSites: invalid response", result.error);
       throw new Error("Invalid server response");
     }
 
-    console.log(result.data);
     return result.data;
   } catch (error: unknown) {
     console.error("getFeedback error:", error);

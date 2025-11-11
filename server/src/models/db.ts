@@ -111,4 +111,16 @@ export const createTables = async () => {
     `CREATE INDEX IF NOT EXISTS idx_created_on ON sites (created_on DESC);`
   );
   console.log("INDEX idx_created_on created");
+
+  const feedbackSummaryTableQuery = `CREATE TABLE IF NOT EXISTS "feedback_summary" (
+    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "site_id" UUID NOT NULL REFERENCES sites(site_id) ON DELETE CASCADE,
+    "summary" TEXT,
+    "started_on" TIMESTAMPTZ DEFAULT now(), -- when generation starts
+    "updated_on" TIMESTAMPTZ DEFAULT now(),  -- when AI response is saved
+    "error" VARCHAR(255),
+    CONSTRAINT unique_site_summary UNIQUE (site_id)
+  );`;
+  await executeQuery(feedbackSummaryTableQuery);
+  console.log("feedback_summary table initialized");
 };

@@ -12,12 +12,7 @@ import { prefetchSiteQuery } from "@/features/sites/prefetchQuery";
 
 import FeedbackMainPage from "@/components/feedback/FeedbackMainPage";
 import SiteCard from "@/components/sites/SiteCard";
-import {
-  Section,
-  SectionContent,
-  Title,
-  TitleLinkButton,
-} from "@/components/Ui";
+import { Section, SectionContent } from "@/components/Ui";
 import { prefetchFeedbackQuery } from "@/features/feedback/prefetchQuery";
 import { getUser } from "@/lib/providers/auth";
 
@@ -53,21 +48,12 @@ export default async function SiteDetailsPage({
     <HydrationBoundary state={dehydrate(queryClient)}>
       {site && (
         <Section>
-          {/* <Title>
-            Site Details
-            {user && (user.is_admin || user.user_id === site.owner_id) && (
-              <TitleLinkButton href={`/sites/${site.site_id}/edit`}>
-                edit details
-              </TitleLinkButton>
-            )}
-          </Title> */}
-
           <SectionContent>
             <SiteCard site={site} user={user} />
           </SectionContent>
 
           <FeedbackMainPage
-            site_id={site.site_id}
+            site={site}
             initialPage={page}
             initialSearch={search}
           />

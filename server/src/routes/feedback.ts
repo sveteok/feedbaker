@@ -16,11 +16,13 @@ import {
 
 import {
   createFeedback,
+  createFeedbackSummarize,
   deleteFeedback,
   findFeedbackById,
   findFeedbackOwnerId,
   getFeedbackBody,
   getFeedbackPaginated,
+  getFeedbackSummarizeInProgress,
   updateFeedback,
 } from "../models/feedback";
 import { summarizeFeedback } from "../models/summarizeFeedback";
@@ -57,16 +59,19 @@ router.get(
       owner_id: req.user && req.user.user_id,
     });
 
+    const feedbackSummarizeInProgress = await getFeedbackSummarizeInProgress(
+      parsed.site_id
+    );
+
+    console.log(feedbackSummarizeInProgress);
+    if (feedbackSummarizeInProgress !== null) {
+      res.status(200).json(feedbackSummarizeInProgress);
+      return;
+    }
+    const feedbackSummarize = await createFeedbackSummarize(parsed.site_id);
     const feedback = await getFeedbackBody(parsed);
-
-    const summary = summarizeFeedback(feedback);
-
-    // res.json({
-    //   summary,
-    //   total_feedback_items: feedbackIds.length,
-    // });
-
-    res.status(200).json({ summarize: summary });
+    summarizeFeedback(feedback, parsed.site_id);
+    res.status(200).json(feedbackSummarize);
   })
 );
 

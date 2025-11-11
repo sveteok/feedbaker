@@ -61,3 +61,12 @@ export const summarizeFeedbackSchema = z.object({
   summarize: z.array(z.string()),
 });
 export type SummarizeFeedbackData = z.infer<typeof summarizeFeedbackSchema>;
+
+export const feedbackSummarizeUpdateSchema = z.object({
+  site_id: z.uuid(),
+  summary: z.string().optional(),
+  error: z.string().optional(),
+});
+export type FeedbackSummarizeUpdateData = z.infer<
+  typeof feedbackSummarizeUpdateSchema
+>;

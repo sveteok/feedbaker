@@ -68,14 +68,20 @@ export const getSitesPaginated = async (
 
 export const findSiteById = async (id: string) => {
   const query = `SELECT 
-                  site_id, 
-                  name, 
-                  url, 
-                  owner_id, 
-                  created_on, 
-                  updated_on, 
-                  description 
-                  FROM sites WHERE site_id=$1::uuid`;
+                  s.site_id, 
+                  s.name, 
+                  s.url, 
+                  s.owner_id, 
+                  s.created_on, 
+                  s.updated_on, 
+                  s.description,
+                  f.summary,
+                  f.started_on as summary_started_on,
+                  f.updated_on as summary_updated_on,
+                  f.error as summary_error
+                  FROM sites s
+                  LEFT JOIN feedback_summary f ON s.site_id = f.site_id
+                  WHERE s.site_id=$1::uuid`;
   const parameters = [id];
 
   const result = await executeQuery(query, parameters);

@@ -33,7 +33,17 @@ CREATE TABLE IF NOT EXISTS "feedback" (
     "updated_on" TIMESTAMP WITH TIME ZONE DEFAULT now(),
     "public" BOOLEAN DEFAULT TRUE,
     "comment" TEXT 
-  );`
+  );
+
+CREATE TABLE IF NOT EXISTS feedback_summary (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    site_id UUID NOT NULL REFERENCES sites(site_id) ON DELETE CASCADE,
+    summary TEXT,
+    started_on TIMESTAMPTZ DEFAULT now(),  -- when generation starts
+    updated_on TIMESTAMPTZ DEFAULT now(),  -- when AI response is saved
+    error VARCHAR(255),
+    CONSTRAINT unique_site_summary UNIQUE (site_id)
+);
 
 CREATE INDEX IF NOT EXISTS idx_users_name_trgm ON users USING gin (name gin_trgm_ops);
 CREATE INDEX IF NOT EXISTS idx_sites_name_trgm ON sites USING gin (name gin_trgm_ops);

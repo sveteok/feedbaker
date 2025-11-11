@@ -6,6 +6,10 @@ export type Site = {
   description?: string | null;
   created_on: string;
   updated_on: string;
+  summary?: string | null;
+  summary_started_on?: string;
+  summary_updated_on?: string;
+  summary_error?: string | null;
 };
 
 export type SiteWithFeedback = Site & { feedback_count: number };

@@ -5,10 +5,12 @@ import {
   FeedbackSearchQueryProps,
   FeedbackDeleteFormData,
   SummarizeFeedbackProps,
+  FeedbackSummarizeUpdateData,
 } from "../validations/feedback";
 import {
   Feedback,
   FeedbackOwnerDetail,
+  FeedbackSummarize,
   PaginatedFeedback,
 } from "../types/feedback";
 
@@ -50,7 +52,7 @@ export const getFeedbackPaginated = async (
   }
 
   qb.query += `
-    ORDER BY f.created_on, f.feedback_id DESC
+    ORDER BY f.created_on DESC, f.feedback_id 
     LIMIT ${qb.addParam(limit)}::int OFFSET ${qb.addParam(offset)}::int;
   `;
 
@@ -139,6 +141,20 @@ export const deleteFeedback = async ({
   return result.rows.length > 0 ? (result.rows[0] as Feedback) : null;
 };
 
+export const getFeedbackSummarizeInProgress = async (
+  site_id: string
+): Promise<FeedbackSummarize | null> => {
+  const query = `SELECT *
+                  FROM feedback_summary
+                  WHERE site_id = $1
+                    AND started_on > now() - interval '5 minutes';`;
+
+  const parameters = [site_id];
+  const result = await executeQuery(query, parameters);
+
+  return result.rows.length > 0 ? (result.rows[0] as FeedbackSummarize) : null;
+};
+
 export const getFeedbackBody = async (
   data: SummarizeFeedbackProps
 ): Promise<{ body: string; feedback_id: string; site_id: string }[]> => {
@@ -159,8 +175,8 @@ export const getFeedbackBody = async (
 
   conditions.push(` f.public IS TRUE  `);
 
-  if (!is_admin) {
-    conditions.push(`f.owner_id = ${qb.addParam(owner_id)}`);
+  if (!is_admin && owner_id) {
+    conditions.push(`s.owner_id = ${qb.addParam(owner_id)}`);
   }
 
   if (conditions.length > 0) {
@@ -174,4 +190,43 @@ export const getFeedbackBody = async (
     feedback_id: string;
     site_id: string;
   }[];
+};
+
+export const createFeedbackSummarize = async (
+  site_id: string
+): Promise<FeedbackSummarize> => {
+  const query = `INSERT INTO feedback_summary (site_id, started_on)
+                  VALUES($1::uuid, now())
+                  ON CONFLICT(site_id)
+                      DO UPDATE SET
+                          started_on = now()
+                  RETURNING *;`;
+  const parameters = [site_id];
+  const result = await executeQuery(query, parameters);
+  return result.rows[0] as FeedbackSummarize;
+};
+
+export const updateFeedbackSummarize = async ({
+  site_id,
+  summary,
+  error,
+}: FeedbackSummarizeUpdateData) => {
+  const query = `UPDATE feedback_summary
+                    SET 
+                      summary = CASE
+                                  WHEN $1::text IS NULL THEN NULL
+                                  ELSE COALESCE($1::text, summary)
+                                END,
+                      error = CASE
+                              WHEN $2::text IS NULL THEN NULL
+                              ELSE COALESCE($2::text, error)
+                            END,
+                      updated_on = now()
+                    WHERE site_id = $3
+                    RETURNING *;
+                    `;
+
+  const result = await executeQuery(query, [summary, error, site_id]);
+
+  return result.rows[0] as FeedbackSummarize;
 };

@@ -1,8 +1,10 @@
 "use client";
 
+import { summarizeFeedback } from "@/lib/fetchers/feedback";
 import { addSite, deleteSite, editSite } from "@/lib/fetchers/sites";
 import { queryKeys } from "@/lib/react-query/queryKeys";
 import { Site } from "@/types/sites";
+import { FeedbackSummarizeData } from "@/validations/feedback";
 import { SiteAddFormData } from "@/validations/sites";
 import {
   useMutation,
@@ -16,6 +18,7 @@ export const SITE_MUTATION = {
   CREATE: "onCreate",
   UPDATE: "onUpdate",
   DELETE: "onDelete",
+  SUMMARIZE_FEEDBAK: "onSummarizeFeedback",
 } as const;
 
 export type SiteMutationAction =
@@ -30,6 +33,9 @@ export function useSiteMutation(
 export function useSiteMutation(
   action: "onDelete"
 ): UseMutationResult<Site | null, Error, string>;
+export function useSiteMutation(
+  action: "onSummarizeFeedback"
+): UseMutationResult<FeedbackSummarizeData, Error, string>;
 
 export function useSiteMutation(action: SiteMutationAction) {
   const queryClient = useQueryClient();
@@ -94,6 +100,47 @@ export function useSiteMutation(action: SiteMutationAction) {
     onError: (error) => toast.error(error.message),
   });
 
+  const summarizeFeedbackMutation = useMutation<
+    FeedbackSummarizeData,
+    Error,
+    string
+  >({
+    mutationFn: summarizeFeedback,
+
+    onSuccess: (updatedSummarizedFeedback) => {
+      if (!updatedSummarizedFeedback) return;
+
+      let updatedSite;
+      queryClient.setQueryData<Site[]>(
+        queryKeys.sites.lists.root(),
+        (old = []) =>
+          old.map((prev) => {
+            if (prev.site_id === updatedSummarizedFeedback.site_id) {
+              updatedSite = {
+                ...prev,
+                summary: updatedSummarizedFeedback.summary,
+                summary_started_on: updatedSummarizedFeedback.started_on,
+                summary_updated_on: updatedSummarizedFeedback.updated_on,
+                summary_error: updatedSummarizedFeedback.error,
+              };
+              return updatedSite;
+            }
+            return prev;
+          })
+      );
+
+      queryClient.setQueryData<Site>(
+        queryKeys.sites.detail(updatedSummarizedFeedback.site_id),
+        updatedSite
+      );
+
+      toast.success("Summarize  started!");
+      invalidateSitesList();
+      router.push(`/sites/${updatedSummarizedFeedback.site_id}/feedback`);
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
   switch (action) {
     case "onCreate":
       return createMutation;
@@ -101,5 +148,7 @@ export function useSiteMutation(action: SiteMutationAction) {
       return updateMutation;
     case "onDelete":
       return deleteMutation;
+    case "onSummarizeFeedback":
+      return summarizeFeedbackMutation;
   }
 }

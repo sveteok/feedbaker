@@ -69,7 +69,11 @@ export const paginatedFeedbackSchema = z.object({
   totalCount: z.number(),
 });
 
-export const summarizeFeedbackSchema = z.object({
-  summarize: z.array(z.string()),
+export const feedbackSummarize = z.object({
+  site_id: z.uuid(),
+  summary: z.union([z.string(), z.null()]).optional(),
+  started_on: z.coerce.date().optional(),
+  updated_on: z.coerce.date().optional(),
+  error: z.union([z.string(), z.null()]).optional(),
 });
-export type SummarizeFeedbackData = z.infer<typeof summarizeFeedbackSchema>;
+export type FeedbackSummarizeData = z.infer<typeof feedbackSummarize>;

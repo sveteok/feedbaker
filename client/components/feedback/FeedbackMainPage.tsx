@@ -19,16 +19,19 @@ import { useFeedbackQuery } from "@/features/feedback/useFeedbackQuery";
 import { useAuth } from "@/lib/providers/AuthContext";
 import { summarizeFeedback } from "@/lib/fetchers/feedback";
 import { SvgRobot } from "../Svg";
+import { Site } from "@/types/sites";
+import { useSiteMutation } from "@/features/sites/mutations";
 
 export default function FeedbackMainPage({
-  site_id,
+  site,
   initialPage,
   initialSearch,
 }: {
-  site_id: string;
+  site: Site;
   initialPage: number;
   initialSearch: string;
 }) {
+  const summarizeFeedbackMutation = useSiteMutation("onSummarizeFeedback");
   const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -41,9 +44,9 @@ export default function FeedbackMainPage({
       ...DEFAULT_QUERY,
       page,
       search,
-      site_id,
+      site_id: site.site_id,
     }),
-    [page, search, site_id]
+    [page, search, site.site_id]
   );
 
   const handleNext = () => updateParams({ page: page + 1 });
@@ -72,39 +75,49 @@ export default function FeedbackMainPage({
     updateParams({ page: 0, search: value });
   };
 
+  const canUpdate = user && (user.user_id === site.owner_id || user?.is_admin);
+  const canSummarize =
+    canUpdate &&
+    (!site.summary_started_on ||
+      new Date().getTime() - new Date(site.summary_started_on).getTime() >
+        5 * 60 * 1000);
+
   const { data: feedback } = useFeedbackQuery(query);
   return (
     <>
       <Title>
         <div className="flex-1">Feedback</div>
-        {user && (
-          <TitleButton>
+        {canSummarize && (
+          <TitleButton
+            onClick={() => summarizeFeedbackMutation.mutate(site.site_id)}
+          >
             <SvgRobot />
             summarize
           </TitleButton>
         )}
-        <TitleLinkButton href={`/sites/${site_id}/feedback/new`}>
+        <TitleLinkButton href={`/sites/${site.site_id}/feedback/new`}>
           add new
         </TitleLinkButton>
       </Title>
 
-      <SectionContent>
-        <TableHolder>
-          <div className="xpx-6 xpy-4 text-sky-800 italic bg-gray-50 flex gap-6x ">
-            <div className="bg-amber-100 p-6 text-3xl border-r border-gray-200 text-amber-600">
-              <SvgRobot />
-            </div>
+      {site.summary && (
+        <SectionContent>
+          <TableHolder>
+            <div className="xpx-6 xpy-4 text-sky-800 italic bg-gray-50 flex gap-6x ">
+              <div className="bg-amber-100 p-6 text-3xl border-r border-gray-200 text-amber-600">
+                <SvgRobot />
+              </div>
 
-            <div className="p-4 block overflow-auto whitespace-pre-line">
-              <h1 className="text-xs font-bold pb-2 opacity-50">AI Summary</h1>
-              {`Our recent user feedback highlights a strong positive sentiment regarding the platform's core experience and support. Users frequently commend the support team for being exceptionally responsive, contributing to an overall smooth setup process and intuitive interface. The seamless integration with Google, top-notch dashboard analytics, and clear, helpful documentation were also consistently praised as significant strengths.
-
-While satisfaction is high, valuable suggestions for future enhancements have been identified. Key areas for improvement include a strong user desire for more UI customization options and the addition of export functionality. Feedback also suggests that implementing a default dark mode would be a welcome feature, and attention could be given to optimizing the mobile version, which some users found to be a bit cramped.
-              `}
+              <div className="p-4 block overflow-auto whitespace-pre-line">
+                <h1 className="text-xs font-bold pb-2 opacity-50">
+                  AI Summary
+                </h1>
+                {site.summary}
+              </div>
             </div>
-          </div>
-        </TableHolder>
-      </SectionContent>
+          </TableHolder>
+        </SectionContent>
+      )}
 
       <SectionContent>
         <ErrorBoundary
