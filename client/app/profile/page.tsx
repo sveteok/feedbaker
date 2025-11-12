@@ -99,15 +99,17 @@ export default function ProfilePage() {
             Own Sites List
           </button>
 
-          <button
-            className="p-2 text-white bg-amber-600 rounded-xs w-2/3 mx-auto 
+          {user.is_admin && (
+            <button
+              className="p-2 text-white bg-amber-600 rounded-xs w-2/3 mx-auto 
         outline-none focus:ring-amber-800 focus:ring-2
         cursor-pointer active:opacity-80"
-            type="button"
-            onClick={() => router.push(`/users`)}
-          >
-            User List
-          </button>
+              type="button"
+              onClick={() => router.push(`/users`)}
+            >
+              User List
+            </button>
+          )}
         </TableHolder>
       </SectionContent>
       <Title>Danger Zone</Title>
