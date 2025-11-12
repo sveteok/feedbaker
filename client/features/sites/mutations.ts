@@ -80,7 +80,7 @@ export function useSiteMutation(action: SiteMutationAction) {
 
       toast.success("Site updated!");
       invalidateSitesList();
-      router.push(`/sites/${updatedSite.site_id}`);
+      // router.push(`/sites/${updatedSite.site_id}/feedback`);
     },
     onError: (error) => toast.error(error.message),
   });
