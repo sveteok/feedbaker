@@ -247,8 +247,10 @@ feedbaker/
 
 ## Optional features (Planned)
 
-Email notifications for new feedback
-Webhook integration for external apps
-Site-level analytics
-Dark/light theme for widget
-Admin dashboard improvements
+- Anti-spam and rate limiting to prevent spam feedback using CAPTCHA, rate limits, or content analysis
+- Improved logging system
+- Additional authentication providers
+- Email or webhook notifications to notify owners about new feedback or summary completion
+- Feedback analytics to visualize trends, categories, and summary metrics per site
+- Dark/light theme for widget
+- Admin dashboard improvements
