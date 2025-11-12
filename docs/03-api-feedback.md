@@ -156,8 +156,13 @@ Response (200 OK)
 
 ```
 {
-  "deleted": true,
-  "feedback_id": "b132a872-4d2c-4d77-b6a0-d11ffb9ebae1"
+  "feedback_id": "8b60c4b3-2d23-45ab-8a21-dcd76d23d7a0",
+  "site_id": "9f1d5f2e-927a-4e31-b26a-19c5c1ad92f4",
+  "author": "Jane Doe",
+  "body": "Love the dark mode option!",
+  "public": true,
+  "created_on": "2025-11-10T12:30:00Z",
+  "updated_on": "2025-11-10T12:31:00Z"
 }
 ```
 

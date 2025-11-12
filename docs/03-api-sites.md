@@ -181,10 +181,14 @@ Path Parameters
 
 Response (200 OK)
 
-{
-"deleted": true,
-"site_id": "7f10b0e8-6432-4d0a-98a2-28dcfc74234c"
-}
+`{
+"site_id": "7f10b0e8-6432-4d0a-98a2-28dcfc74234c",
+"name": "My Updated Docs",
+"url": "https://docs.example.com",
+"description": "Updated description",
+"owner_id": "2f0a0de0-77c4-4a1d-a29d-3a2b7b7332f4",
+"updated_on": "2025-11-10T12:40:00Z"
+}`
 
 Error Responses
 
