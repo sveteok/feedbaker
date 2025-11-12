@@ -64,7 +64,7 @@ const FeedbackCard = ({
                     }
                     onClick={handleToggleStatusFeedback}
                   >
-                    {feedback.public ? "unpublish" : "pubish"}
+                    {feedback.public ? "unpublish" : "publish"}
                   </OwnerButton>
                   <OwnerButton onClick={() => setShowModal(true)}>
                     delete
