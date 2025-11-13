@@ -69,7 +69,8 @@ router.post("/google", async (req: express.Request, res: express.Response) => {
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: "none",
+      // sameSite: "lax",
       maxAge: 60 * 60 * 10000,
     });
 
