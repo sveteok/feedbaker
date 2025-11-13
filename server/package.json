@@ -18,7 +18,8 @@
     "ts-node": "ts-node",
     "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
     "build": "tsc --types node",
-    "seed": "tsx src/scripts/seedData.ts"
+    "seed": "tsx src/scripts/seedData.ts",
+    "install": "npm install --include=dev"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

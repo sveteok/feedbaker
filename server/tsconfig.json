@@ -1,66 +1,23 @@
 {
-  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    "typeRoots": ["./node_modules/@types"],
-    // File Layout
     "rootDir": "src",
-    // "rootDir": "./",
     "outDir": "dist",
-
     "target": "ES2020",
-    // "module": "ESNext",
     "module": "commonjs",
     "moduleResolution": "node",
-    // "moduleResolution": "node",
-    // "moduleResolution": "bundler",
-    // "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    // "strict": true,
-    // "skipLibCheck": true,
-    // "outDir": "dist",
-    // Environment Settings
-    // See also https://aka.ms/tsconfig/module
-    // "module": "nodenext", old
-    // "target": "ES2020", old
-    // "types": [],
-    // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
-    // "types": ["vitest/globals", "node"],
+    "lib": ["ES2020"],
     "types": ["node"],
-    // "moduleResolution": "nodeNext", old
-    // and npm install -D @types/node
-
-    // Other Outputs
     "sourceMap": false,
     "declaration": false,
     "declarationMap": false,
-
-    // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
-    // Style Options
-    // "noImplicitReturns": true,
-    // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
-
-    // Recommended Options
     "strict": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": false,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx"
   },
-  //   "include": ["./**/**/*.ts"],
-  "include": ["src"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "eslint.config.mts"]
 }
