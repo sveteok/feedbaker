@@ -16,10 +16,9 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
     "ts-node": "ts-node",
-    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
-    "build": "tsc --types node",
-    "seed": "tsx src/scripts/seedData.ts",
-    "install": "npm install --include=dev"
+    "build": "tsc",
+    "dev": "ts-node-dev src/index.ts",
+    "seed": "tsx src/scripts/seedData.ts"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
