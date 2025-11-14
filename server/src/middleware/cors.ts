@@ -7,7 +7,6 @@ export const publicCors = cors({
 
 const allowedOrigins = process.env.PRIVATE_CORS_ORIGINS?.split(",") || [];
 
-console.log(allowedOrigins);
 export const restrictedCors = cors({
   // origin: process.env.PRIVATE_CORS_ORIGINS,
   origin: function (origin, callback) {

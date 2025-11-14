@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.options("/api/*", restrictedCors);
+app.options(/.*/, restrictedCors);
 app.use("/api/auth", restrictedCors, authRouter);
 app.use("/api/profile", restrictedCors, profileRouter);
 app.use("/api/sites", publicCors, sitesRouter);
