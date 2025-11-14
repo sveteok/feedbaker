@@ -9,9 +9,7 @@ import {
 } from "@/validations/users";
 import axios, { AxiosResponse } from "axios";
 import { getAxiosErrorMessage } from "@/lib/utils/errors";
-import { SearchUiQueryProps } from "@/validations/feedback";
 import { SITE_PAGE_SIZE } from "@/config/constants";
-import { SearchQueryProps } from "@/validations/sites";
 
 const baseURL = `${absoluteURL}/api/users`;
 
@@ -34,7 +32,7 @@ export const fetchProfile = async (): Promise<UserPayload | null> => {
 
 export const logout = async (): Promise<boolean> => {
   try {
-    const response = await axios.post(`${absoluteURL}/api/logout`, {
+    const response = await axios.post(`${absoluteURL}/api/profile/logout`, {
       headers: { "Cache-Control": "no-cache, no-store, must-revalidate" },
       withCredentials: true,
     });
