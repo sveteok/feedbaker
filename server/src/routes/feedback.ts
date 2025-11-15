@@ -90,7 +90,7 @@ router.get(
 
 router.post(
   "/",
-  restrictedCors,
+  publicCors,
   asyncHandler(async (req: express.Request, res: express.Response) => {
     const result = feedbackCreateSchema.parse(req.body);
     const createdFeedback = await createFeedback(result);
