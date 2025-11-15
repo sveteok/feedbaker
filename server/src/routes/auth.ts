@@ -74,7 +74,7 @@ router.post("/google", async (req: express.Request, res: express.Response) => {
       maxAge: 60 * 60 * 10000,
     });
 
-    res.status(200).json({ message: "Authenticated", userPayload });
+    res.status(200).json({ message: "Authenticated", userPayload, token });
   } catch (err) {
     console.error(err);
     res.status(401).json({ error: "Invalid Google token" });

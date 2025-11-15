@@ -39,6 +39,9 @@ export const logout = async (): Promise<boolean> => {
     if (!response) {
       throw new Error("Invalid server response");
     }
+    const COOKIE_NAME = process.env.COOKIE_NAME!;
+    document.cookie = `${COOKIE_NAME}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict`;
+
     return true;
   } catch (error: unknown) {
     console.error("Failed to logout:", error);
@@ -63,6 +66,9 @@ export const handleCredentialResponse = async (
     if (!result.success) {
       throw new Error("Invalid server response");
     }
+    const COOKIE_NAME = process.env.COOKIE_NAME!;
+
+    document.cookie = `${COOKIE_NAME}=${result.data.token}; path=/; secure; samesite=strict`;
 
     return result.data.userPayload;
   } catch (error: unknown) {

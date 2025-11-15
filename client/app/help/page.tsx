@@ -1,3 +1,5 @@
+"use client";
+
 import WidgetInstructions from "@/components/sites/WidgetInstructions";
 import { Section, SectionContent, TableHolder, Title } from "@/components/Ui";
 import Image from "next/image";
@@ -11,7 +13,8 @@ function EndPoint({ url = "", hint = "" }) {
     </li>
   );
 }
-export default async function HelpPage() {
+
+export default function HelpPage() {
   return (
     <Section>
       <Title>About</Title>
