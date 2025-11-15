@@ -39,8 +39,8 @@ export const logout = async (): Promise<boolean> => {
     if (!response) {
       throw new Error("Invalid server response");
     }
-    // const COOKIE_NAME = process.env.COOKIE_NAME!;
-    // document.cookie = `${COOKIE_NAME}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=none`;
+    const COOKIE_NAME = process.env.COOKIE_NAME!;
+    document.cookie = `${COOKIE_NAME}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax`;
 
     return true;
   } catch (error: unknown) {
@@ -66,9 +66,9 @@ export const handleCredentialResponse = async (
     if (!result.success) {
       throw new Error("Invalid server response");
     }
-    // const COOKIE_NAME = process.env.COOKIE_NAME!;
+    const COOKIE_NAME = process.env.COOKIE_NAME!;
 
-    // document.cookie = `${COOKIE_NAME}=${result.data.token}; path=/; secure; samesite=none`;
+    document.cookie = `${COOKIE_NAME}=${result.data.token}; path=/; secure; samesite=lax`;
 
     return result.data.userPayload;
   } catch (error: unknown) {
