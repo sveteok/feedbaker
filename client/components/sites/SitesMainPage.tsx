@@ -131,7 +131,7 @@ export default function SitesMainPage() {
             <PageNavigator
               onNext={handleNext}
               onPrev={handlePrev}
-              currPage={Number(page || 0)}
+              currPage={Number(page || 1)}
               totalPages={Math.ceil(sites.totalCount / SITE_PAGE_SIZE)}
             />
           </Suspense>

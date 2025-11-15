@@ -144,7 +144,7 @@ export default function FeedbackMainPage({
             <PageNavigator
               onNext={handleNext}
               onPrev={handlePrev}
-              currPage={Number(query.page || 0)}
+              currPage={Number(query.page || 1)}
               totalPages={Math.ceil(feedback.totalCount / FEEDBACK_PAGE_SIZE)}
             />
           </Suspense>
