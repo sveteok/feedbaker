@@ -72,6 +72,7 @@ router.post("/google", async (req: express.Request, res: express.Response) => {
       sameSite: "none",
       // sameSite: "lax",
       maxAge: 60 * 60 * 10000,
+      path: "/",
     });
 
     res.status(200).json({ message: "Authenticated", userPayload, token });
