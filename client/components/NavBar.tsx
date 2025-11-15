@@ -18,6 +18,7 @@ export default function NavBar() {
       <MenuLink href="/sites">Sites</MenuLink>
       {user?.is_admin && <MenuLink href="/users">Users</MenuLink>}
       <MenuLink href="/help">Help</MenuLink>
+      <MenuLink href="/debug">debug</MenuLink>
       <div className="flex-1 border-b-4 pb-3 border-amber-800/10"></div>
       {user && <MenuLink href="/profile">Profile</MenuLink>}
       {!user && <MenuLink href="/login">Sign In</MenuLink>}

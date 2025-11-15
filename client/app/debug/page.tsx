@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-const COOKIE_NAME = process.env.COOKIE_NAME || "auth_token";
+const COOKIE_NAME = process.env.NEXT_PUBLIC_COOKIE_NAME!;
 
 export default async function Debug() {
   const cookieStore = await cookies();

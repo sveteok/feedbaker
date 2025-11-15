@@ -12,6 +12,7 @@ import { getAxiosErrorMessage } from "@/lib/utils/errors";
 import { SITE_PAGE_SIZE } from "@/config/constants";
 
 const baseURL = `${absoluteURL}/api/users`;
+const COOKIE_NAME = process.env.NEXT_PUBLIC_COOKIE_NAME;
 
 export const fetchProfile = async (): Promise<UserPayload | null> => {
   try {
@@ -39,7 +40,7 @@ export const logout = async (): Promise<boolean> => {
     if (!response) {
       throw new Error("Invalid server response");
     }
-    const COOKIE_NAME = process.env.COOKIE_NAME!;
+
     document.cookie = `${COOKIE_NAME}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax`;
 
     return true;
@@ -66,9 +67,14 @@ export const handleCredentialResponse = async (
     if (!result.success) {
       throw new Error("Invalid server response");
     }
-    const COOKIE_NAME = process.env.COOKIE_NAME!;
 
-    document.cookie = `${COOKIE_NAME}=${result.data.token}; path=/; secure; samesite=lax`;
+    // console.log("process.env", process.env.NEXT_PUBLIC_COOKIE_NAME);
+    // console.log("result.data.token", COOKIE_NAME, result.data.token);
+    document.cookie = `${COOKIE_NAME}=${result.data.token};path=/; samesite=lax; max-age=86400`;
+
+    // document.cookie = `${COOKIE_NAME}=${result.data.token}; path=/; secure; samesite=lax`;
+
+    // document.cookie = `${COOKIE_NAME}=${result.data.token}; path=/; domain=.yourdomain.com; secure; samesite=lax; max-age=86400`;
 
     return result.data.userPayload;
   } catch (error: unknown) {

@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { UserPayload } from "@/types/users";
 
-const COOKIE_NAME = process.env.COOKIE_NAME || "auth_token";
+const COOKIE_NAME = process.env.NEXT_PUBLIC_COOKIE_NAME || "auth_token";
 const JWT_SECRET = process.env.JWT_SECRET!;
 
 export type UserProfile = {
