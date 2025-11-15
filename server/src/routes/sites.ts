@@ -33,7 +33,7 @@ const router = express.Router();
 
 router.get(
   "/",
-  publicCors,
+  restrictedCors,
   optionalAuth,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = searchQueryProps.parse({
@@ -52,7 +52,7 @@ router.get(
 
 router.get(
   "/:site_id",
-  publicCors,
+  restrictedCors,
   asyncHandler(async (req: express.Request, res: express.Response) => {
     const parsed = siteGetByIdSchema.parse(req.params);
 
