@@ -14,6 +14,8 @@ export type UserProfile = {
 export async function getUser(): Promise<UserPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;
+
+  console.log("getUser() => ", token);
   if (!token) return null;
 
   try {

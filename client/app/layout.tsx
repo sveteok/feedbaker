@@ -12,6 +12,7 @@ export default async function RootLayout({
 }>) {
   const user = await getUser();
 
+  console.log("layout ", user);
   return (
     <html lang="en">
       <head>

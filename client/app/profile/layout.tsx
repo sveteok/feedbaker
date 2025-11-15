@@ -7,10 +7,10 @@ export default async function ProfileLayout({
   children: React.ReactNode;
 }) {
   const user = await getUser();
-
-  if (user === null) {
-    redirect("/login"); //unauthorized
-  }
+  console.log("profile user", user);
+  // if (user === null) {
+  //   redirect("/login"); //unauthorized
+  // }
 
   return <>{children}</>;
 }
