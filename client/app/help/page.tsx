@@ -36,7 +36,7 @@ export default async function HelpPage() {
       </SectionContent>
       <WidgetInstructions
         site_id={"aaaaaaaa-1234-1234-1234-ffffffffffff"}
-        src={`${process.env.API_URL}/feedbaker.js`}
+        src={`${window.location.origin}/feedbaker.js`}
       />
       <Title>Public Endpoints</Title>
       <SectionContent>

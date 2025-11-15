@@ -31,7 +31,7 @@ const router = express.Router();
 
 router.get(
   "/",
-  publicCors,
+  restrictedCors,
   optionalAuth,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = feedbackSearchQueryProps.parse({
@@ -77,7 +77,7 @@ router.get(
 
 router.get(
   "/:feedback_id",
-  publicCors,
+  restrictedCors,
   asyncHandler(async (req: express.Request, res: express.Response) => {
     const parsed = feedbackGetByIdSchema.parse(req.params);
 
@@ -90,7 +90,7 @@ router.get(
 
 router.post(
   "/",
-  publicCors,
+  restrictedCors,
   asyncHandler(async (req: express.Request, res: express.Response) => {
     const result = feedbackCreateSchema.parse(req.body);
     const createdFeedback = await createFeedback(result);

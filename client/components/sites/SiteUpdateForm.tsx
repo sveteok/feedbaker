@@ -109,7 +109,7 @@ const SiteUpdateForm = ({
 
         <WidgetInstructions
           site_id={site.site_id}
-          src={`${process.env.API_URL}/feedbaker.js`}
+          src={`${window.location.origin}/feedbaker.js`}
         />
 
         <Title>Danger Zone</Title>

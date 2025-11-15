@@ -2,7 +2,7 @@ import express from "express";
 import { DatabaseError } from "pg";
 
 import { authenticateOwnerOrAdmin, optionalAuth } from "../middleware/auth";
-import { publicCors, restrictedCors } from "../middleware/cors";
+import { restrictedCors } from "../middleware/cors";
 import { AuthenticateRequest } from "../types/users";
 import { asyncHandler } from "../utils/asyncHandler";
 
