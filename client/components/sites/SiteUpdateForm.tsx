@@ -1,5 +1,3 @@
-"use client";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -109,10 +107,7 @@ const SiteUpdateForm = ({
           </TableHolder>
         </SectionContent>
 
-        <WidgetInstructions
-          site_id={site.site_id}
-          src={`${window.location.origin}feedbaker.js`}
-        />
+        <WidgetInstructions site_id={site.site_id} />
 
         <Title>Danger Zone</Title>
         <SiteDeleteContent

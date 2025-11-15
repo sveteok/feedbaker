@@ -1,5 +1,3 @@
-"use client";
-
 import WidgetInstructions from "@/components/sites/WidgetInstructions";
 import { Section, SectionContent, TableHolder, Title } from "@/components/Ui";
 import Image from "next/image";
@@ -37,10 +35,7 @@ export default function HelpPage() {
           </p>
         </div>
       </SectionContent>
-      <WidgetInstructions
-        site_id={"aaaaaaaa-1234-1234-1234-ffffffffffff"}
-        src={`${window.location.origin}feedbaker.js`}
-      />
+      <WidgetInstructions site_id={"aaaaaaaa-1234-1234-1234-ffffffffffff"} />
       <Title>Public Endpoints</Title>
       <SectionContent>
         <div className="p-6 xtext-center text-black xtext-xs bg-gray-50">

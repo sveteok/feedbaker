@@ -68,14 +68,7 @@ export const handleCredentialResponse = async (
       throw new Error("Invalid server response");
     }
 
-    // console.log("process.env", process.env.NEXT_PUBLIC_COOKIE_NAME);
-    // console.log("result.data.token", COOKIE_NAME, result.data.token);
     document.cookie = `${COOKIE_NAME}=${result.data.token};path=/; samesite=lax; max-age=86400`;
-
-    // document.cookie = `${COOKIE_NAME}=${result.data.token}; path=/; secure; samesite=lax`;
-
-    // document.cookie = `${COOKIE_NAME}=${result.data.token}; path=/; domain=.yourdomain.com; secure; samesite=lax; max-age=86400`;
-
     return result.data.userPayload;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
