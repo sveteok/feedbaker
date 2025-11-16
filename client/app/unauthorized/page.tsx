@@ -1,6 +1,4 @@
-import WidgetInstructions from "@/components/sites/WidgetInstructions";
-import { Section, SectionContent, TableHolder, Title } from "@/components/Ui";
-import Image from "next/image";
+import { Section, SectionContent, Title } from "@/components/Ui";
 
 export default async function UnauthorizedPage() {
   return (

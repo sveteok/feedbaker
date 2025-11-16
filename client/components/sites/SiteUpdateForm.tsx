@@ -107,10 +107,7 @@ const SiteUpdateForm = ({
           </TableHolder>
         </SectionContent>
 
-        <WidgetInstructions
-          site_id={site.site_id}
-          src={`${process.env.NEXT_PUBLIC_API_URL}/feedbaker.js`}
-        />
+        <WidgetInstructions site_id={site.site_id} />
 
         <Title>Danger Zone</Title>
         <SiteDeleteContent

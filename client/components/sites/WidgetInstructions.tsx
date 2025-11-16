@@ -6,7 +6,6 @@ import { SvgCopyClipboard } from "../Svg";
 
 interface InputFormProps {
   site_id: string;
-  src: string;
 }
 
 type WidgetInstructionsColorsProps = {
@@ -38,7 +37,7 @@ const WidgetInstructionsColors = {
   },
 };
 
-const WidgetInstructions = ({ site_id, src }: InputFormProps) => {
+const WidgetInstructions = ({ site_id }: InputFormProps) => {
   const [state, setState] = useState<WidgetInstructionsColorsProps>(
     WidgetInstructionsColors.style1
   );
@@ -50,7 +49,7 @@ const WidgetInstructions = ({ site_id, src }: InputFormProps) => {
     WidgetInstructionsColors.style4,
   ];
 
-  const scriptTxt = `<script src="${src}" data-site="${site_id}" data-bg="${state.bg}" data-fg="${state.fg}"></script>`;
+  const scriptTxt = `<script src="${window.location.origin}/feedbaker.js" data-site="${site_id}" data-bg="${state.bg}" data-fg="${state.fg}"></script>`;
 
   return (
     <>

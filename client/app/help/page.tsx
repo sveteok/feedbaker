@@ -34,10 +34,7 @@ export default async function HelpPage() {
           </p>
         </div>
       </SectionContent>
-      <WidgetInstructions
-        site_id={"aaaaaaaa-1234-1234-1234-ffffffffffff"}
-        src={`${process.env.NEXT_PUBLIC_API_URL}/feedbaker.js`}
-      />
+      <WidgetInstructions site_id={"aaaaaaaa-1234-1234-1234-ffffffffffff"} />
       <Title>Public Endpoints</Title>
       <SectionContent>
         <div className="p-6 xtext-center text-black xtext-xs bg-gray-50">
