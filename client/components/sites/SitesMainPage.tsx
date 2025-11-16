@@ -30,7 +30,6 @@ export default function SitesMainPage() {
   const search = searchParams.get("search") || SITE_QUERY.search;
   const page = Number(searchParams.get("page")) || SITE_QUERY.page;
   const owner_id = searchParams.get("owner_id") || SITE_QUERY.owner_id;
-  const site_public = searchParams.get("site_public") || SITE_QUERY.site_public;
 
   const [ownSite, setOwnSite] = useState(owner_id !== "");
 
@@ -40,9 +39,8 @@ export default function SitesMainPage() {
       page,
       search,
       owner_id,
-      site_public,
     }),
-    [page, search, owner_id, site_public]
+    [page, search, owner_id]
   );
 
   const handleNext = () => updateParams({ page: page + 1 });
@@ -131,7 +129,7 @@ export default function SitesMainPage() {
             <PageNavigator
               onNext={handleNext}
               onPrev={handlePrev}
-              currPage={Number(page || 0)}
+              currPage={Number(page || 1)}
               totalPages={Math.ceil(sites.totalCount / SITE_PAGE_SIZE)}
             />
           </Suspense>

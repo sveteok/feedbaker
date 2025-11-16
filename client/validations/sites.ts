@@ -4,7 +4,6 @@ export const searchUiQueryProps = z.object({
   page: z.preprocess(Number, z.number().int().min(0)).optional(),
   search: z.string().optional(),
   owner_id: z.uuid().optional(),
-  site_public: z.union([z.string(), z.boolean()]).optional(),
 });
 
 export type SearchUiQueryProps = z.infer<typeof searchUiQueryProps>;
@@ -14,7 +13,6 @@ export const searchQueryProps = z.object({
   offset: z.preprocess(Number, z.number().int().min(0)).optional(),
   searchText: z.string().optional(),
   owner_id: z.uuid().optional(),
-  site_public: z.union([z.string(), z.boolean()]).optional(),
 });
 
 export type SearchQueryProps = z.infer<typeof searchQueryProps>;

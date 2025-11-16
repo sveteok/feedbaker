@@ -12,7 +12,6 @@ export const queryKeys = {
         search?: string;
         site_id?: string;
         owner_id?: string;
-        site_public?: boolean | string;
       }) =>
         [...queryKeys.sites.all, "list", normalizeFilters(filters)] as const,
     },

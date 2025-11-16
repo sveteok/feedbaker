@@ -222,7 +222,7 @@ export type PageNavigatorProps = {
 export default function PageNavigator({
   onPrev,
   onNext,
-  currPage = 0,
+  currPage = 1,
   totalPages = 0,
 }: PageNavigatorProps) {
   return (

@@ -29,7 +29,7 @@ export const getSitesServer = async (
 
     const searchRestQuery: SearchQueryProps = {
       limit: SITE_PAGE_SIZE,
-      offset: (page - 1) * SITE_PAGE_SIZE,
+      offset: Math.max((page - 1) * SITE_PAGE_SIZE, 0),
       searchText: search,
     };
 

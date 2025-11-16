@@ -42,7 +42,6 @@ router.get(
       searchText: String(req.query.searchText ?? ""),
       is_admin: req.user?.is_admin ?? false,
       owner_id: req.query.owner_id || undefined,
-      site_public: Boolean(req.query.site_id ?? true),
     });
 
     const sites = await getSitesPaginated(parsed);

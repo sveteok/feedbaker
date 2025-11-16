@@ -18,19 +18,13 @@ export const getSites = async (
   searchUiQuery: SearchUiQueryProps
 ): Promise<PaginatedSites> => {
   try {
-    const {
-      page = 1,
-      search = "",
-      owner_id = "",
-      site_public = true,
-    } = searchUiQuery;
+    const { page = 1, search = "", owner_id = "" } = searchUiQuery;
 
     const searchRestQuery: SearchQueryProps = {
       limit: SITE_PAGE_SIZE,
       offset: Math.max((page - 1) * SITE_PAGE_SIZE, 0),
       searchText: search,
       owner_id,
-      site_public,
     };
 
     const response = await axios.get(baseURL, {
