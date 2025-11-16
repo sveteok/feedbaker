@@ -1,12 +1,4 @@
 import pg from "pg";
-// const { PG_HOST, PG_PORT, PG_USERNAME, PG_PASSWORD, PG_DATABASE } = process.env;
-// const pool = new pg.Pool({
-//   host: PG_HOST,
-//   port: Number(PG_PORT),
-//   user: PG_USERNAME,
-//   password: PG_PASSWORD,
-//   database: PG_DATABASE,
-// });
 
 const { DATABASE_URL } = process.env;
 

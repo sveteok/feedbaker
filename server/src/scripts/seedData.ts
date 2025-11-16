@@ -11,24 +11,20 @@ import {
   usersData,
 } from "./placeholder-data";
 
-const { PG_HOST, PG_PORT, PG_USERNAME, PG_PASSWORD, PG_DATABASE } = process.env;
-
 async function connectToDb() {
+  if (!process.env.DATABASE_URL) {
+    throw new Error("DATABASE_URL is missing");
+  }
+
   const client = new pg.Client({
-    host: PG_HOST,
-    user: PG_USERNAME,
-    password: PG_PASSWORD,
-    database: PG_DATABASE,
-    port: Number(PG_PORT) || 5432,
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
   });
 
   await client.connect();
-  console.log({
-    host: PG_HOST,
-    port: PG_PORT,
-    user: PG_USERNAME,
-    database: PG_DATABASE,
-  });
+  console.log("Connected to:", process.env.DATABASE_URL);
   return client;
 }
 
