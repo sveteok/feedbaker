@@ -39,7 +39,6 @@ export class QueryBuilder {
 
 export const createTables = async () => {
   await executeQuery(`CREATE EXTENSION IF NOT EXISTS pg_trgm;`);
-  await executeQuery(`DROP TABLE IF EXISTS feedback_summary;`);
 
   const usersTableQuery = `CREATE TABLE IF NOT EXISTS "users" (
     "user_id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
