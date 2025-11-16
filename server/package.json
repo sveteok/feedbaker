@@ -16,8 +16,8 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
     "ts-node": "ts-node",
-    "build": "tsc",
-    "dev": "ts-node-dev src/index.ts",
+    "build": "npm install && tsc",
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
     "seed": "tsx src/scripts/seedData.ts"
   },
   "dependencies": {

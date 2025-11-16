@@ -1,4 +1,6 @@
-import { absoluteURL } from "@/config/env";
+import axios, { AxiosResponse } from "axios";
+import { getAxiosErrorMessage } from "@/lib/utils/errors";
+
 import { PaginatedUsers, UserPayload } from "@/types/users";
 import {
   authenticatedUserSchema,
@@ -7,13 +9,11 @@ import {
   SearchUserUiQueryProps,
   userSchema,
 } from "@/validations/users";
-import axios, { AxiosResponse } from "axios";
-import { getAxiosErrorMessage } from "@/lib/utils/errors";
-import { SearchUiQueryProps } from "@/validations/feedback";
+import { absoluteURL } from "@/config/env";
 import { SITE_PAGE_SIZE } from "@/config/constants";
-import { SearchQueryProps } from "@/validations/sites";
-
 const baseURL = `${absoluteURL}/api/users`;
+
+const COOKIE_NAME = process.env.NEXT_PUBLIC_COOKIE_NAME;
 
 export const fetchProfile = async (): Promise<UserPayload | null> => {
   try {
@@ -34,13 +34,14 @@ export const fetchProfile = async (): Promise<UserPayload | null> => {
 
 export const logout = async (): Promise<boolean> => {
   try {
-    const response = await axios.post(`${absoluteURL}/api/logout`, {
+    const response = await axios.post(`${absoluteURL}/api/profile/logout`, {
       headers: { "Cache-Control": "no-cache, no-store, must-revalidate" },
       withCredentials: true,
     });
     if (!response) {
       throw new Error("Invalid server response");
     }
+    document.cookie = `${COOKIE_NAME}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=lax`;
     return true;
   } catch (error: unknown) {
     console.error("Failed to logout:", error);
@@ -65,7 +66,7 @@ export const handleCredentialResponse = async (
     if (!result.success) {
       throw new Error("Invalid server response");
     }
-
+    document.cookie = `${COOKIE_NAME}=${result.data.token};path=/; samesite=lax; max-age=86400`;
     return result.data.userPayload;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {

@@ -6,7 +6,7 @@ import { AuthenticateRequest } from "../types/users";
 const router = express.Router();
 
 router.get(
-  "/profile",
+  "/",
   authenticateOwnerOrAdmin,
   (req: AuthenticateRequest, res: express.Response) => {
     if (!req.user) {

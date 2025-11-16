@@ -14,6 +14,7 @@ export const userSchema = baseUserSchema.extend({
 export const authenticatedUserSchema = z.object({
   message: z.string(),
   userPayload: userSchema,
+  token: z.string(),
 });
 
 export type BaseUser = z.infer<typeof baseUserSchema>;
