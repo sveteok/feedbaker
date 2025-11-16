@@ -39,6 +39,7 @@ export class QueryBuilder {
 
 export const createTables = async () => {
   await executeQuery(`CREATE EXTENSION IF NOT EXISTS pg_trgm;`);
+  await executeQuery(`DROP TABLE IF EXISTS feedback_summary;`);
 
   const usersTableQuery = `CREATE TABLE IF NOT EXISTS "users" (
     "user_id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -117,8 +118,8 @@ export const createTables = async () => {
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "site_id" UUID NOT NULL REFERENCES sites(site_id) ON DELETE CASCADE,
     "summary" TEXT,
-    "started_on" TIMESTAMPTZ DEFAULT now(), -- when generation starts
-    "updated_on" TIMESTAMPTZ DEFAULT now(),  -- when AI response is saved
+    "started_on" TIMESTAMPTZ, -- when generation starts
+    "updated_on" TIMESTAMPTZ,  -- when AI response is saved
     "error" VARCHAR(255),
     CONSTRAINT unique_site_summary UNIQUE (site_id)
   );`;

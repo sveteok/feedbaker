@@ -8,6 +8,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Search from "@/components/Search";
 import FeedbackList from "@/components/feedback/FeedbackList";
 import PageNavigator, {
+  Ago,
+  cn,
   SectionContent,
   TableHolder,
   Title,
@@ -17,7 +19,6 @@ import PageNavigator, {
 import { DEFAULT_QUERY, FEEDBACK_PAGE_SIZE } from "@/config/constants";
 import { useFeedbackQuery } from "@/features/feedback/useFeedbackQuery";
 import { useAuth } from "@/lib/providers/AuthContext";
-import { summarizeFeedback } from "@/lib/fetchers/feedback";
 import { SvgRobot } from "../Svg";
 import { Site } from "@/types/sites";
 import { useSiteMutation } from "@/features/sites/mutations";
@@ -76,18 +77,23 @@ export default function FeedbackMainPage({
   };
 
   const canUpdate = user && (user.user_id === site.owner_id || user?.is_admin);
-  const canSummarize =
+
+  const now = new Date().getTime();
+  const summStart = site.summary_started_on?.getTime() || 0;
+  const summEnd = site.summary_updated_on?.getTime() || 0;
+  const summarizing = summEnd < summStart;
+
+  const summarizable =
     canUpdate &&
-    (!site.summary_started_on ||
-      new Date().getTime() - new Date(site.summary_started_on).getTime() >
-        5 * 60 * 1000);
+    !summarizing &&
+    now - Math.max(summEnd, summStart) > 5 * 60 * 1000;
 
   const { data: feedback } = useFeedbackQuery(query);
   return (
     <>
       <Title>
         <div className="flex-1">Feedback</div>
-        {canSummarize && (
+        {summarizable && (
           <TitleButton
             onClick={() => summarizeFeedbackMutation.mutate(site.site_id)}
           >
@@ -100,19 +106,39 @@ export default function FeedbackMainPage({
         </TitleLinkButton>
       </Title>
 
-      {site.summary && (
+      {(summarizing || site.summary) && (
         <SectionContent>
           <TableHolder>
-            <div className="xpx-6 xpy-4 text-sky-800 italic bg-gray-50 flex gap-6x ">
+            <div className="text-sky-800 italic bg-gray-50 flex ">
               <div className="bg-amber-100 p-6 text-3xl border-r border-gray-200 text-amber-600">
                 <SvgRobot />
               </div>
 
-              <div className="p-4 block overflow-auto whitespace-pre-line">
+              <div className="p-4 block overflow-auto whitespace-pre-line flex-1">
                 <h1 className="text-xs font-bold pb-2 opacity-50">
                   AI Summary
                 </h1>
-                {site.summary}
+
+                <div
+                  className={cn(
+                    !site.summary && "opacity-50",
+                    summarizing && "animate-pulse"
+                  )}
+                >
+                  {site.summary || "..."}
+                </div>
+
+                {!summarizing && (
+                  <div className="italic text-xs text-right p-2">
+                    generated&nbsp;
+                    <Ago date={site.summary_updated_on!} />
+                  </div>
+                )}
+                {summarizing && (
+                  <div className="italic text-xs text-right p-2 animate-pulse">
+                    summarizing, refresh page to update
+                  </div>
+                )}
               </div>
             </div>
           </TableHolder>

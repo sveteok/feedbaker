@@ -4,6 +4,7 @@ import { SvgLeft, SvgRight } from "./Svg";
 import { usePathname } from "next/navigation";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { useEffect, useState } from "react";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -375,3 +376,43 @@ export function MenuLink({
     </Link>
   );
 }
+
+interface RelativeTimeProps {
+  date: Date | string;
+}
+
+export const Ago: React.FC<RelativeTimeProps> = ({ date }) => {
+  const [relativeTime, setRelativeTime] = useState<string>("");
+
+  useEffect(() => {
+    const updateRelativeTime = () => {
+      const now = new Date();
+      const targetDate = new Date(date);
+      const seconds = Math.floor((now.getTime() - targetDate.getTime()) / 1000);
+
+      if (seconds < 60) {
+        setRelativeTime(`${seconds}s ago`);
+      } else if (seconds < 3600) {
+        const minutes = Math.floor(seconds / 60);
+        setRelativeTime(`${minutes}m ago`);
+      } else if (seconds < 86400) {
+        const hours = Math.floor(seconds / 3600);
+        setRelativeTime(`${hours}h ago`);
+      } else if (seconds < 2592000) {
+        const days = Math.floor(seconds / 86400);
+        setRelativeTime(`${days}d ago`);
+      } else if (seconds < 31536000) {
+        const weeks = Math.floor(seconds / 604800);
+        setRelativeTime(`${weeks}w ago`);
+      } else {
+        const years = Math.floor(seconds / 31536000);
+        setRelativeTime(`${years}y ago`);
+      }
+    };
+    updateRelativeTime();
+    const interval = setInterval(updateRelativeTime, 1000); // Update every second
+    return () => clearInterval(interval);
+  }, [date]);
+
+  return <span>{relativeTime}</span>;
+};

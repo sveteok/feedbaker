@@ -147,7 +147,7 @@ export const getFeedbackSummarizeInProgress = async (
   const query = `SELECT *
                   FROM feedback_summary
                   WHERE site_id = $1
-                    AND started_on > now() - interval '5 minutes';`;
+                    AND started_on > now() - interval '4 minutes';`;
 
   const parameters = [site_id];
   const result = await executeQuery(query, parameters);
