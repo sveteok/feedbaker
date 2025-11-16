@@ -28,7 +28,7 @@ app.options(/^(?!\/api\/feedback).*/, restrictedCors);
 app.use("/api/auth", restrictedCors, authRouter);
 app.use("/api/profile", restrictedCors, profileRouter);
 app.use("/api/sites", restrictedCors, sitesRouter);
-app.use("/api/feedback", feedbackRouter);
+app.use("/api/feedback", publicCors, feedbackRouter);
 app.use("/api/users", restrictedCors, usersRouter);
 
 app.use(errorHandler);
