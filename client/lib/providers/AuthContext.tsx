@@ -10,6 +10,7 @@ import {
 
 import type { UserPayload } from "@/types/users";
 import { useUserQuery } from "@/features/users/useUserQuery";
+import { Loading } from "@/components/Loading";
 
 type AuthContextValue = {
   user: UserPayload | null;
@@ -28,7 +29,7 @@ export function AuthProvider({
   const [user, setUser] = useState(initialUser);
 
   return (
-    <Suspense fallback={<div>Loading auth...</div>}>
+    <Suspense fallback={<Loading />}>
       <AuthContext.Provider value={{ user, setUser }}>
         <UserRefresher />
         {children}
