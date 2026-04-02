@@ -1,0 +1,45 @@
+name: Seed Database
+
+on:
+  workflow_dispatch:
+    inputs:
+      truncate_existing:
+        description: "Delete existing users, sites, and feedback before seeding"
+        required: true
+        type: boolean
+        default: false
+
+concurrency:
+  group: seed-database
+  cancel-in-progress: false
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    env:
+      DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+      DATABASE_SSL: "true"
+      NODE_ENV: production
+      SEED_TRUNCATE: ${{ inputs.truncate_existing }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Seed Neon database
+        run: pnpm --filter @feedbaker/server seed
