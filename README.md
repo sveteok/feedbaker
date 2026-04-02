@@ -154,6 +154,8 @@ Optional overrides can be provided through shell environment variables before st
 
 Use [`client/TEMPLATE.env`](./client/TEMPLATE.env) and [`server/TEMPLATE.env`](./server/TEMPLATE.env) as the source of truth for non-Docker local development.
 
+For Vercel production, set `NEXT_PUBLIC_ORIGIN` to your canonical public URL, for example `https://feedbaker.vercel.app`. The client middleware uses this to redirect generated `*.vercel.app` deployment hosts back to the canonical origin so Google OAuth always runs on the whitelisted host.
+
 ### Database Schema
 
 Feedbaker uses PostgreSQL with the following core tables:
