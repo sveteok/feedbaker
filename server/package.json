@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@feedbaker/server",
   "version": "1.0.0",
   "description": "feedbaker server",
   "license": "ISC",
@@ -7,8 +7,8 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --fix",
     "prettier": "prettier . --check",
     "prettierfix": "prettier . --write",
     "start": "node ./dist/index.js",
@@ -16,9 +16,9 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
     "ts-node": "ts-node",
-    "build": "npm install && tsc",
-    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
-    "seed": "tsx src/scripts/seedData.ts"
+    "build": "tsc",
+    "dev": "nodemon --legacy-watch --watch src --ext ts --exec ts-node src/index.ts",
+    "seed": "ts-node src/scripts/seedData.ts"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

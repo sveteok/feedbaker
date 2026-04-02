@@ -1,13 +1,59 @@
 import pg from "pg";
 
-const { DATABASE_URL } = process.env;
+const {
+  DATABASE_URL,
+  DATABASE_SSL,
+  PG_HOST,
+  PG_PORT,
+  PG_USERNAME,
+  PG_PASSWORD,
+  PG_DATABASE,
+  PGHOST,
+  PGPORT,
+  PGUSER,
+  PGPASSWORD,
+  PGDATABASE,
+} = process.env;
+const isProduction = process.env.NODE_ENV === "production";
+const shouldUseSsl =
+  DATABASE_SSL === "true" ||
+  (DATABASE_SSL !== "false" && (isProduction || Boolean(DATABASE_URL)));
 
-const pool = new pg.Pool({
-  connectionString: DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false, // required for Neon
-  },
-});
+const poolConfig: pg.PoolConfig = {};
+
+if (DATABASE_URL) {
+  poolConfig.connectionString = DATABASE_URL;
+} else {
+  const host = PG_HOST || PGHOST;
+  const port = PG_PORT || PGPORT;
+  const user = PG_USERNAME || PGUSER;
+  const password = PG_PASSWORD || PGPASSWORD;
+  const database = PG_DATABASE || PGDATABASE;
+
+  if (host) {
+    poolConfig.host = host;
+  }
+  if (port) {
+    poolConfig.port = Number(port);
+  }
+  if (user) {
+    poolConfig.user = user;
+  }
+  if (password) {
+    poolConfig.password = password;
+  }
+  if (database) {
+    poolConfig.database = database;
+  }
+}
+
+if (shouldUseSsl) {
+  poolConfig.ssl = {
+    rejectUnauthorized: false, // required for managed Postgres providers
+  };
+}
+
+const pool = new pg.Pool(poolConfig);
 
 export const executeQuery = async (query: string, parameters?: unknown[]) => {
   const client = await pool.connect();

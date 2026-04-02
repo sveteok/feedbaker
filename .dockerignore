@@ -1,0 +1,15 @@
+.git
+.gitignore
+.turbo
+node_modules
+client/node_modules
+server/node_modules
+client/.next
+server/dist
+coverage
+.DS_Store
+draft.jpg
+**/.env
+**/.env.*
+!client/TEMPLATE.env
+!server/TEMPLATE.env

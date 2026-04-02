@@ -3,7 +3,6 @@ import { siteCreateSchema, SiteAddFormData } from "@/validations/sites";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  DefaultLink,
   FormButtons,
   FormInput,
   FormText,
@@ -77,7 +76,11 @@ const SiteAddForm = ({ onSubmit, disabled }: InputFormProps) => {
         </TableHolder>
         <TableHolder>
           <div className="p-2 bg-sky-100">
-            <FormButtons busy={disabled} title={"Register"} />
+            <FormButtons
+              busy={disabled}
+              title={"Register"}
+              onReset={() => reset()}
+            />
           </div>
         </TableHolder>
       </SectionContent>
