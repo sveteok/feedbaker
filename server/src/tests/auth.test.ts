@@ -12,6 +12,13 @@ process.env.COOKIE_NAME = COOKIE_NAME;
 process.env.ADMIN_USER = "admin@example.com";
 process.env.GOOGLE_CLIENT_ID = "fake-client-id";
 
+vi.mock("../models/users", () => ({
+  findOrCreateUser: vi.fn(async (googleUser) => ({
+    user_id: "11111111-1111-1111-1111-111111111111",
+    ...googleUser,
+  })),
+}));
+
 vi.mock("google-auth-library", async () => {
   const actual = await vi.importActual<typeof import("google-auth-library")>(
     "google-auth-library"
@@ -86,7 +93,7 @@ describe("Google Auth", () => {
 
     const cookies = res.headers["set-cookie"];
     expect(cookies?.[0]).toContain(COOKIE_NAME);
-    expect(res.body.user.email).toBe(fakeUser.email);
+    expect(res.body.userPayload.email).toBe(fakeUser.email);
   });
 
   it("should reject invalid google token", async () => {
