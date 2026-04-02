@@ -1,0 +1,105 @@
+services:
+  postgres:
+    image: postgres:16-bookworm
+    container_name: feedbaker-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-feedbaker}
+      POSTGRES_USER: ${POSTGRES_USER:-feedbaker}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-feedbaker}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-feedbaker} -d ${POSTGRES_DB:-feedbaker}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - feedbaker-net
+
+  server:
+    container_name: feedbaker-server
+    build:
+      context: .
+      dockerfile: docker/backend.dev.Dockerfile
+    entrypoint: []
+    depends_on:
+      postgres:
+        condition: service_healthy
+    working_dir: /app
+    command:
+      [
+        "/bin/sh",
+        "-lc",
+        "pnpm install --frozen-lockfile && cd server && pnpm run dev"
+      ]
+    environment:
+      NODE_ENV: development
+      PORT: 8080
+      DATABASE_URL: ${DATABASE_URL:-postgresql://feedbaker:feedbaker@postgres:5432/feedbaker}
+      DATABASE_SSL: ${DATABASE_SSL:-false}
+      PRIVATE_CORS_ORIGINS: ${PRIVATE_CORS_ORIGINS:-http://localhost:3000,http://client:3000}
+      ADMIN_USER: ${ADMIN_USER:-admin@example.com}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-local-google-client-id}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-local-google-client-secret}
+      COOKIE_NAME: ${COOKIE_NAME:-auth_token}
+      JWT_SECRET: ${JWT_SECRET:-local-dev-jwt-secret}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-local-gemini-api-key}
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    volumes:
+      - .:/app
+      - server_root_node_modules:/app/node_modules
+      - server_node_modules:/app/server/node_modules
+      - pnpm_store:/pnpm/store
+    networks:
+      - feedbaker-net
+
+  client:
+    container_name: feedbaker-client
+    build:
+      context: .
+      dockerfile: docker/frontend.dev.Dockerfile
+    entrypoint: []
+    depends_on:
+      server:
+        condition: service_started
+    working_dir: /app
+    command:
+      [
+        "/bin/sh",
+        "-lc",
+        "pnpm install --frozen-lockfile && cd client && pnpm exec next dev --hostname 0.0.0.0 --port 3000"
+      ]
+    environment:
+      NODE_ENV: development
+      API_URL: http://server:8080
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+      NEXT_PUBLIC_ORIGIN: ${NEXT_PUBLIC_ORIGIN:-http://localhost:3000}
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID:-local-google-client-id}
+      NEXT_PUBLIC_COOKIE_NAME: ${NEXT_PUBLIC_COOKIE_NAME:-auth_token}
+      COOKIE_NAME: ${COOKIE_NAME:-auth_token}
+      JWT_SECRET: ${JWT_SECRET:-local-dev-jwt-secret}
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    ports:
+      - "${CLIENT_PORT:-3000}:3000"
+    volumes:
+      - .:/app
+      - client_root_node_modules:/app/node_modules
+      - client_node_modules:/app/client/node_modules
+      - pnpm_store:/pnpm/store
+    networks:
+      - feedbaker-net
+
+volumes:
+  postgres_data:
+  server_root_node_modules:
+  client_root_node_modules:
+  client_node_modules:
+  server_node_modules:
+  pnpm_store:
+
+networks:
+  feedbaker-net:

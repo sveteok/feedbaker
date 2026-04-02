@@ -66,9 +66,93 @@ Visitors can submit feedback directly through these widgets, while owners can vi
 
 - ESLint, Prettier
 - TanStack Query Devtools
-- pnpm / npm Workspaces
+- pnpm workspaces + Turborepo
 - Git + GitLab
 - Supertest, Vitest
+
+## Monorepo Commands
+
+From the repo root:
+
+```bash
+pnpm install
+pnpm dev
+pnpm build
+pnpm lint
+```
+
+Package-specific commands:
+
+```bash
+pnpm --filter @feedbaker/client dev
+pnpm --filter @feedbaker/server dev
+```
+
+## CI/CD
+
+GitHub Actions workflows live in [`.github/workflows/`](./.github/workflows):
+
+- `ci.yml`: runs on pull requests and pushes to `main`, installs dependencies, runs lint, build, and server tests against a temporary PostgreSQL service.
+- `deploy-frontend.yml`: currently manual-only via GitHub Actions `workflow_dispatch`; deploys the `client` app to Vercel when triggered.
+- `deploy-backend.yml`: currently manual-only via GitHub Actions `workflow_dispatch`; triggers a Render production deploy hook when triggered.
+- `security.yml`: runs scheduled and manual dependency audits with `pnpm audit`.
+- `seed-database.yml`: manually seeds the Neon database from GitHub Actions.
+
+### Required GitHub Secrets
+
+Add these repository secrets before enabling the deploy workflows:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+- `RENDER_DEPLOY_HOOK_URL`
+- `NEON_DATABASE_URL`
+
+### CI Environment Strategy
+
+Do not move ordinary CI test values into GitHub secrets unless they are actually sensitive.
+
+- Keep ephemeral CI Postgres values inline in `ci.yml`: `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `DATABASE_URL`.
+- Keep non-secret app placeholders in the committed [`.env.test`](./.env.test): `DATABASE_SSL`, `COOKIE_NAME`, `API_URL`, `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_ORIGIN`, `NEXT_PUBLIC_COOKIE_NAME`, `GOOGLE_CLIENT_ID`, `NEXT_PUBLIC_GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `JWT_SECRET`, and `GEMINI_API_KEY`.
+- Run tests with `NODE_ENV=test`, not `development`.
+- Use GitHub repository secrets only for real secrets that target external systems or production-like infrastructure, such as `VERCEL_TOKEN`, `RENDER_DEPLOY_HOOK_URL`, and `NEON_DATABASE_URL`.
+- Use GitHub Environments for workflows that touch protected infrastructure, such as the manual Neon seed workflow and production deploy workflows.
+
+### Service Setup Notes
+
+- Render: create a deploy hook for the production backend service and store it as `RENDER_DEPLOY_HOOK_URL`.
+- Vercel: link the production frontend project and store its org and project IDs as GitHub secrets.
+- Neon: store the connection string as `NEON_DATABASE_URL`. The manual seed workflow uses it and can optionally truncate existing data before inserting placeholders.
+
+### Avoid Double Deploys
+
+If Render or Vercel are still configured to auto-deploy directly from Git pushes, disable those automatic production deploys before turning on these workflows. Otherwise the same commit can deploy twice: once from the platform integration and once from GitHub Actions.
+
+### Manual Seed Workflow
+
+Use the `Seed Database` workflow from the GitHub Actions tab when you want to populate Neon with demo data.
+
+- Default mode is non-destructive: it inserts placeholder records and skips rows that already exist.
+- If you enable `truncate_existing`, the workflow clears `feedback`, `sites`, and `users` before seeding.
+- The workflow targets the GitHub `production` environment, so you can add required reviewers there before anyone can run it against Neon.
+
+## Docker Local Testing
+
+The repo now includes `docker/backend.dev.Dockerfile`, `docker/frontend.dev.Dockerfile`, and `docker-compose.dev.yml` for a local stack with:
+
+- `client` on `http://localhost:3000`
+- `server` on `http://localhost:8080`
+- `postgres` on `localhost:5432`
+
+Run it from the repo root:
+
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+Optional overrides can be provided through shell environment variables before starting Compose, for example `JWT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GEMINI_API_KEY`, `POSTGRES_PORT`, `CLIENT_PORT`, and `SERVER_PORT`.
+
+Use [`client/TEMPLATE.env`](./client/TEMPLATE.env) and [`server/TEMPLATE.env`](./server/TEMPLATE.env) as the source of truth for non-Docker local development.
 
 ### Database Schema
 
@@ -207,6 +291,10 @@ Example predefined color styles:
 
 ```
 feedbaker/
+├── docker-compose.dev.yml
+├── package.json           # pnpm + turbo workspace root
+├── pnpm-workspace.yaml
+├── turbo.json
 ├── client/                # Next.js frontend
 │   ├── app/
 │   │   ├── login/

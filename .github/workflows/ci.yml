@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    branches:
+      - main
+      - dev
+      - ci-test
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16-bookworm
+        env:
+          POSTGRES_DB: feedbaker
+          POSTGRES_USER: feedbaker
+          POSTGRES_PASSWORD: feedbaker
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U feedbaker -d feedbaker"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://feedbaker:feedbaker@127.0.0.1:5432/feedbaker
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Load test environment
+        run: grep -v '^#' .env.test | grep -v '^[[:space:]]*$' >> "$GITHUB_ENV"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit production dependencies
+        run: pnpm audit --prod --audit-level=high --ignore-registry-errors
+
+      - name: Audit dev dependencies
+        continue-on-error: true
+        run: pnpm audit --dev --audit-level=high --ignore-registry-errors
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run server tests
+        env:
+          NODE_ENV: test
+        run: pnpm --filter @feedbaker/server test -- --run

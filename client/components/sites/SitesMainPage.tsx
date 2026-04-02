@@ -114,7 +114,7 @@ export default function SitesMainPage() {
           fallbackRender={({ error, resetErrorBoundary }) => (
             <div className="alert alert-danger m-3">
               <h4>Something went wrong loading sites.</h4>
-              <p>{error.message}</p>
+              <p>{error instanceof Error ? error.message : "Unknown error"}</p>
               <button className="btn btn-primary" onClick={resetErrorBoundary}>
                 Try Again
               </button>

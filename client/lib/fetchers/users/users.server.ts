@@ -8,7 +8,6 @@ import {
   SearchuserQueryProps,
   SearchUserUiQueryProps,
 } from "@/validations/users";
-import { SearchQueryProps } from "@/validations/sites";
 
 import { absoluteURL } from "@/config/env";
 import { SITE_PAGE_SIZE } from "@/config/constants";
