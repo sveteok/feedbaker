@@ -1,7 +1,6 @@
 import express from "express";
 import { restrictedCors, publicCors } from "./middleware/cors";
 import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -14,12 +13,11 @@ import usersRouter from "./routes/users";
 import { createTables } from "./models/db";
 import { errorHandler } from "./middleware/errorHandler";
 
-createTables();
-
 const app = express();
+const requiredEnvVars = ["COOKIE_NAME", "GOOGLE_CLIENT_ID", "JWT_SECRET"] as const;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.options("/api/feedback", publicCors);
@@ -34,4 +32,20 @@ app.use("/api/users", restrictedCors, usersRouter);
 app.use(errorHandler);
 
 const port = process.env.PORT || 8080;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+
+async function startServer() {
+  const missingEnvVars = requiredEnvVars.filter((key) => !process.env[key]);
+  if (missingEnvVars.length > 0) {
+    throw new Error(
+      `Missing required environment variables: ${missingEnvVars.join(", ")}`
+    );
+  }
+
+  await createTables();
+  app.listen(port, () => console.log(`Server running on port ${port}`));
+}
+
+startServer().catch((error) => {
+  console.error("Failed to start server", error);
+  process.exit(1);
+});

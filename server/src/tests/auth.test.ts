@@ -3,7 +3,6 @@ import { OAuth2Client } from "google-auth-library";
 
 import request from "supertest";
 import jwt, { SignOptions } from "jsonwebtoken";
-import ms from "ms";
 import app from "../testApp";
 
 const COOKIE_NAME = "feedbaker_session";
@@ -59,7 +58,7 @@ interface LoginTicket {
 
 function createTestToken(
   payload: object,
-  expiresIn: number | ms.StringValue = "1h"
+  expiresIn: SignOptions["expiresIn"] = "1h"
 ) {
   const options: SignOptions = {
     expiresIn,

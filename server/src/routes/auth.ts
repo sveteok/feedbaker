@@ -9,23 +9,36 @@ import { findOrCreateUser } from "../models/users";
 
 const router = express.Router();
 
-router.post("/google", async (req: express.Request, res: express.Response) => {
+router.post(
+  "/google",
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
   try {
-    const COOKIE_NAME = process.env.COOKIE_NAME!;
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    const JWT_SECRET = process.env.JWT_SECRET!;
+    const COOKIE_NAME = process.env.COOKIE_NAME;
+    const audience = process.env.GOOGLE_CLIENT_ID;
+    const JWT_SECRET = process.env.JWT_SECRET;
 
     const { credential } = req.body;
 
-    const audience = process.env.GOOGLE_CLIENT_ID;
-    if (!audience) {
-      throw new Error("Missing GOOGLE_CLIENT_ID in environment variables");
+    if (!COOKIE_NAME || !JWT_SECRET || !audience) {
+      throw new Error("Missing auth environment variables");
     }
 
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience,
-    });
+    const client = new OAuth2Client(audience);
+
+    let ticket;
+    try {
+      ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(401).json({ error: "Invalid Google token" });
+    }
 
     const payload = ticket.getPayload();
     if (!payload || !payload?.sub || !payload?.email) {
@@ -69,16 +82,14 @@ router.post("/google", async (req: express.Request, res: express.Response) => {
     res.cookie(COOKIE_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
-      // sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 60 * 60 * 10000,
       path: "/",
     });
 
-    res.status(200).json({ message: "Authenticated", userPayload, token });
-  } catch (err) {
-    console.error(err);
-    res.status(401).json({ error: "Invalid Google token" });
+    return res.status(200).json({ message: "Authenticated", userPayload, token });
+  } catch (error) {
+    return next(error);
   }
 });
 

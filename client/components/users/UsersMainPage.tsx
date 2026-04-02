@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
@@ -77,7 +77,7 @@ export default function UsersMainPage() {
           fallbackRender={({ error, resetErrorBoundary }) => (
             <div className="alert alert-danger m-3">
               <h4>Something went wrong loading users.</h4>
-              <p>{error.message}</p>
+              <p>{error instanceof Error ? error.message : "Unknown error"}</p>
               <button className="btn btn-primary" onClick={resetErrorBoundary}>
                 Try Again
               </button>
