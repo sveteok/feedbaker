@@ -16,6 +16,7 @@ import { errorHandler } from "./middleware/errorHandler";
 const app = express();
 const requiredEnvVars = ["COOKIE_NAME", "GOOGLE_CLIENT_ID", "JWT_SECRET"] as const;
 
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

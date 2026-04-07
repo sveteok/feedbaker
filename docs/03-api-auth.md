@@ -7,16 +7,16 @@
 **CORS**: restrictedCors
 **Auth**: Varies by endpoint — some public, some require authentication
 
-This route handles Google authentication, and CSRF token generation.
+These routes handle Google authentication, profile access, logout, and CSRF token generation.
 
 Endpoints Overview
 
 | Method | Endpoint           | Description                        | Auth Required | Access Level |
 | :----- | :----------------- | :--------------------------------- | :------------ | :----------- |
-| `POST` | `/api/auth/google` | Authenticate user via Google OAuth | no            | Public       |
-| `GET`  | `/api/profile`     | Get authenticated user info        | yes           | Owner/Admin  |
-| `POST` | `/api/logout`      | Log out user and clear cookie      | yes           | Owner/Admin  |
-| `GET`  | `/api/csrf`        | Generate CSRF token                | no            | Public       |
+| `POST` | `/api/auth/google`    | Authenticate user via Google OAuth | no            | Public       |
+| `GET`  | `/api/profile`        | Get authenticated user info        | yes           | Owner/Admin  |
+| `POST` | `/api/profile/logout` | Log out user and clear cookie      | yes           | Owner/Admin  |
+| `GET`  | `/api/profile/csrf`   | Generate CSRF token                | no            | Public       |
 
 ##### `POST /api/auth/google` Verifies Google OAuth credential, creates or fetches the user, sets JWT in HTTP-only cookie.
 
@@ -71,7 +71,7 @@ Example Request
 
 ```
 GET /api/profile
-Authorization: Bearer <JWT>
+Cookie: ID_TOKEN_COOKIE=<JWT>
 ```
 
 Example Response
@@ -93,7 +93,7 @@ Response Codes
 | `200 OK`           | Authenticated user info returned |
 | `401 Unauthorized` | User not authenticated           |
 
-##### `POST /api/logout` Logs out the user by clearing the HTTP-only JWT cookie.
+##### `POST /api/profile/logout` Logs out the user by clearing the HTTP-only JWT cookie.
 
 Auth: authenticateOwnerOrAdmin
 CORS: restrictedCors
@@ -101,8 +101,9 @@ CORS: restrictedCors
 Example Request
 
 ```
-POST /api/logout
-Authorization: Bearer <JWT>
+POST /api/profile/logout
+Cookie: ID_TOKEN_COOKIE=<JWT>
+X-CSRF-Token: <XSRF-TOKEN>
 ```
 
 Example Response
@@ -117,10 +118,11 @@ Response Codes
 
 | Code               | Description             |
 | ------------------ | ----------------------- |
-| `200 OK`           | Successfully logged out |
-| `401 Unauthorized` | User not authenticated  |
+| `200 OK`           | Successfully logged out           |
+| `401 Unauthorized` | User not authenticated            |
+| `403 Forbidden`    | Missing or invalid CSRF token     |
 
-##### `GET /api/csrf` Generates a CSRF token and sets it in a secure cookie (XSRF-TOKEN).
+##### `GET /api/profile/csrf` Generates a CSRF token and sets it in a secure cookie (XSRF-TOKEN).
 
 Auth: None (public)
 CORS: restrictedCors
@@ -128,7 +130,7 @@ CORS: restrictedCors
 Example Request
 
 ```
-GET /api/csrf
+GET /api/profile/csrf
 ```
 
 Example Response
@@ -148,7 +150,7 @@ Response Codes
 ## Notes
 
 POST `/api/auth/google` issues a JWT token in an **HTTP-only cookie**.
-CSRF token can be sent with requests for extra security.
+Authenticated mutation routes require the `X-CSRF-Token` header to match the `XSRF-TOKEN` cookie.
 **profile** and **logout** endpoints require a valid JWT cookie.
-JWT expiration: 1 hour by default.
+JWT expiration: 10 hours.
 Admin users are automatically set based on the **ADMIN_USER** environment variable.

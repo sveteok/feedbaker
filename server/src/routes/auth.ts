@@ -6,11 +6,19 @@ import jwt from "jsonwebtoken";
 import { UserPayload } from "../types/users";
 import { baseUserSchema } from "../validations/users";
 import { findOrCreateUser } from "../models/users";
+import { createRateLimiter } from "../middleware/rateLimit";
 
 const router = express.Router();
+const googleAuthRateLimit = createRateLimiter({
+  maxRequests: 10,
+  windowMs: 15 * 60 * 1000,
+  message: "Too many login attempts. Try again later.",
+  keyPrefix: "auth-google",
+});
 
 router.post(
   "/google",
+  googleAuthRateLimit,
   async (
     req: express.Request,
     res: express.Response,
@@ -87,7 +95,7 @@ router.post(
       path: "/",
     });
 
-    return res.status(200).json({ message: "Authenticated", userPayload, token });
+    return res.status(200).json({ message: "Authenticated", userPayload });
   } catch (error) {
     return next(error);
   }

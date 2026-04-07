@@ -9,6 +9,13 @@ export const verifyCsrfToken = (
   res: express.Response,
   next: express.NextFunction
 ) => {
+  const COOKIE_NAME = process.env.COOKIE_NAME!;
+  const authToken = req.cookies[COOKIE_NAME];
+
+  if (!authToken) {
+    return next();
+  }
+
   const csrfHeader = req.headers["x-csrf-token"];
   const csrfCookie = req.cookies["XSRF-TOKEN"];
 

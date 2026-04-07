@@ -1,6 +1,9 @@
 import express from "express";
 
-import { authenticateOwnerOrAdmin } from "../middleware/auth";
+import {
+  authenticateOwnerOrAdmin,
+  verifyCsrfToken,
+} from "../middleware/auth";
 import { restrictedCors } from "../middleware/cors";
 import { AuthenticateRequest } from "../types/users";
 import { asyncHandler } from "../utils/asyncHandler";
@@ -36,6 +39,7 @@ router.delete(
   "/:user_id",
   restrictedCors,
   authenticateOwnerOrAdmin,
+  verifyCsrfToken,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = userGetByIdSchema.parse(req.params);
 
@@ -53,7 +57,12 @@ router.delete(
     if (!deletedSite) throw new UserNotFoundError(parsed.user_id);
 
     const COOKIE_NAME = process.env.COOKIE_NAME!;
-    res.clearCookie(COOKIE_NAME, { httpOnly: true });
+    res.clearCookie(COOKIE_NAME, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+    });
 
     res.status(200).send(deletedSite);
   })
