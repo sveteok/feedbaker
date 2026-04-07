@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -77,11 +77,25 @@ export default function FeedbackMainPage({
   };
 
   const canUpdate = user && (user.user_id === site.owner_id || user?.is_admin);
-
-  const now = Date.now();
   const summarizeTimeoutMs = 5 * 60 * 1000;
+  const [currentTime, setCurrentTime] = useState(0);
+
+  useEffect(() => {
+    const updateCurrentTime = () => {
+      setCurrentTime(Date.now());
+    };
+
+    updateCurrentTime();
+    const intervalId = window.setInterval(updateCurrentTime, 30_000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
   const summStart = site.summary_started_on?.getTime() || 0;
   const summEnd = site.summary_updated_on?.getTime() || 0;
+  const now = currentTime || Math.max(summStart, summEnd);
   const summarizing =
     Boolean(summStart) &&
     summEnd < summStart &&
