@@ -3,8 +3,6 @@ import { FeedbackSummarizeResult } from "../types/feedback";
 import { feedbackSummarizeUpdateSchema } from "../validations/feedback";
 import { updateFeedbackSummarize } from "./feedback";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
-
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 interface AiErrorWithCode {
@@ -62,6 +60,15 @@ export const summarizeFeedback = async (
   }[],
   site_id: string
 ): Promise<void> => {
+  if (feedback.length === 0) {
+    await updateStatus({
+      site_id,
+      summary: "No public feedback available yet.",
+      error: null,
+    });
+    return;
+  }
+
   const allFeedbackText = feedback.map((row) => row.body).join("\n---\n");
 
   const prompt = `You are a professional feedback analyst. Summarize the following user feedback entries into a concise report.
@@ -76,6 +83,18 @@ export const summarizeFeedback = async (
         ---
         `;
 
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    await updateStatus({
+      site_id,
+      summary: null,
+      error: "GEMINI_API_KEY is not configured.",
+    });
+    return;
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
+
   const aiCall = async () => {
     const aiResponse = await ai.models.generateContent({
       model: "gemini-2.5-flash",
@@ -87,28 +106,30 @@ export const summarizeFeedback = async (
   try {
     const summary = await retryWithBackoff(aiCall, 4); // Retry up to 4 times
 
-    updateStaus({
+    await updateStatus({
       site_id,
-      summary: summary || null,
+      summary:
+        summary?.trim() || "No summary could be generated from the feedback.",
+      error: null,
     });
     return;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to summarize feedback", error);
   }
 
-  updateStaus({
+  await updateStatus({
     site_id,
     summary: null,
-    error: "error",
+    error: "Failed to generate summary.",
   });
 };
 
-export const updateStaus = async (summary_result: FeedbackSummarizeResult) => {
+export const updateStatus = async (summary_result: FeedbackSummarizeResult) => {
   try {
     const summaryParsed = feedbackSummarizeUpdateSchema.parse(summary_result);
 
     await updateFeedbackSummarize(summaryParsed);
   } catch (error) {
-    console.log(error);
+    console.error("Failed to persist feedback summary state", error);
   }
 };
