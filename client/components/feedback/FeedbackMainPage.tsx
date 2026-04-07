@@ -78,15 +78,20 @@ export default function FeedbackMainPage({
 
   const canUpdate = user && (user.user_id === site.owner_id || user?.is_admin);
 
-  const now = new Date().getTime();
+  const now = Date.now();
+  const summarizeTimeoutMs = 5 * 60 * 1000;
   const summStart = site.summary_started_on?.getTime() || 0;
   const summEnd = site.summary_updated_on?.getTime() || 0;
-  const summarizing = summEnd < summStart;
+  const summarizing =
+    Boolean(summStart) &&
+    summEnd < summStart &&
+    now - summStart <= summarizeTimeoutMs;
+  const hasSummaryState = summarizing || Boolean(site.summary) || Boolean(site.summary_error);
 
   const summarizable =
     canUpdate &&
     !summarizing &&
-    now - Math.max(summEnd, summStart) > 5 * 60 * 1000;
+    now - Math.max(summEnd, summStart) > summarizeTimeoutMs;
 
   const { data: feedback } = useFeedbackQuery(query);
   return (
@@ -106,7 +111,7 @@ export default function FeedbackMainPage({
         </TitleLinkButton>
       </Title>
 
-      {(summarizing || site.summary) && (
+      {hasSummaryState && (
         <SectionContent>
           <TableHolder>
             <div className="text-sky-800 italic bg-gray-50 flex ">
@@ -121,17 +126,17 @@ export default function FeedbackMainPage({
 
                 <div
                   className={cn(
-                    !site.summary && "opacity-50",
+                    !site.summary && !site.summary_error && "opacity-50",
                     summarizing && "animate-pulse"
                   )}
                 >
-                  {site.summary || "..."}
+                  {site.summary || site.summary_error || "..."}
                 </div>
 
                 {!summarizing && (
                   <div className="italic text-xs text-right p-2">
-                    generated&nbsp;
-                    <Ago date={site.summary_updated_on!} />
+                    {site.summary ? "generated" : "last attempt"}&nbsp;
+                    {site.summary_updated_on && <Ago date={site.summary_updated_on} />}
                   </div>
                 )}
                 {summarizing && (
