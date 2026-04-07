@@ -173,11 +173,11 @@ Error Responses
 | 403  | `{ "error": "ForbiddenError" }`        | Unauthorized deletion |
 | 404  | `{ "error": "FeedbackNotFoundError" }` | Feedback not found    |
 
-`GET /api/feedback/summarize?site_id=<UUID>` Trigger or retrieve an **AI-generated summary** of feedback for a site.
+`POST /api/feedback/summarize` Trigger or retrieve an **AI-generated summary** of feedback for a site.
 
 If a summarization process is already in progress, it returns the existing status instead of starting a new one.
 
-Query Parameters
+Request Body
 
 | Name       | Type    | Required | Description          |
 | ---------- | ------- | -------- | -------------------- |
@@ -211,7 +211,7 @@ Error Reference
 | 400       | `ZodError`                | Validation failed          |
 | 403       | `ForbiddenError`          | Unauthorized access        |
 | 404       | `FeedbackNotFoundError`   | Record not found           |
-| 429       | `SummarizationInProgress` | Already processing summary |
+| 429       | `Too many summarize requests. Try again later.` | Rate limit exceeded |
 | 500       | `ServerError`             | Unexpected exception       |
 
 ### Example Workflow
@@ -220,4 +220,4 @@ User submits feedback via widget => POST /api/feedback
 Owner views feedback => GET /api/feedback?site_id=...
 Owner updates visibility/comment => PUT /api/feedback/:id
 Owner deletes spam => DELETE /api/feedback/:id
-Owner generates summary => GET /api/feedback/summarize?site_id=...
+Owner generates summary => POST /api/feedback/summarize

@@ -1,6 +1,9 @@
 import express from "express";
 import crypto from "crypto";
-import { authenticateOwnerOrAdmin } from "../middleware/auth";
+import {
+  authenticateOwnerOrAdmin,
+  verifyCsrfToken,
+} from "../middleware/auth";
 import { AuthenticateRequest } from "../types/users";
 
 const router = express.Router();
@@ -16,9 +19,14 @@ router.get(
   }
 );
 
-router.post("/logout", (_req, res: express.Response) => {
+router.post("/logout", verifyCsrfToken, (_req, res: express.Response) => {
   const COOKIE_NAME = process.env.COOKIE_NAME!;
-  res.clearCookie(COOKIE_NAME, { httpOnly: true });
+  res.clearCookie(COOKIE_NAME, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
+  });
   res.json({ success: true });
 });
 
@@ -28,6 +36,7 @@ router.get("/csrf", (_req, res: express.Response) => {
   res.cookie("XSRF-TOKEN", csrfToken, {
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
+    path: "/",
   });
 
   res.json({ csrfToken });

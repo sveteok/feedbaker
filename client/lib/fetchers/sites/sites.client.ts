@@ -11,6 +11,7 @@ import { absoluteURL } from "@/config/env";
 import { PaginatedSites, Site } from "@/types/sites";
 import { SITE_PAGE_SIZE } from "@/config/constants";
 import { getAxiosErrorMessage } from "@/lib/utils/errors";
+import { getCsrfHeaders } from "@/lib/fetchers/csrf.client";
 
 const baseURL = `${absoluteURL}/api/sites`;
 
@@ -70,10 +71,14 @@ export const getSite = async (id: string): Promise<Site | null> => {
 
 export const editSite = async (site: Site): Promise<Site | null> => {
   try {
+    const csrfHeaders = await getCsrfHeaders();
     const response: AxiosResponse = await axios.put(
       `${baseURL}/${site.site_id}`,
       site,
-      { withCredentials: true }
+      {
+        headers: csrfHeaders,
+        withCredentials: true,
+      }
     );
 
     const result = siteSchema.safeParse(response.data);
@@ -91,7 +96,9 @@ export const editSite = async (site: Site): Promise<Site | null> => {
 
 export const deleteSite = async (id: string): Promise<Site | null> => {
   try {
+    const csrfHeaders = await getCsrfHeaders();
     const response: AxiosResponse = await axios.delete(`${baseURL}/${id}`, {
+      headers: csrfHeaders,
       withCredentials: true,
     });
 
@@ -111,7 +118,11 @@ export const addSite = async (
   content: SiteAddFormData
 ): Promise<Site | null> => {
   try {
-    const response = await axios.post<Site>(baseURL, content);
+    const csrfHeaders = await getCsrfHeaders();
+    const response = await axios.post<Site>(baseURL, content, {
+      headers: csrfHeaders,
+      withCredentials: true,
+    });
 
     const result = siteSchema.safeParse(response.data);
 

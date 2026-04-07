@@ -43,17 +43,14 @@ export default async function HelpPage() {
 
             <EndPoint url="GET /api/sites/:site_id " hint="site details" />
             <EndPoint
-              url="GET /api/sites/:site_id/feedback"
+              url="GET /api/feedback?site_id=:site_id"
               hint="feedback list"
             />
             <EndPoint
-              url="GET /api/sites/:site_id/feedback/:feedback_id"
+              url="GET /api/feedback/:feedback_id"
               hint="feedback details"
             />
-            <EndPoint
-              url="POST /api/sites/:site_id/feedback"
-              hint="submit public feedback"
-            />
+            <EndPoint url="POST /api/feedback" hint="submit public feedback" />
           </ul>
         </div>
       </SectionContent>

@@ -1,10 +1,15 @@
 import express from "express";
 
-import { authenticateOwnerOrAdmin, optionalAuth } from "../middleware/auth";
+import {
+  authenticateOwnerOrAdmin,
+  optionalAuth,
+  verifyCsrfToken,
+} from "../middleware/auth";
 import { restrictedCors } from "../middleware/cors";
 import { AuthenticateRequest } from "../types/users";
 import { asyncHandler } from "../utils/asyncHandler";
 import { FeedbackNotFoundError, ForbiddenError } from "../constants/errors";
+import { createRateLimiter } from "../middleware/rateLimit";
 
 import {
   feedbackGetByIdSchema,
@@ -28,6 +33,18 @@ import {
 import { summarizeFeedback } from "../models/summarizeFeedback";
 
 const router = express.Router();
+const publicFeedbackRateLimit = createRateLimiter({
+  maxRequests: 30,
+  windowMs: 10 * 60 * 1000,
+  message: "Too many feedback submissions. Try again later.",
+  keyPrefix: "feedback-create",
+});
+const summarizeFeedbackRateLimit = createRateLimiter({
+  maxRequests: 5,
+  windowMs: 15 * 60 * 1000,
+  message: "Too many summarize requests. Try again later.",
+  keyPrefix: "feedback-summarize",
+});
 
 router.get(
   "/",
@@ -48,13 +65,15 @@ router.get(
   })
 );
 
-router.get(
+router.post(
   "/summarize",
   restrictedCors,
   authenticateOwnerOrAdmin,
+  verifyCsrfToken,
+  summarizeFeedbackRateLimit,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = summarizeFeedbackProps.parse({
-      site_id: req.query.site_id,
+      site_id: req.body.site_id,
       is_admin: req.user?.is_admin || false,
       owner_id: req.user && req.user.user_id,
     });
@@ -76,11 +95,21 @@ router.get(
 
 router.get(
   "/:feedback_id",
+  optionalAuth,
   asyncHandler(async (req: express.Request, res: express.Response) => {
+    const authReq = req as AuthenticateRequest;
     const parsed = feedbackGetByIdSchema.parse(req.params);
 
     const feedback = await findFeedbackById(parsed.feedback_id);
     if (!feedback) throw new FeedbackNotFoundError(parsed.feedback_id);
+
+    const isOwnerOrAdmin =
+      authReq.user &&
+      (authReq.user.user_id === feedback.site_owner_id || authReq.user.is_admin);
+
+    if (!feedback.public && !isOwnerOrAdmin) {
+      throw new ForbiddenError();
+    }
 
     res.status(200).json(feedback);
   })
@@ -88,6 +117,7 @@ router.get(
 
 router.post(
   "/",
+  publicFeedbackRateLimit,
   asyncHandler(async (req: express.Request, res: express.Response) => {
     const result = feedbackCreateSchema.parse(req.body);
     const createdFeedback = await createFeedback(result);
@@ -99,6 +129,7 @@ router.put(
   "/:feedback_id",
   restrictedCors,
   authenticateOwnerOrAdmin,
+  verifyCsrfToken,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const { feedback_id } = req.params;
     const { comment, feedback_public } = req.body;
@@ -127,6 +158,7 @@ router.delete(
   "/:feedback_id",
   restrictedCors,
   authenticateOwnerOrAdmin,
+  verifyCsrfToken,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = feedbackGetByIdSchema.parse(req.params);
 
