@@ -34,8 +34,14 @@ export const baseSiteSchema = z.object({
   created_on: z.coerce.date(),
   updated_on: z.coerce.date(),
   summary: z.union([z.string(), z.null()]).optional(),
-  summary_started_on: z.coerce.date().optional(),
-  summary_updated_on: z.coerce.date().optional(),
+  summary_started_on: z.preprocess(
+    (val) => (val === null ? undefined : val),
+    z.coerce.date().optional()
+  ),
+  summary_updated_on: z.preprocess(
+    (val) => (val === null ? undefined : val),
+    z.coerce.date().optional()
+  ),
   summary_error: z.union([z.string(), z.null()]).optional(),
 });
 

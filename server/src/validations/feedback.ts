@@ -64,8 +64,8 @@ export type SummarizeFeedbackData = z.infer<typeof summarizeFeedbackSchema>;
 
 export const feedbackSummarizeUpdateSchema = z.object({
   site_id: z.uuid(),
-  summary: z.string().optional(),
-  error: z.string().optional(),
+  summary: z.union([z.string(), z.null()]).optional(),
+  error: z.union([z.string(), z.null()]).optional(),
 });
 export type FeedbackSummarizeUpdateData = z.infer<
   typeof feedbackSummarizeUpdateSchema
