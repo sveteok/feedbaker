@@ -17,6 +17,7 @@ const db_1 = require("./models/db");
 const errorHandler_1 = require("./middleware/errorHandler");
 const app = (0, express_1.default)();
 const requiredEnvVars = ["COOKIE_NAME", "GOOGLE_CLIENT_ID", "JWT_SECRET"];
+app.set("trust proxy", 1);
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());

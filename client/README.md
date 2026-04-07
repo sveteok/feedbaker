@@ -114,7 +114,7 @@ DELETE /api/sites/:site_id
 **Feedback**
 
 ```
-GET /api/feedback/summarize?site_id=[SITE_ID]
+POST /api/feedback/summarize
 PUT /api/feedback/:feedback_id
 DELETE /api/feedback/:feedback_id
 ```
@@ -142,8 +142,8 @@ GET /api/users?limit=[LIMIT]&offset=[OFFSET]&searchText=[SEARH_BY_NAME]
 ```
 POST /api/auth/google
 GET /api/profile
-POST /api/logout
-GET /api/csrf
+POST /api/profile/logout
+GET /api/profile/csrf
 ```
 
 ## Frontend Overview

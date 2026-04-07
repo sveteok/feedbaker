@@ -1,7 +1,11 @@
 import express from "express";
 import { DatabaseError } from "pg";
 
-import { authenticateOwnerOrAdmin, optionalAuth } from "../middleware/auth";
+import {
+  authenticateOwnerOrAdmin,
+  optionalAuth,
+  verifyCsrfToken,
+} from "../middleware/auth";
 import { publicCors, restrictedCors } from "../middleware/cors";
 import { AuthenticateRequest } from "../types/users";
 import { asyncHandler } from "../utils/asyncHandler";
@@ -68,6 +72,7 @@ router.post(
   "/",
   restrictedCors,
   authenticateOwnerOrAdmin,
+  verifyCsrfToken,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const owner_id = req.user!.user_id;
 
@@ -89,6 +94,7 @@ router.put(
   "/:site_id",
   restrictedCors,
   authenticateOwnerOrAdmin,
+  verifyCsrfToken,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = siteUpdateInputSchema.parse({
       ...req.body,
@@ -115,6 +121,7 @@ router.delete(
   "/:site_id",
   restrictedCors,
   authenticateOwnerOrAdmin,
+  verifyCsrfToken,
   asyncHandler(async (req: AuthenticateRequest, res: express.Response) => {
     const parsed = siteGetByIdSchema.parse(req.params);
 

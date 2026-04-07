@@ -2,6 +2,7 @@ import { FEEDBACK_PAGE_SIZE } from "@/config/constants";
 import { absoluteURL } from "@/config/env";
 import { getAxiosErrorMessage } from "@/lib/utils/errors";
 import { Feedback, PaginatedFeedback } from "@/types/feedback";
+import { getCsrfHeaders } from "@/lib/fetchers/csrf.client";
 import {
   baseFeedbackSchema,
   FeedbackAddFormData,
@@ -20,11 +21,18 @@ export const summarizeFeedback = async (
   site_id: string
 ): Promise<FeedbackSummarizeData> => {
   try {
-    const response = await axios.get(`${baseURL}/summarize`, {
-      headers: { "Cache-Control": "no-cache, no-store, must-revalidate" },
-      params: { site_id },
-      withCredentials: true,
-    });
+    const csrfHeaders = await getCsrfHeaders();
+    const response = await axios.post(
+      `${baseURL}/summarize`,
+      { site_id },
+      {
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          ...csrfHeaders,
+        },
+        withCredentials: true,
+      }
+    );
 
     const result = feedbackSummarize.safeParse(response.data);
 
@@ -105,6 +113,7 @@ export const editFeedback = async (
   feedback: FeedbackUpdateFormData
 ): Promise<Feedback | null> => {
   try {
+    const csrfHeaders = await getCsrfHeaders();
     const response: AxiosResponse = await axios.put(
       `${baseURL}/${feedback.feedback_id}`,
 
@@ -112,7 +121,10 @@ export const editFeedback = async (
         comment: feedback.comment,
         feedback_public: feedback.public,
       },
-      { withCredentials: true }
+      {
+        headers: csrfHeaders,
+        withCredentials: true,
+      }
     );
 
     const result = baseFeedbackSchema.safeParse(response.data);
@@ -130,7 +142,9 @@ export const editFeedback = async (
 
 export const deleteFeedback = async (id: string): Promise<Feedback | null> => {
   try {
+    const csrfHeaders = await getCsrfHeaders();
     const response: AxiosResponse = await axios.delete(`${baseURL}/${id}`, {
+      headers: csrfHeaders,
       withCredentials: true,
     });
 

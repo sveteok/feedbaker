@@ -70,12 +70,14 @@ export const findFeedbackById = async (
 ): Promise<Feedback | null> => {
   const query = `SELECT 
                   feedback.feedback_id, 
+                  feedback.site_id,
                   feedback.author,
                   feedback.body, 
                   feedback.created_on,
                   feedback.updated_on,
                   feedback.comment,
                   feedback.public,
+                  sites.owner_id as site_owner_id,
                   sites.name as site_name,
                   sites.url as site_url
                   FROM feedback 

@@ -94,6 +94,7 @@ describe("Google Auth", () => {
     const cookies = res.headers["set-cookie"];
     expect(cookies?.[0]).toContain(COOKIE_NAME);
     expect(res.body.userPayload.email).toBe(fakeUser.email);
+    expect(res.body.token).toBeUndefined();
   });
 
   it("should reject invalid google token", async () => {
