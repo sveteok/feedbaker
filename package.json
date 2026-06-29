@@ -17,11 +17,16 @@
       "picomatch@2.3.1": "2.3.2",
       "picomatch@4.0.3": "4.0.4",
       "brace-expansion@1.1.12": "1.1.13",
-      "brace-expansion@5.0.4": "5.0.5",
+      "brace-expansion@5.0.4": "5.0.6",
+      "brace-expansion@5.0.5": "5.0.6",
+      "postcss": "8.5.10",
+      "qs": "6.15.2",
+      "js-yaml": "4.2.0",
+      "esbuild": "0.28.1",
       "vite": "7.3.5"
     }
   },
   "devDependencies": {
-    "turbo": "^2.3.3"
+    "turbo": "^2.9.14"
   }
 }
