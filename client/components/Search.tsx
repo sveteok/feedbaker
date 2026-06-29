@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 type SearchProps = {
   searchQuery: string;
@@ -11,7 +11,7 @@ type SearchProps = {
   statusText?: string;
 };
 
-const Search = ({
+const SearchInput = ({
   searchQuery,
   setSearchQuery,
   isPending = false,
@@ -19,11 +19,8 @@ const Search = ({
   disabled = false,
   statusText = "",
 }: SearchProps) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(searchQuery);
 
-  useEffect(() => {
-    setText(searchQuery);
-  }, [searchQuery]);
   return (
     <div className="p-4 bg-sky-100 gap-4 pt-6 border-sky-200">
       <div
@@ -75,4 +72,9 @@ const Search = ({
     </div>
   );
 };
+
+const Search = (props: SearchProps) => {
+  return <SearchInput key={props.searchQuery} {...props} />;
+};
+
 export default Search;
