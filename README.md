@@ -1,267 +1,297 @@
 # Feedbaker
 
-**Feedbaker** (a playful twist on "feedback") is a lightweight feedback management service for websites and web apps.
-It provides a simple but powerful way to **collect, organize, and moderate** user feedback.
+**A full-stack SaaS application for collecting, managing, and analyzing user feedback.**
 
-## Overview
+Feedbaker provides an end-to-end feedback workflow: website owners register their sites, collect feedback from users, manage submissions through a dashboard, and generate AI-assisted summaries to surface recurring themes.
 
-Owners (developers or product managers) can register using **Google OAuth**, create site entries, and embed a **lightweight feedback widget** on their websites.
-Visitors can submit feedback directly through these widgets, while owners can view, moderate, and respond to feedback in a web dashboard or REST API.
+The project covers the full lifecycle of a modern web application: architecture, relational data modeling, backend APIs, frontend development, authentication and authorization, AI integration, automated testing, CI/CD, containerized development, and cloud deployment.
 
-**_Standout features:_**
+## Product Overview
 
-- Lightweight embeddable feedback widget.
-- Three main roles: visitor, owner, and admin
-- Secure authentication with Google OAuth + JWT
-- RESTful API for integrations
-- AI-powered feedback summarization
+Feedbaker helps websites and web applications collect feedback without building a custom feedback system from scratch.
 
-## MVP feature list
+Core workflows:
 
-1. **Authentication**
+- **Visitors** submit feedback through a public form or embeddable widget.
+- **Owners** manage sites and feedback and generate AI-assisted summaries.
+- **Admins** manage users, sites, and feedback across the platform.
 
-   - Login with **Google OAuth (One Tap)**
-   - JWT stored in **HTTP-only cookies**
+## Product Preview
 
-2. **Site management**
+### Site Management
 
-   - Create, update, and delete owned sites
+Shows the owner workflow for creating and editing registered sites, including metadata, site URLs, descriptions, and widget setup instructions.
 
-3. **Feedback system**
+![Feedbaker site management](./docs/images/site-management.png)
 
-   - Public feedback submission via widget or form
-   - Owners can view, comment on, or delete feedback
+### Feedback Management
 
-4. **Public views**
+Shows the feedback moderation workflow, including filtering, owner replies, publishing controls, and delete actions.
 
-   - Anyone can browse public sites and feedback
+![Feedbaker feedback management](./docs/images/feedback-management.png)
 
-5. **Admin role**
+### AI Summary
 
-   - Full management of users, sites, and feedback
+Shows Gemini-powered feedback summarization for a site, helping owners identify recurring themes across user submissions.
 
-## Tech stack
+![Feedbaker AI summary](./docs/images/ai-summary.png)
 
-### Frontend:
+### Embeddable Widget
 
-- **Next.js16 (React 19, App Router)**
-- TypeScript
-- TailwindCSS
-- React Hook Form + Zod (validation)
-- TanStack Query (data fetching)
-- Axios, React Hot Toast, React Error Boundary
-- clsx, jsonwebtoken
+Shows the lightweight widget that can be added to external websites for collecting visitor feedback.
 
-### Backend:
+![Feedbaker embeddable feedback widget](./docs/images/feedback-widget.png)
 
-- **Express.js (TypeScript)**
-- PostgreSQL
-- JWT-based authentication
-- Google OAuth (One Tap)
-- Zod (validation)
-- Google Gemini AI (for summarization)
-- CORS, dotenv, cookie-parser, pg
+## My Role
 
-### Development Tools:
+Feedbaker is an independent end-to-end engineering project.
 
-- ESLint, Prettier
-- TanStack Query Devtools
-- pnpm workspaces + Turborepo
-- Git + GitLab
-- Supertest, Vitest
+I designed and implemented the application architecture, PostgreSQL data model, REST API, authentication and authorization flows, frontend product experience, automated tests, CI/CD workflows, and deployment setup.
 
-## Monorepo Commands
+## Why I Built It
 
-From the repo root:
+I built Feedbaker to take ownership of a product across the entire stack and explore the engineering decisions involved in taking a SaaS application from architecture through implementation and deployment.
+
+The project includes:
+
+- application and API architecture
+- relational data modeling with PostgreSQL
+- Google OAuth authentication and JWT session handling
+- role-aware authorization for visitors, owners, and admins
+- frontend product flows with Next.js and React
+- embedded feedback collection for external sites
+- AI-assisted feedback summarization with Gemini
+- automated server tests and CI checks
+- containerized local development
+- separate frontend and backend deployment workflows
+
+## Architecture
+
+Feedbaker uses a separated frontend/backend architecture with a REST API boundary.
+
+```text
++--------------------------+
+|  Next.js / React client  |
+|  TypeScript + Tailwind   |
++------------+-------------+
+             |
+             | REST API
+             v
++--------------------------+
+|  Express / Node.js API   |
+|  TypeScript + Zod        |
++------------+-------------+
+             |
+             v
++--------------------------+
+|       PostgreSQL         |
++--------------------------+
+```
+
+## Engineering Highlights
+
+### End-to-end TypeScript
+
+TypeScript is used across the frontend and backend, keeping the application logic, API integration, validation, and tests consistent across the stack.
+
+### Authentication, authorization and security
+
+Users authenticate through Google OAuth. The backend verifies Google credentials and issues JWT sessions through HTTP-only cookies.
+
+Authenticated mutations use CSRF protection, while role-aware authorization separates visitor, owner, and administrator capabilities. The project also includes rate limiting and scheduled dependency auditing.
+
+### Feedback collection
+
+Feedback can be submitted through public routes and an embeddable widget, then managed centrally from the authenticated dashboard.
+
+### AI-assisted analysis
+
+Owners can generate Gemini-powered summaries for site feedback, turning individual submissions into higher-level product insights.
+
+### Production-oriented workflow
+
+The repository includes CI, database-backed tests, Docker local development, dependency auditing, and separate deployment workflows for frontend and backend services.
+
+## Tech Stack
+
+| Area                 | Technologies                                         |
+| -------------------- | ---------------------------------------------------- |
+| Frontend             | Next.js, React, TypeScript, Tailwind CSS             |
+| Forms and validation | React Hook Form, Zod                                 |
+| Data fetching        | TanStack Query, Axios                                |
+| Backend              | Node.js, Express, TypeScript                         |
+| Database             | PostgreSQL, `pg`                                     |
+| Authentication       | Google OAuth, JWT, HTTP-only cookies                 |
+| AI                   | Google Gemini                                        |
+| Testing              | Vitest, Supertest                                    |
+| Tooling              | pnpm workspaces, Turborepo, ESLint, Prettier         |
+| DevOps               | Docker Compose, GitHub Actions, Vercel, Render, Neon |
+
+## Features
+
+- Google OAuth sign-in
+- JWT sessions stored in HTTP-only cookies
+- CSRF protection for authenticated mutations
+- Role-aware access for visitors, owners, and admins
+- Site creation and management
+- Public feedback submission
+- Feedback moderation
+- Paginated and searchable site, feedback, and user lists
+- AI-generated feedback summaries
+- Embeddable feedback widget
+- Dockerized local development stack
+- CI workflow with PostgreSQL-backed tests
+- Scheduled dependency security audit
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20+
+- pnpm 9+
+- PostgreSQL 14+ for non-Docker local development
+- Google OAuth credentials for real sign-in
+- Gemini API key for feedback summarization
+
+### Install Dependencies
 
 ```bash
 pnpm install
+```
+
+### Environment Setup
+
+Copy the template files:
+
+```bash
+cp client/TEMPLATE.env client/.env.local
+cp server/TEMPLATE.env server/.env
+```
+
+Use the templates as the source of truth for required variables:
+
+- [client/TEMPLATE.env](./client/TEMPLATE.env)
+- [server/TEMPLATE.env](./server/TEMPLATE.env)
+
+For local development, the most important values are:
+
+- `DATABASE_URL`
+- `PRIVATE_CORS_ORIGINS`
+- `NEXT_PUBLIC_API_URL`
+- `NEXT_PUBLIC_ORIGIN`
+- `GOOGLE_CLIENT_ID`
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `COOKIE_NAME`
+- `NEXT_PUBLIC_COOKIE_NAME`
+- `JWT_SECRET`
+- `GEMINI_API_KEY`
+
+### Run Locally
+
+Start the full workspace:
+
+```bash
 pnpm dev
-pnpm build
-pnpm lint
+```
+
+Or run each app separately:
+
+```bash
+pnpm dev:client
+pnpm dev:server
+```
+
+Default local URLs:
+
+- Client: `http://localhost:3000`
+- Server: configured by `server/.env`
+
+### Run with Docker
+
+The Docker development stack starts the frontend, backend, and PostgreSQL together.
+
+```bash
+pnpm docker:dev
+```
+
+Default Docker URLs:
+
+- Client: `http://localhost:3000`
+- Server: `http://localhost:8080`
+- PostgreSQL: `localhost:5432`
+
+You can override ports and secrets with shell environment variables such as `CLIENT_PORT`, `SERVER_PORT`, `POSTGRES_PORT`, `JWT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GEMINI_API_KEY`.
+
+## Common Commands
+
+Run these from the repository root.
+
+```bash
+pnpm dev       # Start the monorepo in development mode
+pnpm build     # Build all workspace packages
+pnpm lint      # Run lint checks
+pnpm test      # Run tests
+pnpm audit     # Check dependencies for known vulnerabilities
 ```
 
 Package-specific commands:
 
 ```bash
 pnpm --filter @feedbaker/client dev
+pnpm --filter @feedbaker/client build
 pnpm --filter @feedbaker/server dev
+pnpm --filter @feedbaker/server build
+pnpm --filter @feedbaker/server test -- --run
 ```
 
-## CI/CD
+## Database Model
 
-GitHub Actions workflows live in [`.github/workflows/`](./.github/workflows):
+Feedbaker uses PostgreSQL with four core tables.
 
-- `ci.yml`: runs on pull requests and pushes to `main`, installs dependencies, runs lint, build, and server tests against a temporary PostgreSQL service.
-- `deploy-frontend.yml`: currently manual-only via GitHub Actions `workflow_dispatch`; deploys the `client` app to Vercel when triggered.
-- `deploy-backend.yml`: currently manual-only via GitHub Actions `workflow_dispatch`; triggers a Render production deploy hook when triggered.
-- `security.yml`: runs scheduled and manual dependency audits with `pnpm audit`.
-- `seed-database.yml`: manually seeds the Neon database from GitHub Actions.
+| Table              | Purpose                                             |
+| ------------------ | --------------------------------------------------- |
+| `users`            | Google-authenticated users and roles                |
+| `sites`            | Websites or apps registered for feedback collection |
+| `feedback`         | Feedback submissions for registered sites           |
+| `feedback_summary` | AI-generated summaries for site feedback            |
 
-### Required GitHub Secrets
+## API Overview
 
-Add these repository secrets before enabling the deploy workflows:
+Detailed API documentation lives in [docs](./docs).
 
-- `VERCEL_TOKEN`
-- `VERCEL_ORG_ID`
-- `VERCEL_PROJECT_ID`
-- `RENDER_DEPLOY_HOOK_URL`
-- `NEON_DATABASE_URL`
+Public endpoints include:
 
-### CI Environment Strategy
-
-Do not move ordinary CI test values into GitHub secrets unless they are actually sensitive.
-
-- Keep ephemeral CI Postgres values inline in `ci.yml`: `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `DATABASE_URL`.
-- Keep non-secret app placeholders in the committed [`.env.test`](./.env.test): `DATABASE_SSL`, `COOKIE_NAME`, `API_URL`, `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_ORIGIN`, `NEXT_PUBLIC_COOKIE_NAME`, `GOOGLE_CLIENT_ID`, `NEXT_PUBLIC_GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `JWT_SECRET`, and `GEMINI_API_KEY`.
-- Run tests with `NODE_ENV=test`, not `development`.
-- Use GitHub repository secrets only for real secrets that target external systems or production-like infrastructure, such as `VERCEL_TOKEN`, `RENDER_DEPLOY_HOOK_URL`, and `NEON_DATABASE_URL`.
-- Use GitHub Environments for workflows that touch protected infrastructure, such as the manual Neon seed workflow and production deploy workflows.
-
-### Service Setup Notes
-
-- Render: create a deploy hook for the production backend service and store it as `RENDER_DEPLOY_HOOK_URL`.
-- Vercel: link the production frontend project and store its org and project IDs as GitHub secrets.
-- Neon: store the connection string as `NEON_DATABASE_URL`. The manual seed workflow uses it and can optionally truncate existing data before inserting placeholders.
-
-### Avoid Double Deploys
-
-If Render or Vercel are still configured to auto-deploy directly from Git pushes, disable those automatic production deploys before turning on these workflows. Otherwise the same commit can deploy twice: once from the platform integration and once from GitHub Actions.
-
-### Manual Seed Workflow
-
-Use the `Seed Database` workflow from the GitHub Actions tab when you want to populate Neon with demo data.
-
-- Default mode is non-destructive: it inserts placeholder records and skips rows that already exist.
-- If you enable `truncate_existing`, the workflow clears `feedback`, `sites`, and `users` before seeding.
-- The workflow targets the GitHub `production` environment, so you can add required reviewers there before anyone can run it against Neon.
-
-## Docker Local Testing
-
-The repo now includes `docker/backend.dev.Dockerfile`, `docker/frontend.dev.Dockerfile`, and `docker-compose.dev.yml` for a local stack with:
-
-- `client` on `http://localhost:3000`
-- `server` on `http://localhost:8080`
-- `postgres` on `localhost:5432`
-
-Run it from the repo root:
-
-```bash
-docker compose -f docker-compose.dev.yml up --build
-```
-
-Optional overrides can be provided through shell environment variables before starting Compose, for example `JWT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GEMINI_API_KEY`, `POSTGRES_PORT`, `CLIENT_PORT`, and `SERVER_PORT`.
-
-Use [`client/TEMPLATE.env`](./client/TEMPLATE.env) and [`server/TEMPLATE.env`](./server/TEMPLATE.env) as the source of truth for non-Docker local development.
-
-For Vercel production, set `NEXT_PUBLIC_ORIGIN` to your canonical public URL, for example `https://feedbaker.vercel.app`. The client middleware uses this to redirect generated `*.vercel.app` deployment hosts back to the canonical origin so Google OAuth always runs on the whitelisted host.
-
-### Database Schema
-
-Feedbaker uses PostgreSQL with the following core tables:
-
-| Table            | Description                                            |
-| ---------------- | ------------------------------------------------------ |
-| users            | System users (owners, admins) authenticated via Google |
-| sites            | Registered sites where feedback can be left            |
-| feedback         | Individual feedback entries                            |
-| feedback_summary | AI-generated summaries for each site’s feedback        |
-
-### REST API Overview
-
-##### **Public Endpoints**
-
-**Sites**
-
-```
-GET /api/sites
-GET /api/sites?page=[PAGE]&search=[SEARH_BY_NAME]&owner_id=[OWNER_ID]
-GET /api/sites?limit=[LIMIT]&offset=[OFFSET]&searchText=[SEARH_BY_NAME]&owner_id=[OWNER_ID]
-```
-
-**Feedback**
-
-```
-GET /api/feedback?site_id=[SITE_ID]
-GET /api/feedback?feedback_id=[FEEDBACK_ID]
+```text
+GET  /api/sites
+GET  /api/feedback
 POST /api/feedback
 ```
 
-##### **Authenticated User (Owner or Admin)**
+Authenticated owner/admin endpoints include:
 
-**Sites**
-
-```
-POST /api/sites
-PUT /api/sites/:site_id
+```text
+POST   /api/sites
+PUT    /api/sites/:site_id
 DELETE /api/sites/:site_id
-```
-
-**Feedback**
-
-```
-POST /api/feedback/summarize
-PUT /api/feedback/:feedback_id
+POST   /api/feedback/summarize
+PUT    /api/feedback/:feedback_id
 DELETE /api/feedback/:feedback_id
+GET    /api/profile
+POST   /api/profile/logout
+GET    /api/profile/csrf
 ```
 
-**Users**
+Admin endpoints include:
 
-```
+```text
+GET    /api/users
 DELETE /api/users/:user_id
 ```
 
-##### **Admin-Only**
+## Widget Integration
 
-**Users**
-
-```
-GET /api/users
-GET /api/users?page=[PAGE]&search=[SEARH_BY_NAME]
-GET /api/users?limit=[LIMIT]&offset=[OFFSET]&searchText=[SEARH_BY_NAME]
-```
-
-##### **Authentication**
-
-**Users**
-
-```
-POST /api/auth/google
-GET /api/profile
-POST /api/profile/logout
-GET /api/profile/csrf
-```
-
-## Frontend Overview
-
-### UI Pages
-
-| Page                  | Description                                                 |
-| --------------------- | ----------------------------------------------------------- |
-| **Main Page**         | Welcome / landing                                           |
-| **Login Page**        | Google One Tap sign-in                                      |
-| **Profile Page**      | User info, links to manage own sites, delete account        |
-| **Sites Page**        | Paginated site list, filter/search, CRUD (by role)          |
-| **Feedback Page**     | Paginated feedback list, moderation tools, AI summarization |
-| **Help Page**         | Widget instructions, API info, examples                     |
-| **Unauthorized Page** | Shown when access is restricted                             |
-| **Users Page**        | Admin-only list and management view                         |
-
-### Core UI Components
-
-**General UI**
-`Section`, `SectionContent`, `Title`, `FormInput`, `FormText`, `Serach`, `Modal`, `DeleteContent`
-
-**Sites**
-`SiteList`, `SiteCard`, `SiteUpdateForm`,`WidgetInstructions`
-
-**Feedback**
-`FeedbackList`, `FeedbackCard`, `FeedbackAddForm`, `FeedbackUpdateCommentForm`
-
-**Users**
-`UserList`, `UserCard`, `UserDeleteContent`
-
-## Widget Integration Example
+Feedbaker includes an embeddable widget for collecting feedback from external sites.
 
 ```html
 <script
@@ -272,75 +302,78 @@ GET /api/profile/csrf
 ></script>
 ```
 
-## Customization
+Widget options:
 
-`data-site`: required, site identifier
-`data-bg`: background color
-`data-fg`: text/border color
+| Attribute   | Required | Description                          |
+| ----------- | -------- | ------------------------------------ |
+| `data-site` | Yes      | Site identifier created in Feedbaker |
+| `data-bg`   | No       | Widget background color              |
+| `data-fg`   | No       | Widget text and border color         |
 
-Example predefined color styles:
+See [Widget Integration Guide](./docs/04-widget-guide.md) for more details.
 
-```js
-{
-  style1: { bg: "#0088aa", fg: "#ffffff" },
-  style2: { bg: "#ffffff", fg: "#000000" },
-  style3: { bg: "#000000", fg: "#ffffff" },
-  style4: { bg: "#ffff22", fg: "#008800" },
-}
-```
+## Documentation
+
+- [Getting Started](./docs/01-getting-started.md)
+- [Architecture Overview](./docs/02-architecture-overview.md)
+- [Sites API](./docs/03-api-sites.md)
+- [Feedback API](./docs/03-api-feedback.md)
+- [Users API](./docs/03-api-users.md)
+- [Auth API](./docs/03-api-auth.md)
+- [Widget Integration Guide](./docs/04-widget-guide.md)
+
+## CI/CD
+
+GitHub Actions workflows live in [.github/workflows](./.github/workflows).
+
+- `ci.yml` installs dependencies, runs lint/build checks, and runs server tests against a temporary PostgreSQL service.
+- `security.yml` runs scheduled and manual `pnpm audit` checks.
+- Deployment workflows support independent frontend and backend releases to Vercel and Render.
+- `seed-database.yml` manually seeds the Neon database with placeholder data.
+
+Required deployment secrets:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+- `RENDER_DEPLOY_HOOK_URL`
+- `NEON_DATABASE_URL`
 
 ## Project Structure
 
-```
+```text
 feedbaker/
-├── docker-compose.dev.yml
-├── package.json           # pnpm + turbo workspace root
-├── pnpm-workspace.yaml
-├── turbo.json
-├── client/                # Next.js frontend
-│   ├── app/
-│   │   ├── login/
-│   │   ├── profile/
-│   │   ├── help/
-│   │   ├── sites/
-│   │   │   ├── [site_id]/
-│   │   │   ├── [site_id]/feedback/
-│   │   │   └── new/
-│   │   ├── unauthorized/
-│   │   ├── users/
-│   │   └── layout.tsx
-│   ├── components/
-│   ├── config/
-│   ├── lib/
-│   ├── fetchers/
-│   ├── public/            # feedback widget, assets
-│   ├── types/
-│   ├── validations/
-│   └── README.md
-│
-└── server/                # Express REST API
-    ├── src/
-    │   ├── routes/
-    │   ├── middleware/
-    │   ├── models/
-    │   ├── scripts/
-    │   ├── tests/
-    │   ├── types/
-    │   ├── validations/
-    │   └── utils/
-    ├── .env
-    ├── TEMPLATE.env
-    ├── package.json
-    └── vitest.config.ts
-
+|-- .github/workflows/       # CI, security, deploy, and seed workflows
+|-- client/                  # Next.js frontend
+|   |-- app/                 # App Router pages
+|   |-- components/          # Reusable UI and feature components
+|   |-- lib/                 # Fetchers, providers, and client utilities
+|   |-- public/              # Static assets and widget files
+|   |-- validations/         # Client-side validation schemas
+|   `-- TEMPLATE.env
+|-- server/                  # Express REST API
+|   |-- src/
+|   |   |-- middleware/      # Auth, CSRF, rate limiting
+|   |   |-- models/          # Database access and schema setup
+|   |   |-- routes/          # API routes
+|   |   |-- scripts/         # Seed scripts
+|   |   |-- tests/           # Vitest and Supertest tests
+|   |   `-- validations/     # API validation schemas
+|   `-- TEMPLATE.env
+|-- docs/                    # Developer documentation
+|-- docker/                  # Development Dockerfiles and nginx templates
+|-- docker-compose.dev.yml
+|-- package.json             # pnpm workspace root
+|-- pnpm-lock.yaml
+|-- pnpm-workspace.yaml
+`-- turbo.json
 ```
 
-## Optional features (Planned)
+## Planned Improvements
 
-- Anti-spam and rate limiting to prevent spam feedback using CAPTCHA, rate limits, or content analysis
-- Improved logging system
+- Feedback analytics and trend visualizations
+- Email and webhook notifications
+- More structured logging and observability
 - Additional authentication providers
-- Email or webhook notifications to notify owners about new feedback or summary completion
-- Feedback analytics to visualize trends, categories, and summary metrics per site
-- Dark/light theme for widget
-- Admin dashboard improvements
+- Expanded widget configuration and theming
+- Improved administration tools
