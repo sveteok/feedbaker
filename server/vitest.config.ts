@@ -6,11 +6,9 @@ export default defineConfig({
     environment: "node",
     isolate: false,
     pool: "threads",
-    poolOptions: {
-      threads: {
-        singleThread: true,
-      },
-    },
+    fileParallelism: false,
+    maxWorkers: 1,
+    minWorkers: 1,
     include: ["src/tests/**/*.test.ts"],
     setupFiles: [],
     coverage: {
